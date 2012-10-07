@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 package net.mikaboshi.intra_mart.tools.log_stats.parser;
 
 import java.util.regex.Matcher;
@@ -8,6 +22,9 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.LogLayoutItemType;
 
 /**
  * ログレイアウトの定義
+ *
+ * @version 1.0.8
+ * @author <a href="https://github.com/cwan">cwan</a>
  */
 public final class LogLayoutDefinitions {
 
@@ -121,27 +138,27 @@ public final class LogLayoutDefinitions {
 
 		return v7layout.toString();
 	}
-	
+
 	/**
 	 * 標準のリクエストログレイアウトを取得する。
 	 * @param version
 	 * @return
 	 */
 	public static String getStandardRequestLogLayout(Version version) {
-		
+
 		switch (version) {
-		
+
 			case V60:
 			case V61:
 				return REQUEST_V6x;
-				
+
 			case V70:
 			case V71:
 				return REQUEST_V70_V71;
-				
+
 			case V72:
 				return REQUEST_V72;
-				
+
 			default:
 				return null;
 		}
@@ -153,20 +170,20 @@ public final class LogLayoutDefinitions {
 	 * @return
 	 */
 	public static String getStandardTransitionLogLayout(Version version) {
-		
+
 		switch (version) {
-		
+
 			case V60:
 			case V61:
 				return TRANSITION_V6x;
-				
+
 			case V70:
 				return TRANSITION_V70;
-				
+
 			case V71:
 			case V72:
 				return TRANSITION_V71_V72;
-				
+
 			default:
 				return null;
 		}

@@ -1,47 +1,67 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 package net.mikaboshi.intra_mart.tools.log_stats.report;
 
 import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
 
+/**
+ * レポートパラメータ
+ *
+ * @version 1.0.8
+ * @author <a href="https://github.com/cwan">cwan</a>
+ */
 public class ReportParameter {
 
 	/**
 	 * 解析間隔（分）
 	 */
 	private long span = 5L;
-	
+
 	/**
 	 * セッションタイムアウト時間（分）
 	 */
 	private int sessionTimeout = 10;
-	
+
 	/**
 	 * リクエスト処理時間ランクの出力件数
 	 */
 	private int requestPageTimeRankSize = 20;
-	
+
 	/**
 	 * リクエストURLランクの出力件数
 	 */
 	private int requestUrlRankSize = 20;
-	
+
 	/**
 	 * セッションランクの出力件数
 	 */
 	private int sessionRankSize = 20;
-	
+
 	/**
 	 * レポート名
 	 */
 	private String name = "intra-mart ログ統計レポート";
-	
+
 	/**
 	 * 署名
 	 */
 	private String signature = "";
-	
+
 	/** バージョン  */
 	private Version version = Version.V72;
-	
+
 	/**
 	 * 解析間隔（分）を取得する。
 	 * @return
@@ -89,7 +109,7 @@ public class ReportParameter {
 	public void setRequestPageTimeRankSize(int requestPageTimeRankSize) {
 		this.requestPageTimeRankSize = requestPageTimeRankSize;
 	}
-	
+
 	/**
 	 * リクエストURLランクの出力件数を取得する。
 	 * @return
@@ -97,7 +117,7 @@ public class ReportParameter {
 	public int getRequestUrlRankSize() {
 		return requestUrlRankSize;
 	}
-	
+
 	/**
 	 * リクエストURLランクの出力件数を設定する。
 	 * @param requestUrlRankSize
@@ -105,7 +125,7 @@ public class ReportParameter {
 	public void setRequestUrlRankSize(int requestUrlRankSize) {
 		this.requestUrlRankSize = requestUrlRankSize;
 	}
-	
+
 	/**
 	 * セッションランクの出力件数を設定する。
 	 * @return
@@ -113,7 +133,7 @@ public class ReportParameter {
 	public int getSessionRankSize() {
 		return sessionRankSize;
 	}
-	
+
 	/**
 	 * セッションランクの出力件数を設定する。
 	 * @param sessionRankSize
@@ -121,7 +141,7 @@ public class ReportParameter {
 	public void setSessionRankSize(int sessionRankSize) {
 		this.sessionRankSize = sessionRankSize;
 	}
-	
+
 	/**
 	 * レポート名を取得する
 	 * @return
@@ -129,7 +149,7 @@ public class ReportParameter {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * レポート名を設定する
 	 * @param name
@@ -137,7 +157,7 @@ public class ReportParameter {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 署名を取得する。
 	 * @return
@@ -145,7 +165,7 @@ public class ReportParameter {
 	public String getSignature() {
 		return signature;
 	}
-	
+
 	/**
 	 * 署名を設定する。
 	 * @param signature
@@ -153,11 +173,11 @@ public class ReportParameter {
 	public void setSignature(String signature) {
 		this.signature = signature;
 	}
-	
+
 	public Version getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(Version version) {
 		this.version = version;
 	}
