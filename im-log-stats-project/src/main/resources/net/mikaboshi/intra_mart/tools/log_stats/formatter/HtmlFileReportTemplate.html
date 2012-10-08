@@ -9,8 +9,7 @@
 		<meta charset="${charset}">
 		<title>${reportName?html}</title>
 
-		<style type="text/css">
-
+		<style type="text/css" media="all">
 			.clearfix {
 				zoom: 1;
 			}
@@ -51,11 +50,6 @@
 				margin: 5px 0;
 			}
 
-			#toc a {
-				font-size: 85%;
-				color: #116;
-			}
-
 			h2 {
 				font-size: 95%;
 				font-weight: bold;
@@ -63,19 +57,6 @@
 				margin: 20px 0 5px 0;
 				padding: 0;
 				float: left;
-			}
-
-			.go_top {
-				margin: 20px 0 5px 0;
-				float: right;
-				color: #116;
-			}
-
-			.go_top a {
-				font-size: 90%;
-				font-weight: bold;
-				color: #666;
-				text-decoration: none;
 			}
 
 			h3 {
@@ -94,15 +75,6 @@
 			tr, td, th {
 				border: 1px solid #030;
 				padding: 2px 4px;
-			}
-
-			th {
-				font-size: 80%;
-				font-weight: normal;
-				color: #EFE;
-				background-color: #030;
-				text-align: center;
-				white-space: nowrap;
 			}
 
 			td {
@@ -166,9 +138,55 @@
 				color: #CCC;
 				font-weight: bold;
 			}
+		</style>
+		<style type="text/css" media="screen">
+			#toc a {
+				font-size: 85%;
+				color: #116;
+			}
 
+			.go_top {
+				margin: 20px 0 5px 0;
+				float: right;
+				color: #116;
+			}
+
+			.go_top a {
+				font-size: 90%;
+				font-weight: bold;
+				color: #666;
+				text-decoration: none;
+			}
+
+			th {
+				font-size: 80%;
+				font-weight: normal;
+				color: #EFE;
+				background-color: #030;
+				text-align: center;
+				white-space: nowrap;
+			}
+		</style>
+		<style type="text/css" media="print">
+			#toc {
+				display: none;
+			}
+
+			.go_top {
+				display: none;
+			}
+
+			th {
+				font-size: 80%;
+				font-weight: bold;
+				color: #222;
+				background-color: #FFF;
+				text-align: center;
+				white-space: nowrap;
+			}
 		</style>
 	</head>
+
 	<body>
 		<div id="page_header" class="clearfix">
 			<h1><a name="top"></a>${reportName?html}</h1>
