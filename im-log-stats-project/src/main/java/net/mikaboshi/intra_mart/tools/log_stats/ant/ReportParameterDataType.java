@@ -20,9 +20,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.formatter.ReportFormatter;
-import net.mikaboshi.intra_mart.tools.log_stats.formatter.SimpleTextFileReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.formatter.TemplateFileReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
@@ -66,7 +64,7 @@ public class ReportParameterDataType extends DataType {
 	/**
 	 * カスタムテンプレートファイルパス
 	 */
-	private String template = null;
+	private String templateFile = null;
 
 	/**
 	 * カスタムテンプレートファイルの文字コード
@@ -132,8 +130,8 @@ public class ReportParameterDataType extends DataType {
 		this.signature = signature;
 	}
 
-	public void setTemplate(String template) {
-		this.template = template;
+	public void setTemplateFile(String templateFile) {
+		this.templateFile = templateFile;
 	}
 
 	public void setTemplateCharset(String templateCharset) {
@@ -157,38 +155,42 @@ public class ReportParameterDataType extends DataType {
 				ParserParameter parserParameter,
 				ReportParameter reportParameter) throws BuildException {
 
-		ReportFormatter reportFormatter = null;
-
 		File outputFile = new File(this.output);
 
-		if ("html".equalsIgnoreCase(this.type) || "template".equalsIgnoreCase(this.type)) {
+		TemplateFileReportFormatter reportFormatter =
+				new TemplateFileReportFormatter(
+								outputFile,
+								this.charset,
+								parserParameter,
+								reportParameter);
 
-			reportFormatter = new TemplateFileReportFormatter(
-					outputFile, this.charset, parserParameter, reportParameter);
+		if ("html".equalsIgnoreCase(this.type) || "csv".equalsIgnoreCase(this.type)) {
+
+			String templateFileRecourcePath = "/net/mikaboshi/intra_mart/tools/log_stats/formatter/";
+
+			if ("html".equalsIgnoreCase(this.type)) {
+				templateFileRecourcePath += "HtmlFileReportTemplate.html";
+			} else {
+				templateFileRecourcePath += "CsvFileReportTemplate.txt";
+			}
+
+			reportFormatter.setTempleteResourceFilePath(templateFileRecourcePath);
+			reportFormatter.setTemplateFileCharset("Windows-31J");
+
+		} else if ("template".equalsIgnoreCase(this.type)) {
+
+			if (this.templateFile == null) {
+				throw new BuildException("Paranmeter 'templeteFile' is required at 'report' tag.");
+			}
 
 			// カスタムテンプレートの設定
-			if (this.template != null) {
+			try {
+				reportFormatter.setTemplateFile(new File(this.templateFile));
+				reportFormatter.setTemplateFileCharset(this.templateCharset);
 
-				try {
-					((TemplateFileReportFormatter) reportFormatter).setTemplateFile(new File(this.template));
-				} catch (FileNotFoundException e) {
-					throw new BuildException(e);
-				}
+			} catch (FileNotFoundException e) {
+				throw new BuildException(e);
 			}
-
-			if (this.templateCharset != null) {
-				((TemplateFileReportFormatter) reportFormatter).setTemplateFileCharset(this.templateCharset);
-			}
-
-		} else if ("csv".equalsIgnoreCase(this.type)) {
-
-			reportFormatter = new SimpleTextFileReportFormatter(
-					outputFile, this.charset, ',', parserParameter, reportParameter);
-
-		} else if ("tsv".equalsIgnoreCase(this.type)) {
-
-			reportFormatter = new SimpleTextFileReportFormatter(
-					outputFile, this.charset, '\t', parserParameter, reportParameter);
 
 		} else {
 			throw new BuildException("Unsupported report type : " + this.type);

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.mikaboshi.intra_mart.tools.log_stats.formatter.SimpleTextFileReportFormatter;
+import net.mikaboshi.intra_mart.tools.log_stats.formatter.TemplateFileReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.report.LogReportGenerator;
 import net.mikaboshi.intra_mart.tools.log_stats.report.ReportParameter;
@@ -61,13 +61,12 @@ public class LogReportGeneratorCsvSample {
 		reportParameter.setSignature("LogReportGeneratorCsvSample");
 		generator.setReportParameter(reportParameter);
 
-		SimpleTextFileReportFormatter reportFormatter =
-										new SimpleTextFileReportFormatter(
-												new File("temp/report.csv"),
-												"Windows-31J",
-												',',
-												parserParameter,
-												reportParameter);
+		TemplateFileReportFormatter reportFormatter =
+										new TemplateFileReportFormatter(
+														new File("temp/report.csv"),
+														"Windows-31J",
+														parserParameter,
+														reportParameter);
 
 		generator.execute(reportFormatter);
 	}

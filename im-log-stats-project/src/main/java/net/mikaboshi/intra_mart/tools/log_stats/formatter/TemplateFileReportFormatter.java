@@ -63,14 +63,11 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 	private static final Log logger = LogFactory.getLog(TemplateFileReportFormatter.class);
 
-	/** デフォルトテンプレートファイル（クラスパス） */
-	private static final String TEMPLATE_FILE_PATH = "HtmlFileReportTemplate.html";
-
-	/**  デフォルトテンプレートファイルの文字コード */
-	private static final String TEMPLATE_FILE_CHARSET = "Windows-31J";
-
-	/** カスタムテンプレートファイル */
+	/** テンプレートファイル */
 	private File templateFile = null;
+
+	/** テンプレートファイルパス */
+	private String templeteResourceFilePath = null;
 
 	/** カスタムテンプレートファイルの文字コード */
 	private String templateFileCharset = Charset.defaultCharset().toString();
@@ -106,7 +103,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 	}
 
 	/**
-	 * カスタムテンプレートファイルを設定する。
+	 * テンプレートファイルを設定する。
 	 * @param templateFile
 	 * @throws FileNotFoundException
 	 */
@@ -117,6 +114,15 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 		}
 
 		this.templateFile = templateFile;
+	}
+
+	/**
+	 * テンプレートファイルパス（リソース）を設定する。
+	 * @param templeteResourceFilePath
+	 * @since 1.0.8
+	 */
+	public void setTempleteResourceFilePath(String templeteResourceFilePath) {
+		this.templeteResourceFilePath = templeteResourceFilePath;
 	}
 
 	/**
@@ -140,15 +146,16 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 			if (this.templateFile != null) {
 
-				// カスタムテンプレート
 				in = new BufferedInputStream(new FileInputStream(this.templateFile));
 				reader = new InputStreamReader(in, this.templateFileCharset);
 
-			} else {
-				// デフォルトテンプレート
-				in = new BufferedInputStream(getClass().getResourceAsStream(TEMPLATE_FILE_PATH));
+			} else if (this.templeteResourceFilePath != null) {
 
-				reader = new InputStreamReader(in, TEMPLATE_FILE_CHARSET);
+				in = new BufferedInputStream(getClass().getResourceAsStream(this.templeteResourceFilePath));
+				reader = new InputStreamReader(in, this.templateFileCharset);
+
+			} else {
+				throw new IOException("Neither 'templateFile' nor 'templeteResourceFilePath' is set.");
 			}
 
 
