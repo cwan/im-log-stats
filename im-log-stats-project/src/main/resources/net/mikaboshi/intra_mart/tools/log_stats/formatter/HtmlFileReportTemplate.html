@@ -266,46 +266,46 @@
 							</span>
 						</td>
 						<td class="numeric">
-							${row.requestCount?string(",##0")}
+							${row.requestCount}
 						</td>
 						<td class="numeric">
-							${row.pageTimeSum?string(",##0")}
+							${row.pageTimeSum}
 						</td>
 						<td class="numeric">
-							${row.pageTimeAverage?string(",##0")}
+							${row.pageTimeAverage}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMin?string(",##0")}
+							${row.pageTimeMin}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMedian?string(",##0")}
+							${row.pageTimeMedian}
 						</td>
 						<td class="numeric">
-							${row.pageTime90Percent?string(",##0")}
+							${row.pageTime90Percent}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMax?string(",##0")}
+							${row.pageTimeMax}
 						</td>
 						<td class="numeric">
-							${row.pageTimeStandardDeviation?string(",##0")}
+							${row.pageTimeStandardDeviation}
 						</td>
 						<td class="numeric">
-							${row.uniqueUserCount?string(",##0")}
+							${row.uniqueUserCount}
 						</td>
 						<td class="numeric">
-							${row.uniqueSessionCount?string(",##0")}
+							${row.uniqueSessionCount}
 						</td>
 						<td class="numeric">
-							${row.activeSessionCount?string(",##0")}
+							${row.activeSessionCount}
 						</td>
 						<td class="numeric">
-							${row.exceptionCount?string(",##0")}
+							${row.exceptionCount}
 						</td>
 						<td class="numeric">
-							${row.transitionCount?string(",##0")}
+							${row.transitionCount}
 						</td>
 						<td class="numeric">
-							${row.transitionExceptionCount?string(",##0")}
+							${row.transitionExceptionCount}
 						</td>
 					</tr>
 				</#list>
@@ -353,7 +353,7 @@
 							${row.requestUrl}
 						</td>
 						<td class="numeric">
-							${row.requestPageTime?string(",##0")}
+							${row.requestPageTime}
 						</td>
 						<td class="date_time">
 							${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}
@@ -433,28 +433,28 @@
 							${row.url}
 						</td>
 						<td class="numeric">
-							${row.count?string(",##0")}
+							${row.count}
 						</td>
 						<td class="numeric">
-							${row.pageTimeSum?string(",##0")}
+							${row.pageTimeSum}
 						</td>
 						<td class="numeric">
-							${row.pageTimeAverage?string(",##0")}
+							${row.pageTimeAverage}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMin?string(",##0")}
+							${row.pageTimeMin}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMedian?string(",##0")}
+							${row.pageTimeMedian}
 						</td>
 						<td class="numeric">
-							${row.pageTime90Percent?string(",##0")}
+							${row.pageTime90Percent}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMax?string(",##0")}
+							${row.pageTimeMax}
 						</td>
 						<td class="numeric">
-							${row.pageTimeStandardDeviation?string(",##0")}
+							${row.pageTimeStandardDeviation}
 						</td>
 						<td class="numeric">
 							${row.countRate}%
@@ -543,28 +543,28 @@
 							${row.userId}<br/>
 						</td>
 						<td class="numeric">
-							${row.count?string(",##0")}
+							${row.count}
 						</td>
 						<td class="numeric">
-							${row.pageTimeSum?string(",##0")}
+							${row.pageTimeSum}
 						</td>
 						<td class="numeric">
-							${row.pageTimeAverage?string(",##0")}
+							${row.pageTimeAverage}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMin?string(",##0")}
+							${row.pageTimeMin}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMedian?string(",##0")}
+							${row.pageTimeMedian}
 						</td>
 						<td class="numeric">
-							${row.pageTime90Percent?string(",##0")}
+							${row.pageTime90Percent}
 						</td>
 						<td class="numeric">
-							${row.pageTimeMax?string(",##0")}
+							${row.pageTimeMax}
 						</td>
 						<td class="numeric">
-							${row.pageTimeStandardDeviation?string(",##0")}
+							${row.pageTimeStandardDeviation}
 						</td>
 						<td class="numeric">
 							${row.countRate}%
@@ -637,7 +637,7 @@
 							${row.firstLineOfStackTrace?html}<br/>
 						</td>
 						<td class="numeric">
-							${row.count?string(",##0")}
+							${row.count}
 						</td>
 					</tr>
 				</#list>
@@ -708,16 +708,16 @@
 				期間別統計の間隔 : ${reportParameter.span?c}分
 			</li>
 			<li>
-				セッションタイムアウト時間 : ${reportParameter.sessionTimeout?number}分
+				セッションタイムアウト時間 : ${reportParameter.sessionTimeout}分
 			</li>
 			<li>
-				リクエスト処理時間ランクの出力件数 : ${reportParameter.requestPageTimeRankSize?number}
+				リクエスト処理時間ランクの出力件数 : ${reportParameter.requestPageTimeRankSize}
 			</li>
 			<li>
-				リクエストURLランクの出力件数 : ${reportParameter.requestUrlRankSize?number}
+				リクエストURLランクの出力件数 : ${reportParameter.requestUrlRankSize}
 			</li>
 			<li>
-				セッションランクの出力件数 : ${reportParameter.sessionRankSize?number}
+				セッションランクの出力件数 : ${reportParameter.sessionRankSize}
 			</li>
 		</ul>
 
