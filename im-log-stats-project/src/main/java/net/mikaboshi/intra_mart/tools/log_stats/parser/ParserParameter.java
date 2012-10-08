@@ -121,6 +121,15 @@ public class ParserParameter {
 	}
 
 	/**
+	 *
+	 * @return
+	 * @since 1.0.8
+	 */
+	public boolean isExceptionGroupingByCause() {
+		return this.exceptionGroupingType == ExceptionLog.GroupingType.CAUSE;
+	}
+
+	/**
 	 * @param begin セットする begin
 	 */
 	public void setBegin(Date begin) {

@@ -32,17 +32,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
+import net.mikaboshi.intra_mart.tools.log_stats.report.GrossStatistics.RequestEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.PageTimeStat;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report;
-import net.mikaboshi.intra_mart.tools.log_stats.report.ReportParameter;
-import net.mikaboshi.intra_mart.tools.log_stats.report.TimeSpanStatistics;
-import net.mikaboshi.intra_mart.tools.log_stats.report.GrossStatistics.RequestEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report.ExceptionReportEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report.RequestUrlReportEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report.SessionReportEntry;
+import net.mikaboshi.intra_mart.tools.log_stats.report.ReportParameter;
+import net.mikaboshi.intra_mart.tools.log_stats.report.TimeSpanStatistics;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
@@ -394,7 +392,6 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 		List<Map<String, Object>> exceptionList = new ArrayList<Map<String, Object>>();
 		rootMap.put("exceptionList", exceptionList);
-		rootMap.put("exceptionGroupingByCause", this.parserParameter.getExceptionGroupingType() == ExceptionLog.GroupingType.CAUSE);
 
 		for (ExceptionReportEntry e : report.getExceptionReport()) {
 
