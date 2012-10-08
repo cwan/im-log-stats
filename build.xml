@@ -21,7 +21,7 @@
 		classpathref="execute.classpath"
 		loaderref="loader1" />
 
-	<property name="log.dir" value="C:\Users\cwan\Desktop\iAC\log" />
+	<property name="log.dir" value="C:\imart\log" />
 
 	<target name="generate_report">
 
