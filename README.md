@@ -219,8 +219,7 @@ templateCharset | カスタムテンプレートファイルの文字コード |
 :--|:--|:--
 リクエストURL（遷移先画面パス） | リクエスト先のURLまたは遷移先画面パス ([*](#request_url)) | リクエストログ
 リクエスト回数 | このURL（または遷移先画面パス）に対するリクエスト受信回数の合計 | リクエストログ
-リクエスト処理時間 [ms] | Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒）
-（詳細は、上記参照） (*) | リクエストログ
+リクエスト処理時間 [ms] | Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒）([*](#response_time)) | リクエストログ
 リクエスト回数% | 全リクエストの合計に対する、このURLの回数が占める比率 | リクエストログ
 処理時間% | 全リクエストの合計に対する、このURLの処理時間が占める比率 | リクエストログ
 
@@ -288,7 +287,6 @@ charset | java.lang.String | レポートの文字コード
 reportName | java.lang.String | レポート名
 signature | java.lang.String | 署名
 generatedTime | java.util.Date | レポート生成日時
-exceptionGroupingByCause | boolean | 根本原因の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
 
 ### 5.2. パーサパラメータ
 
@@ -300,6 +298,7 @@ parserParameter.transitionLogLayout | java.lang.String | 画面遷移ログの�
 parserParameter.begin | java.util.Date | 開始日時（未設定の場合はnull）
 parserParameter.end | java.util.Date | 終了日時（未設定の場合はnull）
 parserParameter.version.name | java.lang.String | バージョン
+parserParameter.exceptionGroupingByCause | boolean | 根本原因の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
 
 ### 5.3. レポートパラメータ
 
