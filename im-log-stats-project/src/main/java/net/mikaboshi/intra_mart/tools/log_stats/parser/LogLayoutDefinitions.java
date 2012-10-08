@@ -34,8 +34,8 @@ public final class LogLayoutDefinitions {
 	/** Ver.7.0, 7.1標準のリクエストログレイアウト */
 	private static final String REQUEST_V70_V71 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.url}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
 
-	/** Ver.7.2標準のリクエストログレイアウト */
-	private static final String REQUEST_V72 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.method}\t%X{request.url}\t%X{request.query_string}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
+	/** Ver.7.2, 8.0標準のリクエストログレイアウト */
+	private static final String REQUEST_V72_V80 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.method}\t%X{request.url}\t%X{request.query_string}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
 
 	/** Ver.6.0, 6.1標準の画面遷移ログレイアウト */
 	private static final String TRANSITION_V6x = "{DATE}{TAB}{TYPE}{TAB}{REMOTE_ADDRESS}{TAB}{REMOTE_HOST}{TAB}{USER_ID}{TAB}{SESSION_ID}{TAB}{NEXT_PAGE}{TAB}{RESPONSE_TIME}{TAB}{EXCEPTION_NAME}{TAB}{EXCEPTION_MSG}{TAB}{PREVIOUS_PAGE}";
@@ -43,8 +43,8 @@ public final class LogLayoutDefinitions {
 	/** Ver.7.0標準の画面遷移ログレイアウト */
 	private static final String TRANSITION_V70 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
 
-	/** Ver.7.1, 7.2標準の画面遷移ログレイアウト */
-	private static final String TRANSITION_V71_V72 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
+	/** Ver.7.1, 7.2, 8.0標準の画面遷移ログレイアウト */
+	private static final String TRANSITION_V71_V72_V80 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
 
 	private static final Pattern V6_LAYOUT_PATTERN = Pattern.compile("^\\{(.+?)\\}.*");
 
@@ -157,7 +157,8 @@ public final class LogLayoutDefinitions {
 				return REQUEST_V70_V71;
 
 			case V72:
-				return REQUEST_V72;
+			case V80:
+				return REQUEST_V72_V80;
 
 			default:
 				return null;
@@ -182,7 +183,8 @@ public final class LogLayoutDefinitions {
 
 			case V71:
 			case V72:
-				return TRANSITION_V71_V72;
+			case V80:
+				return TRANSITION_V71_V72_V80;
 
 			default:
 				return null;

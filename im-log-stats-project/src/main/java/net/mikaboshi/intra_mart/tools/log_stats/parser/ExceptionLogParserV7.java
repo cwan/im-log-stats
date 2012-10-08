@@ -30,7 +30,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Ver.7xの例外ログパーサ
+ * Ver.7x, 8.xの例外ログパーサ
  *
  * @version 1.0.8
  * @author <a href="https://github.com/cwan">cwan</a>

@@ -30,7 +30,9 @@ public enum Version {
 
 	V71("7.1"),
 
-	V72("7.2");
+	V72("7.2"),
+
+	V80("8.0");
 
 	private final String name;
 
@@ -54,7 +56,7 @@ public enum Version {
 	}
 
 	public boolean isVersion7() {
-		return this == V70 || this == V71 || this == V72;
+		return this == V70 || this == V71 || this == V72 || this == V80;
 	}
 
 	public String getName() {
