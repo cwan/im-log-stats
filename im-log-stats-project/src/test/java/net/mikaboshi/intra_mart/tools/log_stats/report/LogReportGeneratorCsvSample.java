@@ -68,6 +68,8 @@ public class LogReportGeneratorCsvSample {
 														parserParameter,
 														reportParameter);
 
+		reportFormatter.setSeparator(",");
+
 		generator.execute(reportFormatter);
 	}
 

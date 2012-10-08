@@ -72,6 +72,9 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 	/** カスタムテンプレートファイルの文字コード */
 	private String templateFileCharset = Charset.defaultCharset().toString();
 
+	/** 項目の区切り文字 */
+	private String separator = null;
+
 	/**
 	 * コンストラクタ
 	 * @param output レポートの出力先
@@ -133,6 +136,15 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 		this.templateFileCharset = templateFileCharset;
 	}
 
+	/**
+	 * 項目の区切り文字を設定する。
+	 * @param separator
+	 * @since 1.0.8
+	 */
+	public void setSeparator(String separator) {
+		this.separator = separator;
+	}
+
 
 	@Override
 	public void doFormat(Report report) throws IOException {
@@ -167,6 +179,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			rootMap.put("reportName", report.getParameter().getName());
 			rootMap.put("signature", report.getParameter().getSignature());
 			rootMap.put("generatedTime", new Date());
+			rootMap.put("separator", this.separator);
 
 			setParameters(rootMap);
 			setTimeSpanStatistics(report, rootMap);

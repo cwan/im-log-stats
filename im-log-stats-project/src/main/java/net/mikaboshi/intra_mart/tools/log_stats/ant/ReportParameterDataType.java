@@ -164,14 +164,20 @@ public class ReportParameterDataType extends DataType {
 								parserParameter,
 								reportParameter);
 
-		if ("html".equalsIgnoreCase(this.type) || "csv".equalsIgnoreCase(this.type)) {
+		if ("html".equalsIgnoreCase(this.type) || "csv".equalsIgnoreCase(this.type) || "tsv".equalsIgnoreCase(this.type)) {
 
 			String templateFileRecourcePath = "/net/mikaboshi/intra_mart/tools/log_stats/formatter/";
 
 			if ("html".equalsIgnoreCase(this.type)) {
 				templateFileRecourcePath += "HtmlFileReportTemplate.html";
 			} else {
-				templateFileRecourcePath += "CsvFileReportTemplate.txt";
+				templateFileRecourcePath += "SvFileReportTemplate.txt";
+
+				if ("csv".equalsIgnoreCase(this.type)) {
+					reportFormatter.setSeparator(",");
+				} else {
+					reportFormatter.setSeparator("\t");
+				}
 			}
 
 			reportFormatter.setTempleteResourceFilePath(templateFileRecourcePath);
