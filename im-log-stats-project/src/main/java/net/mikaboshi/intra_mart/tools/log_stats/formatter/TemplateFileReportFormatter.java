@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.report.PageTimeStat;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report;
@@ -393,6 +394,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 		List<Map<String, Object>> exceptionList = new ArrayList<Map<String, Object>>();
 		rootMap.put("exceptionList", exceptionList);
+		rootMap.put("exceptionGroupingByCause", this.parserParameter.getExceptionGroupingType() == ExceptionLog.GroupingType.CAUSE);
 
 		for (ExceptionReportEntry e : report.getExceptionReport()) {
 
@@ -401,7 +403,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 			row.put("level", e.level);
 			row.put("message", e.message);
-			row.put("firstLineOfStackTrace", e.firstLineOfStackTrace);
+			row.put("groupingLineOfStackTrace", e.groupingLineOfStackTrace);
 			row.put("count", e.count);
 		}
 	}

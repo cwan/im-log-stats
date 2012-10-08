@@ -22,6 +22,7 @@ import java.util.Date;
 
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.RequestLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.TransitionLogLayout;
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
 
@@ -54,6 +55,9 @@ public class ParserParameterDataType extends DataType {
 
 	/** 終了日時（これ以降のログは切り捨てる） */
 	private Date end = null;
+
+	/** 例外のグルーピング方法 */
+	private ExceptionLog.GroupingType exceptionGroupingType = null;
 
 	public void addConfigured(RequestLogLayout requestLogLayout) {
 		this.requestLogLayout = requestLogLayout;
@@ -103,6 +107,21 @@ public class ParserParameterDataType extends DataType {
 		}
 	}
 
+	public void setExceptionGroupingType(String exceptionGroupingType) {
+
+		if (exceptionGroupingType != null) {
+			if ("first-line".equalsIgnoreCase(exceptionGroupingType)) {
+				this.exceptionGroupingType = ExceptionLog.GroupingType.FIEST_LINE;
+
+			} else if ("cause".equalsIgnoreCase(exceptionGroupingType)) {
+				this.exceptionGroupingType = ExceptionLog.GroupingType.CAUSE;
+
+			} else {
+				throw new BuildException("exceptionGroupingType is invalid : " + exceptionGroupingType);
+			}
+		}
+	}
+
 	/**
 	 * 自身の内容をParserParameterインスタンスに変換する。
 	 * @param version
@@ -128,6 +147,10 @@ public class ParserParameterDataType extends DataType {
 
 		parameter.setBegin(this.begin);
 		parameter.setEnd(this.end);
+
+		if (this.exceptionGroupingType != null) {
+			parameter.setExceptionGroupingType(this.exceptionGroupingType);
+		}
 
 		return parameter;
 	}

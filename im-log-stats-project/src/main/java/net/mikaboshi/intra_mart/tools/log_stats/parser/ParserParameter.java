@@ -17,6 +17,8 @@ package net.mikaboshi.intra_mart.tools.log_stats.parser;
 import java.nio.charset.Charset;
 import java.util.Date;
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
+
 /**
  * ログファイルのパースに関するパラメータ。
  *
@@ -42,6 +44,9 @@ public class ParserParameter {
 
 	/** ログのバージョン */
 	private Version version = Version.V72;
+
+	/** 例外のグルーピング方法 */
+	private ExceptionLog.GroupingType exceptionGroupingType = ExceptionLog.GroupingType.CAUSE;
 
 	/**
 	 * @return charset
@@ -107,6 +112,15 @@ public class ParserParameter {
 	}
 
 	/**
+	 *
+	 * @return
+	 * @since 1.0.8
+	 */
+	public ExceptionLog.GroupingType getExceptionGroupingType() {
+		return exceptionGroupingType;
+	}
+
+	/**
 	 * @param begin セットする begin
 	 */
 	public void setBegin(Date begin) {
@@ -139,6 +153,16 @@ public class ParserParameter {
 	 */
 	public void setVersion(Version version) {
 		this.version = version;
+	}
+
+	/**
+	 *
+	 * @param exceptionGroupingType
+	 * @since 1.0.8
+	 */
+	public void setExceptionGroupingType(
+			ExceptionLog.GroupingType exceptionGroupingType) {
+		this.exceptionGroupingType = exceptionGroupingType;
 	}
 
 }

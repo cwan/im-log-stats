@@ -14,6 +14,8 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.entity;
 
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -26,9 +28,30 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class ExceptionLog extends Log {
 
 	/**
+	 * 例外のグルーピングを何で行うか
+	 *
+	 * @since 1.0.8
+	 */
+	public static enum GroupingType {
+
+		/** スタックトレースの1行目 */
+		FIEST_LINE,
+
+		/** スタックトレースの一番下のCaused by */
+		CAUSE;
+	}
+
+	private static final Pattern LINE_SPLIT_PATTERN = Pattern.compile("\\r?\\n");
+
+	/**
 	 * スタックトレース
 	 */
 	public String stackTrace = null;
+
+	/**
+	 * 例外のグルーピングを何で行うか
+	 */
+	public GroupingType groupingType = GroupingType.CAUSE;
 
 	/**
 	 * スタックトレースの1行目を取得する。
@@ -52,7 +75,52 @@ public class ExceptionLog extends Log {
 		return this.stackTrace;
 	}
 
-	// レベル・メッセージ・スタックトレース1行目で同一性をチェックする
+	/**
+	 * スタックトレースの根本のCause行を取得する。
+	 * @return
+	 * @since 1.0.8
+	 */
+	public String getCauseLineOfStackTrace() {
+
+		if (this.stackTrace == null) {
+			return null;
+		}
+
+		String cause = null;
+		final String prefix = "Caused by: ";
+
+		for (String line : LINE_SPLIT_PATTERN.split(this.stackTrace)) {
+
+			if (cause == null) {
+				cause = line;
+				continue;
+			}
+
+			if (line.startsWith(prefix)) {
+				cause = line.substring(prefix.length());
+				continue;
+			}
+		}
+
+		return cause;
+	}
+
+	/**
+	 * 例外ログをグルーピングする行を取得する。
+	 * @return
+	 * @since 1.0.8
+	 */
+	public String getGroupingLineOfStackTrace() {
+
+		switch (this.groupingType) {
+			case CAUSE:
+				return getCauseLineOfStackTrace();
+			case FIEST_LINE:
+				return getFirstLineOfStackTrace();
+			default:
+				return null;
+		}
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -63,20 +131,40 @@ public class ExceptionLog extends Log {
 
 		ExceptionLog log2 = (ExceptionLog) obj;
 
-		return new EqualsBuilder()
-			.append(this.level, log2.level)
-			.append(this.getFirstLineOfStackTrace(), log2.getFirstLineOfStackTrace())
-			.append(this.message, log2.message)
-			.isEquals();
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(this.level, log2.level);
+
+		switch (this.groupingType) {
+			case CAUSE:
+				equalsBuilder.append(this.getCauseLineOfStackTrace(), log2.getCauseLineOfStackTrace());
+				break;
+
+			case FIEST_LINE:
+				equalsBuilder.append(this.getFirstLineOfStackTrace(), log2.getFirstLineOfStackTrace());
+				equalsBuilder.append(this.message, log2.message);
+				break;
+		}
+
+		return equalsBuilder.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
 
-		return new HashCodeBuilder()
-				.append(this.level)
-				.append(this.getFirstLineOfStackTrace())
-				.append(this.message)
-				.toHashCode();
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+		hashCodeBuilder.append(this.level);
+
+		switch (this.groupingType) {
+			case CAUSE:
+				hashCodeBuilder.append(this.getCauseLineOfStackTrace());
+				break;
+
+			case FIEST_LINE:
+				hashCodeBuilder.append(this.getFirstLineOfStackTrace());
+				hashCodeBuilder.append(this.message);
+				break;
+		}
+
+		return hashCodeBuilder.toHashCode();
 	}
 }

@@ -247,7 +247,7 @@ public class Report {
 
 			e.level = log.level;
 			e.message = log.message;
-			e.firstLineOfStackTrace = log.getFirstLineOfStackTrace();
+			e.groupingLineOfStackTrace = log.getGroupingLineOfStackTrace();
 			e.count = entry.getValue()[0];
 
 			list.add(e);
@@ -439,7 +439,7 @@ public class Report {
 
 		public Level level = null;
 		public String message = null;
-		public String firstLineOfStackTrace = null;
+		public String groupingLineOfStackTrace = null;
 		public int count = 0;
 	}
 

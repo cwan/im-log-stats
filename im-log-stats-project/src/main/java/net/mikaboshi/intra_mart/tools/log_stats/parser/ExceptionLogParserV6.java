@@ -51,6 +51,8 @@ public class ExceptionLogParserV6 extends ExceptionLogParser {
 
 		ExceptionLog log = new ExceptionLog();
 
+		log.groupingType = this.parameter.getExceptionGroupingType();
+
 		if (lines.length > 0 && lines[0].startsWith(GENERATING_TIME_PREFIX)) {
 
 			try {

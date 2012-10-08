@@ -75,6 +75,8 @@ public class ExceptionLogParserV7 extends ExceptionLogParser {
 
 		ExceptionLog log = new ExceptionLog();
 
+		log.groupingType = this.parameter.getExceptionGroupingType();
+
 		try {
 			log.date = dateFormat.parse(getValue(lines[0]));
 

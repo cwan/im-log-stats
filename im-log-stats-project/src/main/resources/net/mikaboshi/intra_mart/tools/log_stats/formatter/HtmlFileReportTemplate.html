@@ -609,7 +609,7 @@
 
 		<ul class="notation">
 			<li>エラーログに出力された例外の集計です。</li>
-			<li>レベル・メッセージ・スタックトレース1行目の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
+			<li>レベル・<#if exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレース1行目</#if>の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
 		</ul>
 
 		<table>
@@ -617,16 +617,22 @@
 				<tr>
 					<th>#</th>
 					<#if reportParameter.version.version7>
-						<th title="ログレベルです。">
-							レベル
-						</th>
+					<th title="ログレベルです。">
+						レベル
+					</th>
 					</#if>
+					<#if exceptionGroupingByCause>
+					<th title="根本のCaused byの1行目です。">
+						Caused by:1行目
+					</th>
+					<#else>
 					<th title="例外メッセージです。">
 						メッセージ
 					</th>
 					<th title="スタックトレースの1行目です。">
 						スタックトレース1行目
 					</th>
+					</#if>
 					<th title="この例外が何回発生したかを表します。">
 						回数<span class="sort_mark">▼</span>
 					</th>
@@ -638,21 +644,23 @@
 					<#if row_index % 2 = 1><tr class="even_row"></#if>
 						<td class="seq">${row_index + 1}</td>
 						<#if reportParameter.version.version7>
-							<td class="text">
-								<#if row.level??>
-									${row.level?html}
-								</#if>
-								<br/>
-							</td>
+						<td class="text">
+							<#if row.level??>
+								${row.level?html}
+							</#if>
+							<br/>
+						</td>
 						</#if>
+						<#if !exceptionGroupingByCause>
 						<td class="text">
 							<#if row.message??>
 								${row.message?html}
 							</#if>
 							<br/>
 						</td>
+						</#if>
 						<td class="text">
-							${row.firstLineOfStackTrace?html}<br/>
+							${row.groupingLineOfStackTrace?html}<br/>
 						</td>
 						<td class="numeric">
 							${row.count}
@@ -736,6 +744,9 @@
 			</li>
 			<li>
 				セッションランクの出力件数 : ${reportParameter.sessionRankSize}
+			</li>
+			<li>
+				例外のグルーピング方法 : <#if exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
 			</li>
 		</ul>
 

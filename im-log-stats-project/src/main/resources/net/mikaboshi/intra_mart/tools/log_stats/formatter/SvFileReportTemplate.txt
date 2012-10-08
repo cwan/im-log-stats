@@ -37,10 +37,17 @@ ${(row_index + 1)?c}${separator}${csv(row.sessionId)}${separator}${csv(row.userI
 </#list>
 
 例外
+<#if exceptionGroupingByCause>
+#${separator}<#if reportParameter.version.version7>レベル${separator}</#if>根本のCaused byの1行目${separator}回数▼
+<#list exceptionList as row>
+${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.level)}${separator}</#if>${csv(row.groupingLineOfStackTrace)}${separator}${row.count?c}
+</#list>
+<#else>
 #${separator}<#if reportParameter.version.version7>レベル${separator}</#if>メッセージ${separator}スタックトレース1行目${separator}回数▼
 <#list exceptionList as row>
-${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.level)}${separator}</#if>${csv(row.message)}${separator}${csv(row.firstLineOfStackTrace)}${separator}${row.count?c}
+${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.level)}${separator}</#if>${csv(row.message)}${separator}${csv(row.groupingLineOfStackTrace)}${separator}${row.count?c}
 </#list>
+</#if>
 
 解析対象ログファイル
 種類${separator}ファイルパス/個数
@@ -65,3 +72,4 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.
 リクエスト処理時間ランクの出力件数${separator}${reportParameter.requestPageTimeRankSize?c}
 リクエストURLランクの出力件数${separator}${reportParameter.requestUrlRankSize?c}
 セッションランクの出力件数${separator}${reportParameter.sessionRankSize?c}
+例外のグルーピング方法${separator}<#if exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
