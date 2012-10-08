@@ -247,7 +247,7 @@ templateCharset | カスタムテンプレートファイルの文字コード |
 
 ### 4.6. 補足
 
-#### <a name="request_url">リクエストURL
+#### <a name="request_url"></a>リクエストURL
 
 リクエストURL（または遷移先画面パス）からは、以下のようにして対応する機能が分かります。
 
