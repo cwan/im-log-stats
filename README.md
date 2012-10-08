@@ -409,5 +409,11 @@ logFiles.exceptionLogFiles | java.util.Collection<java.io.File> | 例外ログ
 logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト情報を取得する（リクエストログ無し）ならば true
 
 
+## 6. ライセンス
 
+[Apache License, Version 2.0](/cwan/im-log-stats/blob/master/LICENSE.txt)
 
+## 7. 更新履歴
+
+### Ver.1.0.8 (2012-10-08)
+- 一般公開
