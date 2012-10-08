@@ -273,3 +273,141 @@ URL パターン | 説明
 
 ユーザの体感速度は、サーバの処理時間だけではなく、ネットワークの遅延時間、ブラウザ上のレンダリングや JavaScript の実行時間なども含めたものとなりますので、 リクエスト処理時間だけで性能の評価を下すことはできません。
 
+## 5. カスタムテンプレート
+
+`report/@templateFile` にテンプレートファイルを指定することによって、レポートの形式を自由に定義することが可能です。  
+テンプレートファイルは、[FreeMarker](http://freemarker.sourceforge.net/) の形式で作成してください。
+
+テンプレートに渡されるパラメータを以下に示します。
+
+### 5.1. 共通
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+charset | java.lang.String | レポートの文字コード
+reportName | java.lang.String | レポート名
+signature | java.lang.String | 署名
+generatedTime | java.util.Date | レポート生成日時
+exceptionGroupingByCause | boolean | 根本原因の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
+
+### 5.2. パーサパラメータ
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+parserParameter.charset | java.lang.String | ログファイルの文字コード
+parserParameter.requestLogLayout | java.lang.String | リクエストログのレイアウト
+parserParameter.transitionLogLayout | java.lang.String | 画面遷移ログのレイアウト
+parserParameter.begin | java.util.Date | 開始日時（未設定の場合はnull）
+parserParameter.end | java.util.Date | 終了日時（未設定の場合はnull）
+parserParameter.version.name | java.lang.String | バージョン
+
+### 5.3. レポートパラメータ
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+reportParameter.span | long | 期間別統計の間隔（分）
+reportParameter.sessionTimeout | int | セッションタイムアウト時間（分）
+reportParameter.requestPageTimeRankSize | int | リクエスト処理時間ランクの出力件数
+reportParameter.requestUrlRankSize | int | リクエストURLランクの出力件数
+reportParameter.sessionRankSize | int | セッションランクの出力件数
+reportParameter.version.name | java.lang.String | バージョン
+
+### 5.4. 期間別統計
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+timeSpanStat.span | long | 期間別統計の間隔（分）
+timeSpanStat.list | java.util.List | 期間別統計リスト
+- startDate | java.util.Date | 期間開始日時
+- endDate | java.util.Date | 期間終了日時
+- requestCount | int | リクエスト回数
+- pageTimeSum | long | リクエスト処理時間合計
+- pageTimeAverage | long | リクエスト処理時間平均値
+- pageTimeMin | long | リクエスト処理時間最小値
+- pageTimeMedian | long | リクエスト処理時間中央値
+- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeMax | long | リクエスト処理時間最大値
+- pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
+- uniqueUserCount | int | ユニークユーザ数
+- uniqueSessionCount | int | ユニークセッション数
+- activeSessionCount | int | 有効セッション数
+- exceptionCount | int | 例外発生数
+- transitionCount | int | 画面遷移数
+- transitionExceptionCount | int | 画面遷移例外発生数
+
+### 5.5. リクエスト処理時間総合ランク
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+requestPageTimeRank.size | int | リクエスト処理時間総合ランクの出力件数
+requestPageTimeRank.requestCount | int | リクエスト数合計
+requestPageTimeRank.list | java.util.List | リクエスト処理時間総合ランクリスト
+- requestUrl | java.lang.String | リクエストURL（または遷移先画面パス）
+- requestPageTime | long | リクエスト処理時間
+- date | java.util.Date | ログ出力日時
+- sessionId | java.lang.String | セッションID
+- userId | java.lang.String | ユーザID
+
+### 5.6. リクエストURL（画面遷移パス）別・処理時間合計ランク
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+requestUrlRank.size | int | リクエストURL別・処理時間合計ランクの出力件数
+requestUrlRank.total | int | リクエストURL（または遷移先画面パス）数合計
+requestUrlRank.list | java.util.List | リクエストURL別・処理時間合計ランクリスト
+- url | java.lang.String | リクエストURL（または遷移先画面パス）
+- count | int | リクエスト回数
+- pageTimeSum | long | リクエスト処理時間合計
+- pageTimeAverage | long | リクエスト処理時間平均値
+- pageTimeMin | long | リクエスト処理時間最小値
+- pageTimeMedian | long | リクエスト処理時間中央値
+- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeMax | long | リクエスト処理時間最大値
+- pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
+- countRate | double | リクエスト回数%
+- pageTimeRage | double | 処理時間%
+
+### 5.7. セッション別・処理時間合計ランク 
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+sessionRank.size | int | セッション別・処理時間合計ランクの出力件数
+sessionRank.total | int | セッション数数合計
+sessionRank | java.util.List | セッション別・処理時間合計ランクリスト
+- sessionId | java.lang.String | セッションID
+- userId | java.lang.String | ユーザID
+- count | int | リクエスト回数
+- pageTimeSum | long | リクエスト処理時間合計
+- pageTimeAverage | long | リクエスト処理時間平均値
+- pageTimeMin | long | リクエスト処理時間最小値
+- pageTimeMedian | long | リクエスト処理時間中央値
+- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeMax | long | リクエスト処理時間最大値
+- pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
+- countRate | double | リクエスト回数%
+- pageTimeRage | double | 処理時間%
+- firstAccessTime | java.util.Date | 初回アクセス日時
+- lastAccessTime | java.util.Date | 最終アクセス日時
+
+### 5.8. 例外
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+exceptionList | java.util.List | 例外リスト
+- level | enum | ログレベル
+- message | java.lang.String | ログメッセージ
+- firstLineOfStackTrace | java.lang.String | スタックトレースの1行目
+- count | int | 回数
+
+### 5.9. 解析対象ログファイル
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+logFiles.requestLogFiles | java.util.Collection<java.io.File> | リクエストログ
+logFiles.transitionLogFiles | java.util.Collection<java.io.File> | 画面遷移ログ
+logFiles.exceptionLogFiles | java.util.Collection<java.io.File> | 例外ログ
+logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト情報を取得する（リクエストログ無し）ならば true
+
+
+
+
