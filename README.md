@@ -132,6 +132,48 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
 省略した場合は、imLogStats/@version に指定したバージョンの標準レイアウトが適用されます。
 
 
+### 3.4. imLogStats のネスト要素 report
+
+生成されるログ統計レポートの設定です。
+
+名称 | 説明 | 必須 | デフォルト
+:--|:--|:--|:--
+type | レポートファイルの形式 ( html, csv, tsv, template ) | No | html
+span | 期間別統計の集計間隔（分）| No | 5
+sessionTimeout | IM環境のセッションタイムアウト時間（分）<br/>（有効セッション数の計算に利用する） | No | 10
+requestPageTimeRankSize | リクエスト処理時間総合ランクの行数 | No | 20
+requestUrlRankSize | リクエストURL別・処理時間合計ランクの行数 | No | 20
+sessionRankSize | セッション別・処理時間合計ランクの行数 | No | 20
+name | レポートの名称（タイトル等に使用する） | No | intra-mart ログ統計レポート
+signature | レポートの署名 | No | （なし）
+output | レポートの出力先ファイルパス | No | カレントディレクトリ/report_yyyyMMdd-HHmmss (年月日-時分秒)
+charset | レポートファイルの文字コード | No | Ant 実行環境の JVM デフォルト文字コード
+templateFile | カスタムテンプレートのファイルパス | No | デフォルトのHTMLテンプレート<br/>（@type="template" 以外の場合は無視される）
+templateCharset | カスタムテンプレートファイルの文字コード | No | Ant実行環境のJVMデフォルト文字コード<br/>（@type="template" 以外の場合および @template を指定していない場合は無視される）
+
+### 3.5. imLogStats のネスト要素 requestLogFiles
+
+解析対象のリクエストログファイルを指定します（複数記述可能）。  
+形式は、Ant 標準の [`<fileset>`](http://ant.apache.org/manual/Types/fileset.html) と同じです。  
+省略した場合、リクエストログは解析しません。
+
+### 3.6. imLogStats のネスト要素 transitionLogFile
+
+解析対象の画面遷移ログファイルを指定します（複数記述可能）。  
+形式は、Ant 標準の [`<fileset>`](http://ant.apache.org/manual/Types/fileset.html) と同じです。  
+省略した場合、画面遷移ログは解析しません。
+
+### 3.7. imLogStats のネスト要素 exceptionLogFiles
+
+解析対象の例外ログファイルを指定します（複数記述可能）。  
+形式は、Ant 標準の [`<fileset>`](http://ant.apache.org/manual/Types/fileset.html) と同じです。  
+省略した場合、例外ログは解析しません。
+
+## 4. レポートの見方
+
+生成される統計レポートの見方について説明します。  
+時間・リクエストURL・セッション（ユーザ）の3つの軸で統計をとり、大まかなシステムの負荷の傾向が分かるようになっています。
+
 
 
 
