@@ -30,7 +30,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 
 /**
- * ログ統計レポート設定のネスと要素
+ * ログ統計レポート設定のネスト要素
  *
  * @version 1.0.8
  * @author <a href="https://github.com/cwan">cwan</a>
@@ -139,7 +139,12 @@ public class ReportParameterDataType extends DataType {
 	}
 
 	public void setOutput(String output) {
-		this.output = output;
+
+		try {
+			this.output = AntParameterUtil.getReportOutput(output);
+		} catch (IllegalArgumentException e) {
+			throw new BuildException("Parameter 'output' is invalid : " + output);
+		}
 	}
 
 	public void setCharset(String charset) {

@@ -73,6 +73,8 @@ public class ParserParameterDataType extends DataType {
 
 	public void setBegin(String begin) throws BuildException {
 
+		begin = AntParameterUtil.parseToday(begin);
+
 		if (begin != null) {
 
 			begin = StringUtils.replaceChars(begin, '/', '-');
@@ -90,6 +92,8 @@ public class ParserParameterDataType extends DataType {
 	}
 
 	public void setEnd(String end) throws BuildException {
+
+		end = AntParameterUtil.parseToday(end);
 
 		if (end != null) {
 
