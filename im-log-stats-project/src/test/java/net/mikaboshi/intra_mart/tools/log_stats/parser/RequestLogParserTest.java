@@ -54,7 +54,7 @@ public class RequestLogParserTest {
 						"0:0:0:0:0:0:0:1",
 						"POST",
 						"http://localhost:8088/imart/system(2f)setting(2f)system(2f)login(5f)groups(2f)main.jssps",
-						"im_mark=r-7xij29*vhp35p",
+						"hoge=fuga&im_mark=r-7xij29*vhp35p",
 						"http://localhost:8088/imart/SystemMenu5.menu",
 						"281",
 						"2011-11-13 15:46:57,977",

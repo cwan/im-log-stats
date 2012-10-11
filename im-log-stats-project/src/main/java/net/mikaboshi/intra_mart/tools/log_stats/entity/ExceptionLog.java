@@ -14,7 +14,7 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.entity;
 
-import java.util.regex.Pattern;
+import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -40,8 +40,6 @@ public class ExceptionLog extends Log {
 		/** スタックトレースの一番下のCaused by */
 		CAUSE;
 	}
-
-	private static final Pattern LINE_SPLIT_PATTERN = Pattern.compile("\\r?\\n");
 
 	/**
 	 * スタックトレース
@@ -89,7 +87,7 @@ public class ExceptionLog extends Log {
 		String cause = null;
 		final String prefix = "Caused by: ";
 
-		for (String line : LINE_SPLIT_PATTERN.split(this.stackTrace)) {
+		for (String line : LogStringUtil.lines(this.stackTrace)) {
 
 			if (cause == null) {
 				cause = line;

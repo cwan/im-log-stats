@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
+import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -66,7 +67,7 @@ public class ExceptionLogParserV7 extends ExceptionLogParser {
 			return null;
 		}
 
-		String[] lines = string.split("\\r?\\n");
+		String[] lines = LogStringUtil.lines(string);
 
 		if (lines.length < 9) {
 			warn("invalid exception log");

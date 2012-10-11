@@ -15,6 +15,7 @@
 package net.mikaboshi.intra_mart.tools.log_stats.entity;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * リクエストログ
@@ -23,6 +24,8 @@ import java.util.Date;
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class RequestLog extends Log {
+
+	private static final Pattern REQUEST_QUERY_SPLIT_PATTERN = Pattern.compile("&");
 
 	/**
 	 * リモートホスト
@@ -74,7 +77,7 @@ public class RequestLog extends Log {
 			return null;
 		}
 
-		for (String param : this.requestQueryString.split("&")) {
+		for (String param : REQUEST_QUERY_SPLIT_PATTERN.split(this.requestQueryString)) {
 			if (param.startsWith(name + "=")) {
 				return param.substring(name.length() + 1);
 			}

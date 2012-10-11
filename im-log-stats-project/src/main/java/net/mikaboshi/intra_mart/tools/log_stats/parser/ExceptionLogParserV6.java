@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
+import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 
 
 /**
@@ -47,7 +48,7 @@ public class ExceptionLogParserV6 extends ExceptionLogParser {
 			return null;
 		}
 
-		String[] lines = string.split("\\r?\\n");
+		String[] lines = LogStringUtil.lines(string);
 
 		ExceptionLog log = new ExceptionLog();
 
