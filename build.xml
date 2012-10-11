@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="generate_report">
 
-	<property environment="env" />
-
 	<!-- 実行時クラスパス -->
 	<path id="execute.classpath">
 		<fileset dir="${basedir}/lib">
