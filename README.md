@@ -80,7 +80,7 @@ intra-mart のログファイル（リクエストログ、画面遷移ログ、
 version | intra-mart のバージョン ( 6.0, 6.1, 7.0, 7.1, 7.2, 8.0 ) | No | 7.2
 delay | ログファイルのパース中に挿入される遅延時間（ミリ秒）。<br/>（リクエストログ・画面遷移ログは100件毎、例外ログは10ファイル毎）<br/>運用サーバ上で実行する場合、25～100程度を設定すると、時間はかかるがサーバに負荷をかけにくくなる。 | No | 0
 
-*注意*
+**注意**
 - version の設定が間違っていると、レポートの生成に失敗する場合があります。（バージョンによってログレイアウトパターンが異なるため）
 
 ### 3.3. imLogStats のネスト要素 parser
@@ -96,12 +96,24 @@ begin | 開始日時（これより前のログは切り捨てる） | No | 下�
 end | 終了日時（これより後のログは切り捨てる） | No | 上限なし
 exceptionGroupingType | 例外のグルーピング方法<br/>cause : 根本原因となっているの Caused by の1行目でグルーピング<br/>first-line : 例外メッセージ + スタックトレース1行目でグルーピング | No | cause
 
-begin および end では、以下のいずれかの形式で日時を指定してください。 時刻を省略した場合、begin では 00:00、end では 24:00 で補完されます。
+begin および end では、以下のいずれかの形式で日時を指定してください。  
+時刻を省略した場合、begin では 00:00、end では 24:00 で補完されます。
 
 - yyyy/MM/dd HH:mm
 - yyyy-MM-dd HH:mm
 - yyyy/MM/dd
 - yyyy-MM-dd
+- today
+- today - n (*n = 1, 2, 3 ...*)
+
+`today` を設定した場合、本日の日付が設定されます。  
+`today - n` を指定した場合、本日の n 日前の日付が設定されます。  
+例えば、前週のログを集計したい場合は、以下のように設定してください。
+
+    <parser
+        charset="UTF-8"
+        begin="today - 7"
+        end="today - 1" />
 
 #### parser のネスト要素 requestLogLayout
 
@@ -136,6 +148,8 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
 
 生成されるログ統計レポートの設定です。
 
+#### report の属性
+
 名称 | 説明 | 必須 | デフォルト
 :--|:--|:--|:--
 type | レポートファイルの形式 ( html, csv, tsv, template ) | No | html
@@ -146,10 +160,18 @@ requestUrlRankSize | リクエストURL別・処理時間合計ランクの行�
 sessionRankSize | セッション別・処理時間合計ランクの行数 | No | 20
 name | レポートの名称（タイトル等に使用する） | No | intra-mart ログ統計レポート
 signature | レポートの署名 | No | （なし）
-output | レポートの出力先ファイルパス | No | カレントディレクトリ/report_yyyyMMdd-HHmmss (年月日-時分秒)
+output | レポートの出力先ファイルパス(※1) | No | カレントディレクトリ/report_yyyyMMdd-HHmmss (年月日-時分秒)
 charset | レポートファイルの文字コード | No | Ant 実行環境の JVM デフォルト文字コード
 templateFile | カスタムテンプレートのファイルパス | No | デフォルトのHTMLテンプレート<br/>（@type="template" 以外の場合は無視される）
 templateCharset | カスタムテンプレートファイルの文字コード | No | Ant実行環境のJVMデフォルト文字コード<br/>（@type="template" 以外の場合および @template を指定していない場合は無視される）
+
+(※1)   
+ `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
+ フォーマットの形式は、[java.text.SimpleDateFormat](http://docs.oracle.com/javase/jp/6/api/java/text/SimpleDateFormat.html) と同じです。
+
+    例:
+      <report output="report_{yyyyMMdd}.html" />
+      ⇛ 現在が2012年10月12日ならば、report_20121012.html が生成されます。
 
 ### 3.5. imLogStats のネスト要素 requestLogFiles
 
@@ -413,6 +435,9 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 [Apache License, Version 2.0](/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
+
+### Ver.1.0.9 (2012-10-12)
+- [#1 パラメータの parser/@begin, parser/@EnD, report/@output を動的に設定できるようにした。](/cwan/im-log-stats/issues/1)
 
 ### Ver.1.0.8 (2012-10-08)
 - 一般公開
