@@ -1,4 +1,4 @@
-<#function csv s>
+<#function esc s>
 	<#if s??>
 		<#return "\"" + s?replace("\"", "\"\"") + "\"">
 	<#else>
@@ -10,7 +10,7 @@
 <#else>
 	<#assign requestUrl="リクエストURL">
 </#if>
-${csv(reportName)}${separator}${generatedTime?string("yyyy-MM-dd HH:mm:ss")}${separator}${csv(signature)}
+${esc(reportName)}${separator}${generatedTime?string("yyyy-MM-dd HH:mm:ss")}${separator}${esc(signature)}
 
 期間別統計
 #${separator}集計期間▲${separator}リクエスト数合計${separator}リクエスト処理時間の合計(ms)${separator}リクエスト処理時間の平均値(ms)${separator}リクエスト処理時間の最小値(ms)${separator}リクエスト処理時間の中央値(ms)${separator}リクエスト処理時間の90%Line(ms)${separator}リクエスト処理時間の最大値(ms)${separator}リクエスト処理時間の標準偏差(ms)${separator}ユニークユーザ数${separator}ユニークセッション数${separator}有効セッション数${separator}例外数合計${separator}画面遷移数合計${separator}画面遷移例外数合計
@@ -21,52 +21,52 @@ ${(row_index + 1)?c}${separator}${row.startDate?string("yyyy-MM-dd HH:mm")} - ${
 リクエスト処理時間総合ランク${separator}${requestPageTimeRank.size?c}/${requestPageTimeRank.requestCount?c}
 #${separator}リクエストURL${separator}処理時間(ms)▼${separator}ログ出力日時${separator}セッションID${separator}ユーザID
 <#list requestPageTimeRank.list as row>
-${(row_index + 1)?c}${separator}${csv(row.requestUrl)}${separator}${row.requestPageTime?c}${separator}${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${csv(row.sessionId)}${separator}${csv(row.userId)}
+${(row_index + 1)?c}${separator}${esc(row.requestUrl)}${separator}${row.requestPageTime?c}${separator}${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}
 </#list>
 
 ${requestUrl}別・処理時間合計ランク${separator}${requestUrlRank.size?c}/${requestUrlRank.total?c}
 #${separator}リクエストURL${separator}リクエスト回数${separator}処理時間合計(ms)▼${separator}処理時間平均(ms)${separator}処理時間最小値(ms)${separator}処理時間中央値(ms)${separator}処理時間90%Line(ms)${separator}処理時間最大値(ms)${separator}処理時間標準偏差(ms)${separator}リクエスト回数%${separator}処理時間%
 <#list requestUrlRank.list as row>
-${(row_index + 1)?c}${separator}${csv(row.url)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%
+${(row_index + 1)?c}${separator}${esc(row.url)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%
 </#list>
 
 セッション別・処理時間合計ランク${separator}${sessionRank.size?c}/${sessionRank.total?c}
 #${separator}セッションID${separator}ユーザID${separator}リクエスト回数${separator}処理時間合計(ms)▼${separator}処理時間平均(ms)${separator}処理時間最小値(ms)${separator}処理時間中央値(ms)${separator}処理時間90%Line(ms)${separator}処理時間最大値(ms)${separator}処理時間標準偏差(ms)${separator}リクエスト回数%${separator}処理時間%${separator}初回アクセス日時${separator}最終アクセス日時
 <#list sessionRank.list as row>
-${(row_index + 1)?c}${separator}${csv(row.sessionId)}${separator}${csv(row.userId)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%${separator}${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}
+${(row_index + 1)?c}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%${separator}${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}
 </#list>
 
 例外
 <#if parserParameter.exceptionGroupingByCause>
 #${separator}<#if reportParameter.version.version7>レベル${separator}</#if>根本のCaused byの1行目${separator}回数▼
 <#list exceptionList as row>
-${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.level)}${separator}</#if>${csv(row.groupingLineOfStackTrace)}${separator}${row.count?c}
+${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.level)}${separator}</#if>${esc(row.groupingLineOfStackTrace)}${separator}${row.count?c}
 </#list>
 <#else>
 #${separator}<#if reportParameter.version.version7>レベル${separator}</#if>メッセージ${separator}スタックトレース1行目${separator}回数▼
 <#list exceptionList as row>
-${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${csv(row.level)}${separator}</#if>${csv(row.message)}${separator}${csv(row.groupingLineOfStackTrace)}${separator}${row.count?c}
+${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.level)}${separator}</#if>${esc(row.message)}${separator}${esc(row.groupingLineOfStackTrace)}${separator}${row.count?c}
 </#list>
 </#if>
 
 解析対象ログファイル
 種類${separator}ファイルパス/個数
 <#list logFiles.requestLogFiles as file>
-リクエストログ${separator}${csv(file.absolutePath)}
+リクエストログ${separator}${esc(file.absolutePath)}
 </#list>
 <#list logFiles.transitionLogFiles as file>
-画面遷移ログ${separator}${csv(file.absolutePath)}
+画面遷移ログ${separator}${esc(file.absolutePath)}
 </#list>
 エラーログ${separator}${logFiles.exceptionLogFiles?size?c}ファイル
 
 レポートパラメータ
 項目名${separator}値
-バージョン${separator}${csv(parserParameter.version.getName())}
+バージョン${separator}${esc(parserParameter.version.getName())}
 開始時刻${separator}<#if parserParameter.begin??>${parserParameter.begin?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
 終了時刻${separator}<#if parserParameter.end??>${parserParameter.end?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
-ログファイルの文字コード${separator}${csv(parserParameter.charset)}
-リクエストログレイアウト${separator}${csv(parserParameter.requestLogLayout)}
-画面遷移ログレイアウト${separator}${csv(parserParameter.transitionLogLayout)}
+ログファイルの文字コード${separator}${esc(parserParameter.charset)}
+リクエストログレイアウト${separator}${esc(parserParameter.requestLogLayout)}
+画面遷移ログレイアウト${separator}${esc(parserParameter.transitionLogLayout)}
 期間別統計の間隔${separator}${reportParameter.span?c}分
 セッションタイムアウト時間${separator}${reportParameter.sessionTimeout?c}分
 リクエスト処理時間ランクの出力件数${separator}${reportParameter.requestPageTimeRankSize?c}
