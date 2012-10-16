@@ -32,7 +32,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログ統計レポート設定のネスト要素
  *
- * @version 1.0.8
+ * @version 1.0.9
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameterDataType extends DataType {

@@ -22,7 +22,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * 例外ログ
  *
- * @version 1.0.8
+ * @version 1.0.9
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ExceptionLog extends Log {

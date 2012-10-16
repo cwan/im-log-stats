@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * リクエストログ
  *
- * @version 1.0.8
+ * @version 1.0.9
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class RequestLog extends Log {

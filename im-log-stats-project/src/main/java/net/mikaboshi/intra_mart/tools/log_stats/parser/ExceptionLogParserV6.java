@@ -26,7 +26,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 /**
  * Ver.6.xの例外ログパーサ
  *
- * @version 1.0.8
+ * @version 1.0.9
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ExceptionLogParserV6 extends ExceptionLogParser {
