@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ReportType;
 import net.mikaboshi.intra_mart.tools.log_stats.formatter.ReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.formatter.TemplateFileReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
@@ -32,13 +33,13 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログ統計レポート設定のネスト要素
  *
- * @version 1.0.9
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameterDataType extends DataType {
 
-	/** レポートタイプ（html|template|csv|tsv） */
-	private String type = "html";
+	/** レポートタイプ */
+	private ReportType type = ReportType.HTML;
 
 	/** 期間別統計の単位（分）  */
 	private long span = 0L;
@@ -77,8 +78,12 @@ public class ReportParameterDataType extends DataType {
 	/** レポートの文字コード */
 	private String charset = Charset.defaultCharset().toString();
 
-	public void setType(String type) {
-		this.type = type;
+	public void setType(String s) {
+		this.type = ReportType.toEnum(s);
+
+		if (this.type == null) {
+			throw new BuildException("Unsupported report type : " + s);
+		}
 	}
 
 	/**
@@ -169,16 +174,16 @@ public class ReportParameterDataType extends DataType {
 								parserParameter,
 								reportParameter);
 
-		if ("html".equalsIgnoreCase(this.type) || "csv".equalsIgnoreCase(this.type) || "tsv".equalsIgnoreCase(this.type)) {
+		if (this.type == ReportType.HTML || this.type == ReportType.CSV || this.type == ReportType.TSV) {
 
 			String templateFileRecourcePath = "/net/mikaboshi/intra_mart/tools/log_stats/formatter/";
 
-			if ("html".equalsIgnoreCase(this.type)) {
+			if (this.type == ReportType.HTML) {
 				templateFileRecourcePath += "HtmlFileReportTemplate.html";
 			} else {
 				templateFileRecourcePath += "SvFileReportTemplate.txt";
 
-				if ("csv".equalsIgnoreCase(this.type)) {
+				if (this.type == ReportType.CSV) {
 					reportFormatter.setSeparator(",");
 				} else {
 					reportFormatter.setSeparator("\t");
@@ -188,7 +193,7 @@ public class ReportParameterDataType extends DataType {
 			reportFormatter.setTempleteResourceFilePath(templateFileRecourcePath);
 			reportFormatter.setTemplateFileCharset("Windows-31J");
 
-		} else if ("template".equalsIgnoreCase(this.type)) {
+		} else if (this.type == ReportType.TEMPLATE) {
 
 			if (this.templateFile == null) {
 				throw new BuildException("Paranmeter 'templeteFile' is required at 'report' tag.");
@@ -204,7 +209,7 @@ public class ReportParameterDataType extends DataType {
 			}
 
 		} else {
-			throw new BuildException("Unsupported report type : " + this.type);
+			throw new AssertionError();
 		}
 
 		return reportFormatter;
