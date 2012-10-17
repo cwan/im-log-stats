@@ -279,52 +279,22 @@
 						<td class="seq">${row_index + 1}</td>
 						<td class="date_time">
 							${row.startDate?string("yyyy-MM-dd HH:mm")}
-							<span class="end_date">
-								- ${row.endDate?string("HH:mm")}
-							</span>
+							<span class="end_date">- ${row.endDate?string("HH:mm")}</span>
 						</td>
-						<td class="numeric">
-							${row.requestCount}
-						</td>
-						<td class="numeric">
-							${row.pageTimeSum}
-						</td>
-						<td class="numeric">
-							${row.pageTimeAverage}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMin}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMedian}
-						</td>
-						<td class="numeric">
-							${row.pageTime90Percent}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMax}
-						</td>
-						<td class="numeric">
-							${row.pageTimeStandardDeviation}
-						</td>
-						<td class="numeric">
-							${row.uniqueUserCount}
-						</td>
-						<td class="numeric">
-							${row.uniqueSessionCount}
-						</td>
-						<td class="numeric">
-							${row.activeSessionCount}
-						</td>
-						<td class="numeric">
-							${row.exceptionCount}
-						</td>
-						<td class="numeric">
-							${row.transitionCount}
-						</td>
-						<td class="numeric">
-							${row.transitionExceptionCount}
-						</td>
+						<td class="numeric">${row.requestCount}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.uniqueUserCount}</td>
+						<td class="numeric">${row.uniqueSessionCount}</td>
+						<td class="numeric">${row.activeSessionCount}</td>
+						<td class="numeric">${row.exceptionCount}</td>
+						<td class="numeric">${row.transitionCount}</td>
+						<td class="numeric">${row.transitionExceptionCount}</td>
 					</tr>
 				</#list>
 			</tbody>
@@ -367,21 +337,11 @@
 					<#if row_index % 2 = 0><tr class="odd_row"></#if>
 					<#if row_index % 2 = 1><tr class="even_row"></#if>
 						<td class="seq">${row_index + 1}</td>
-						<td class="url">
-							${row.requestUrl}
-						</td>
-						<td class="numeric">
-							${row.requestPageTime}
-						</td>
-						<td class="date_time">
-							${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}
-						</td>
-						<td class="text">
-							${row.sessionId}
-						</td>
-						<td class="text">
-							${row.userId}<br/>
-						</td>
+						<td class="url">${row.requestUrl}</td>
+						<td class="numeric">${row.requestPageTime}</td>
+						<td class="date_time">${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+						<td class="text">${row.sessionId}</td>
+						<td class="text">${row.userId}<br/></td>
 					</tr>
 				</#list>
 			</tbody>
@@ -447,39 +407,17 @@
 					<#if row_index % 2 = 0><tr class="odd_row"></#if>
 					<#if row_index % 2 = 1><tr class="even_row"></#if>
 						<td class="seq">${row_index + 1}</td>
-						<td class="url">
-							${row.url}
-						</td>
-						<td class="numeric">
-							${row.count}
-						</td>
-						<td class="numeric">
-							${row.pageTimeSum}
-						</td>
-						<td class="numeric">
-							${row.pageTimeAverage}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMin}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMedian}
-						</td>
-						<td class="numeric">
-							${row.pageTime90Percent}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMax}
-						</td>
-						<td class="numeric">
-							${row.pageTimeStandardDeviation}
-						</td>
-						<td class="numeric">
-							${row.countRate}%
-						</td>
-						<td class="numeric">
-							${row.pageTimeRate}%
-						</td>
+						<td class="url">${row.url}</td>
+						<td class="numeric">${row.count}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.countRate}%</td>
+						<td class="numeric">${row.pageTimeRate}%</td>
 					</tr>
 				</#list>
 			</tbody>
@@ -554,48 +492,20 @@
 					<#if row_index % 2 = 0><tr class="odd_row"></#if>
 					<#if row_index % 2 = 1><tr class="even_row"></#if>
 						<td class="seq">${row_index + 1}</td>
-						<td class="text">
-							${row.sessionId}
-						</td>
-						<td class="text">
-							${row.userId}<br/>
-						</td>
-						<td class="numeric">
-							${row.count}
-						</td>
-						<td class="numeric">
-							${row.pageTimeSum}
-						</td>
-						<td class="numeric">
-							${row.pageTimeAverage}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMin}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMedian}
-						</td>
-						<td class="numeric">
-							${row.pageTime90Percent}
-						</td>
-						<td class="numeric">
-							${row.pageTimeMax}
-						</td>
-						<td class="numeric">
-							${row.pageTimeStandardDeviation}
-						</td>
-						<td class="numeric">
-							${row.countRate}%
-						</td>
-						<td class="numeric">
-							${row.pageTimeRate}%
-						</td>
-						<td class="date_time">
-							${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}
-						</td>
-						<td class="date_time">
-							${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}
-						</td>
+						<td class="text">${row.sessionId}</td>
+						<td class="text">${row.userId}<br/></td>
+						<td class="numeric">${row.count}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.countRate}%</td>
+						<td class="numeric">${row.pageTimeRate}%</td>
+						<td class="date_time">${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+						<td class="date_time">${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
 					</tr>
 				</#list>
 			</tbody>
@@ -644,27 +554,13 @@
 					<#if row_index % 2 = 1><tr class="even_row"></#if>
 						<td class="seq">${row_index + 1}</td>
 						<#if reportParameter.version.version7>
-						<td class="text">
-							<#if row.level??>
-								${row.level?html}
-							</#if>
-							<br/>
-						</td>
+						<td class="text"><#if row.level??>${row.level?html}</#if><br/></td>
 						</#if>
 						<#if !parserParameter.exceptionGroupingByCause>
-						<td class="text">
-							<#if row.message??>
-								${row.message?html}
-							</#if>
-							<br/>
-						</td>
+						<td class="text"><#if row.message??>${row.message?html}</#if><br/></td>
 						</#if>
-						<td class="text">
-							${row.groupingLineOfStackTrace?html}<br/>
-						</td>
-						<td class="numeric">
-							${row.count}
-						</td>
+						<td class="text">${row.groupingLineOfStackTrace?html}<br/></td>
+						<td class="numeric">${row.count}</td>
 					</tr>
 				</#list>
 			</tbody>
