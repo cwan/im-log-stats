@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<#if logFiles.transitionLogOnly>
+	<#assign requestUrl="遷移先画面パス">
+<#else>
+	<#assign requestUrl="リクエストURL">
+</#if>
+<html>
+	<head>
+		<meta charset="${charset}">
+		<title>${reportName?html}</title>
+
+		<link rel="stylesheet" href="visualize/css/visualize.css" type="text/css" />
+		<link rel="stylesheet" href="visualize/css/visualize-light.css" type="text/css" />
+
+		<style type="text/css" media="all">
+			.clearfix {
+				zoom: 1;
+			}
+
+			.clearfix:after {
+				content: ".";
+				display: block;
+ 				clear: both;
+				height: 0;
+				visibility: hidden;
+			}
+
+			body {
+				padding: 0;
+				margin: 20px 24px;
+				font-family: 'Meiryo UI', 'HGSｺﾞｼｯｸM';
+			}
+
+			#page_header {
+				border-bottom: 1px solid #030;
+			}
+
+			h1 {
+				font-size: 180%;
+				font-weight: bold;
+				color: #F42;
+				float: left;
+				padding: 0;
+				margin: 5px 0;
+			}
+
+			#signature {
+				font-size: 105%;
+				color: #333;
+				float: right;
+				text-align: right;
+				padding: 0;
+				margin: 5px 0;
+			}
+
+			h2 {
+				font-size: 140%;
+				font-weight: bold;
+				color: #030;
+				margin: 20px 0 5px 0;
+				padding: 0;
+				float: left;
+			}
+
+			h3 {
+				font-size: 130%;
+				font-weight: bold;
+				color: #030;
+				margin: 5px 0 5px 12px;
+				padding: 0;
+			}
+
+			table.detail {
+				margin: 0;
+				padding: 0;
+				width: auto;
+			}
+
+			table.line_graph_source {
+				display: none;
+			}}
+
+			table.detail tr {
+				border: 1px solid #030;
+				padding: 2px 4px;
+			}
+
+			table.detail td {
+				border: 1px solid #030;
+				padding: 2px 4px;
+				width: auto;
+				font-size: 120%;
+				font-weight: normal;
+				color: #020;
+			}
+
+			table.detail th {
+				border: 1px solid #030;
+				padding: 2px 4px;
+				width: auto;
+			}
+
+			table.detail td.date_time {
+				text-align: center;
+			}
+
+			table.detail td.numeric {
+				text-align: right;
+			}
+
+			table.detail td.seq {
+				text-align: center;
+			}
+
+			table.detail tr.odd_row td {
+				background-color: #FFF;
+			}
+
+			table.detail tr.even_row td {
+				background-color: #FFC;
+			}
+
+			.end_date {
+				vertical-align: super;
+				font-size: 70%;
+			}
+
+			.file_list, .parameters_list {
+				font-size: 120%;
+				font-weight: normal;
+				color: #020;
+			}
+
+			#page_footer {
+				height: 1px;
+				margin: 20px 0 0 0;
+				border-top: 1px solid #030;
+			}
+
+			.sort_mark {
+				color: #F93;
+				padding-left: 2px;
+			}
+
+			.notation {
+				font-size: 105%;
+				color: #666;
+				font-weight: bold;
+				margin: 8px 0;
+				padding: 0 0 0 30px;
+			}
+
+			.tab {
+				padding: 0 2px;
+				color: #CCC;
+				font-weight: bold;
+			}
+
+			.visualize {
+				margin: 20px 0 0 0 !important;
+			}
+
+			.visualize-title {
+				font-size: 140% !important;
+			}
+
+			div.vertical-x ul.visualize-labels-x span.label {
+				/* 縦書き */
+				-webkit-transform: rotate(-90deg);
+				-moz-transform: rotate(-90deg);-moz-transform-origin: 20px 0px;
+				filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+				cursor: pointer;
+			}
+		</style>
+		<style type="text/css" media="screen">
+			#toc a {
+				font-size: 130%;
+				color: #116;
+			}
+
+			.go_top {
+				margin: 20px 0 5px 0;
+				float: right;
+				color: #116;
+			}
+
+			.go_top a {
+				font-size: 135%;
+				font-weight: bold;
+				color: #666;
+				text-decoration: none;
+			}
+
+			table.detail th {
+				font-size: 120%;
+				font-weight: normal;
+				color: #EFE;
+				background-color: #030;
+				text-align: center;
+				white-space: nowrap;
+			}
+		</style>
+		<style type="text/css" media="print">
+			#toc {
+				display: none;
+			}
+
+			.go_top {
+				display: none;
+			}
+
+			table.detail th {
+				font-size: 120%;
+				font-weight: bold;
+				color: #222;
+				background-color: #FFF;
+				text-align: center;
+				white-space: nowrap;
+			}
+		</style>
+
+		<script type="text/javascript" src="visualize/js/excanvas.js"></script>
+		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
+		<script type="text/javascript">
+			$(function() {
+//				$('table').visualize({type: 'pie', height: '300px', width: '420px'});
+//				$('table').visualize({type: 'bar', width: '420px'});
+//				$('table').visualize({type: 'area', width: '420px'});
+				$('table.line_graph_source').visualize({type: 'line', width: '960px', height: '450px', parseDirection: 'y'});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="page_header" class="clearfix">
+			<h1><a name="top"></a>${reportName?html}</h1>
+			<div id="signature">
+				${generatedTime?string("yyyy-MM-dd HH:mm:ss")}<br/>
+				${signature?html}
+			</div>
+		</div>
+
+
+		<ul id="toc">
+			<li><a href="#time_span_stat">期間別統計</a></li>
+			<li><a href="#request_page_time_rank">リクエスト処理時間総合ランク</a></li>
+			<li><a href="#request_url_rank">${requestUrl}L別・処理時間合計ランク</a></li>
+			<li><a href="#session_rank">セッション別・処理時間合計ランク</a></li>
+			<li><a href="#exception_count">例外</a></li>
+			<li><a href="#log_files">解析対象ログファイル</a></li>
+			<li><a href="#parameters">レポートパラメータ</a></li>
+		</ul>
+
+		<div class="section_header clearfix">
+			<h2><a name="time_span_stat"></a>期間別統計</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>ログを${timeSpanStat.span}分毎に集計しています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="集計単位となる期間です。">
+						集計期間<span class="sort_mark">▲</span>
+					</th>
+					<th rowspan="2"	title="この期間内に受信した全てのHTTPリクエスト数の合計です。">
+						リクエスト数<br/>合計
+					</th>
+					<th colspan="7"	title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						リクエスト処理時間 [ms]
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したユーザの数です。">
+						ユニーク<br/>ユーザ数
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したセッションの数です。（未ログインセッションも含む）">
+						ユニーク<br/>セッション数
+					</th>
+					<th rowspan="2" title="この期間において、有効であると見なされるセッションの数です。（この期間以前に生成され、まだログアウト・タイムアウトしていないセッション）">
+						有効<br/>セッション数
+					</th>
+					<th rowspan="2"	title="この期間内に発生したエラーの合計です。（エラーログファイルの数。1つのエラーで複数のエラーログが作成される場合もあります。リクエスト処理以外で発生したログも含まれます）">
+						例外数合計
+					</th>
+					<th rowspan="2"	title="この期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計です。（JSSPRPCやポートレットなど、画面遷移ログに出力されないものは含まれません）">
+						画面遷移数<br>合計
+					</th>
+					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
+						画面遷移<br>例外数合計
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list timeSpanStat.list as row>
+					<#if row_index % 2 = 0><tr class="odd_row"></#if>
+					<#if row_index % 2 = 1><tr class="even_row"></#if>
+						<td class="seq">${row_index + 1}</td>
+						<td class="date_time">
+							${row.startDate?string("yyyy-MM-dd HH:mm")}
+							<span class="end_date">- ${row.endDate?string("HH:mm")}</span>
+						</td>
+						<td class="numeric">${row.requestCount}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.uniqueUserCount}</td>
+						<td class="numeric">${row.uniqueSessionCount}</td>
+						<td class="numeric">${row.activeSessionCount}</td>
+						<td class="numeric">${row.exceptionCount}</td>
+						<td class="numeric">${row.transitionCount}</td>
+						<td class="numeric">${row.transitionExceptionCount}</td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+
+		<div class="vertical-x">
+		<#-- 数が多いと見づらくなるので、50件で分割する。ただし、最後が5件以下の場合は、前のグラフに含める。 -->
+		<#assign timeSpanStatGraphLimit=25>
+		<#list timeSpanStat.list as row>
+		<#if row_index % timeSpanStatGraphLimit == 0 && (row_index == 0 || (timeSpanStat.list?size - row_index >= 5))>
+			<#if (row_index > 0)>
+				</tbody>
+			</table>
+			</#if>
+			<table class="line_graph_source">
+				<caption>
+					期間別統計 - リクエスト処理時間 [ms]
+					(${timeSpanStat.list[row_index].startDate?string("yyyy-MM-dd HH:mm")} ～)
+				</caption>
+				<thead>
+					<tr>
+						<td></td>
+						<th>平均値</th>
+						<th>中央値</th>
+						<th>90% Line</th>
+						<th>最大値</th>
+					</tr>
+				</thead>
+				<tbody>
+		</#if>
+					<tr>
+						<th>${row.startDate?string("HH:mm")}</th>
+						<td>${row.pageTimeAverage?c}</td>
+						<td>${row.pageTimeMedian?c}</td>
+						<td>${row.pageTime90Percent?c}</td>
+						<td>${row.pageTimeMax?c}</td>
+					</tr>
+			</#list>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="section_header clearfix">
+			<h2><a name="request_page_time_rank"></a>リクエスト処理時間総合ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>全てのログから、リクエスト処理時間が大きいものから順に${requestPageTimeRank.size}件抽出しました。</li>
+			<li>リクエスト数の合計は、${requestPageTimeRank.requestCount}件です。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th title="リクエスト先のURLまたは遷移先画面パスです。">
+						${requestUrl}
+					</th>
+					<th title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						処理時間 [ms]<span class="sort_mark">▼</span>
+					</th>
+					<th title="ログが出力された日時です。（INの場合はリクエスト受信直後、OUTの場合はレスポンス送信前）">
+						ログ出力日時
+					</th>
+					<th title="このリクエストを送信したセッションです。">
+						セッションID
+					</th>
+					<th title="このリクエストを送信したユーザです。（未ログイン状態の場合は、不明の場合があります）">
+						ユーザID
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list requestPageTimeRank.list as row>
+					<#if row_index % 2 = 0><tr class="odd_row"></#if>
+					<#if row_index % 2 = 1><tr class="even_row"></#if>
+						<td class="seq">${row_index + 1}</td>
+						<td class="url">${row.requestUrl}</td>
+						<td class="numeric">${row.requestPageTime}</td>
+						<td class="date_time">${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+						<td class="text">${row.sessionId}</td>
+						<td class="text">${row.userId}<br/></td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="request_url_rank"></a>${requestUrl}別・処理時間合計ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>全てのログから${requestUrl}毎に処理時間を集計し、処理時間の合計が大きいものから順に${requestUrlRank.size}件抽出しました。</li>
+			<li>${requestUrl}の合計は、${requestUrlRank.total}件です。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="リクエスト先のURLまたは遷移先画面パスです。">
+						${requestUrl}
+					</th>
+					<th rowspan="2" title="このURLまたは画面パスに対するリクエスト受信回数の合計です。">
+						リクエスト<br/>回数
+					</th>
+					<th colspan="7" title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						処理時間 [ms]
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このURLまたは画面パスの回数が占める比率です。">
+						リクエスト<br/>回数%
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このURLまたは画面パスの処理時間が占める比率です。">
+						処理<br/>時間%
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計<span class="sort_mark">▼</span>
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list requestUrlRank.list as row>
+					<#if row_index % 2 = 0><tr class="odd_row"></#if>
+					<#if row_index % 2 = 1><tr class="even_row"></#if>
+						<td class="seq">${row_index + 1}</td>
+						<td class="url">${row.url}</td>
+						<td class="numeric">${row.count}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.countRate}%</td>
+						<td class="numeric">${row.pageTimeRate}%</td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="session_rank"></a>セッション別・処理時間合計ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>全てのログからセッション毎に処理時間を集計し、処理時間の合計が大きいものから順に${sessionRank.size}件抽出しました。</li>
+			<li>セッション数の合計は、${sessionRank.total}件です。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="セッションIDです。">
+						セッションID
+					</th>
+					<th rowspan="2" title="セッションに紐付くユーザIDです。（未ログイン状態の場合は、不明の場合があります）">
+						ユーザID
+					</th>
+					<th rowspan="2" title="このセッションからのリクエスト受信回数の合計です。">
+						リクエスト<br/>回数
+					</th>
+					<th colspan="7" title="このセッションからのリクエスト処理時間の合計です。">
+						処理時間 [ms]
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このセッションの回数が占める比率です。">
+						リクエスト<br/>回数%
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このセッションの処理時間が占める比率です。">
+						処理<br/>時間%
+					</th>
+					<th rowspan="2" title="このセッションが最初にリクエストを送信した日時です。（ログに出現する範囲）">
+						初回アクセス日時
+					</th>
+					<th rowspan="2" title="このセッションが最後にリクエストを送信した日時です。（ログに出現する範囲）">
+						最終アクセス日時
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計<span class="sort_mark">▼</span>
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list sessionRank.list as row>
+					<#if row_index % 2 = 0><tr class="odd_row"></#if>
+					<#if row_index % 2 = 1><tr class="even_row"></#if>
+						<td class="seq">${row_index + 1}</td>
+						<td class="text">${row.sessionId}</td>
+						<td class="text">${row.userId}<br/></td>
+						<td class="numeric">${row.count}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.countRate}%</td>
+						<td class="numeric">${row.pageTimeRate}%</td>
+						<td class="date_time">${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+						<td class="date_time">${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="exception_count"></a>例外</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>エラーログに出力された例外の集計です。</li>
+			<li>レベル・<#if parserParameter.exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレース1行目</#if>の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th>#</th>
+					<#if reportParameter.version.version7>
+					<th title="ログレベルです。">
+						レベル
+					</th>
+					</#if>
+					<#if parserParameter.exceptionGroupingByCause>
+					<th title="根本のCaused byの1行目です。">
+						Caused by:1行目
+					</th>
+					<#else>
+					<th title="例外メッセージです。">
+						メッセージ
+					</th>
+					<th title="スタックトレースの1行目です。">
+						スタックトレース1行目
+					</th>
+					</#if>
+					<th title="この例外が何回発生したかを表します。">
+						回数<span class="sort_mark">▼</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list exceptionList as row>
+					<#if row_index % 2 = 0><tr class="odd_row"></#if>
+					<#if row_index % 2 = 1><tr class="even_row"></#if>
+						<td class="seq">${row_index + 1}</td>
+						<#if reportParameter.version.version7>
+						<td class="text"><#if row.level??>${row.level?html}</#if><br/></td>
+						</#if>
+						<#if !parserParameter.exceptionGroupingByCause>
+						<td class="text"><#if row.message??>${row.message?html}</#if><br/></td>
+						</#if>
+						<td class="text">${row.groupingLineOfStackTrace?html}<br/></td>
+						<td class="numeric">${row.count}</td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="log_files"></a>解析対象ログファイル</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<h3>リクエストログ</h3>
+		<ul class="file_list">
+			<#list logFiles.requestLogFiles as file>
+				<li>${file.absolutePath?html}</li>
+			</#list>
+		</ul>
+
+		<h3>画面遷移ログ</h3>
+		<ul class="file_list">
+			<#list logFiles.transitionLogFiles as file>
+				<li>${file.absolutePath?html}</li>
+			</#list>
+		</ul>
+
+		<h3>エラーログ</h3>
+		<ul class="file_list">
+			<li>${logFiles.exceptionLogFiles?size}ファイル</li>
+		</ul>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="parameters"></a>レポートパラメータ</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="parameters_list">
+			<li>
+				バージョン : ${parserParameter.version.getName()}
+			</li>
+			<li>
+				開始時刻 :
+				<#if parserParameter.begin??>
+					${parserParameter.begin?string("yyyy/MM/dd HH:mm")}
+				<#else>
+					-
+				</#if>
+			</li>
+			<li>
+				終了時刻 :
+				<#if parserParameter.end??>
+					${parserParameter.end?string("yyyy/MM/dd HH:mm")}
+				<#else>
+					-
+				</#if>
+			</li>
+			<li>
+				ログファイルの文字コード : ${parserParameter.charset?html}
+			</li>
+			<li>
+				リクエストログレイアウト :<br/>${parserParameter.requestLogLayout?html?replace("\t", "<span class='tab'>{TAB}</span>")}
+			</li>
+			<li>
+				画面遷移ログレイアウト :<br/>${parserParameter.transitionLogLayout?html?replace("\t", "<span class='tab'>{TAB}</span>")}
+			</li>
+			<li>
+				期間別統計の間隔 : ${reportParameter.span}分
+			</li>
+			<li>
+				セッションタイムアウト時間 : ${reportParameter.sessionTimeout}分
+			</li>
+			<li>
+				リクエスト処理時間ランクの出力件数 : ${reportParameter.requestPageTimeRankSize}
+			</li>
+			<li>
+				リクエストURLランクの出力件数 : ${reportParameter.requestUrlRankSize}
+			</li>
+			<li>
+				セッションランクの出力件数 : ${reportParameter.sessionRankSize}
+			</li>
+			<li>
+				例外のグルーピング方法 : <#if parserParameter.exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
+			</li>
+		</ul>
+
+		<div id="page_footer">
+		</div>
+	</body>
+</html>

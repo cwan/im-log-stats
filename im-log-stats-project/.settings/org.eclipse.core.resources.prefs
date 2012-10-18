@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/resources/net/mikaboshi/intra_mart/tools/log_stats/formatter/HtmlFileReportTemplate.html=MS932
 encoding//src/main/resources/net/mikaboshi/intra_mart/tools/log_stats/formatter/SvFileReportTemplate.txt=MS932
+encoding//src/main/resources/net/mikaboshi/intra_mart/tools/log_stats/formatter/VisualizeFileReportTemplate.html=MS932
 encoding/<project>=UTF-8

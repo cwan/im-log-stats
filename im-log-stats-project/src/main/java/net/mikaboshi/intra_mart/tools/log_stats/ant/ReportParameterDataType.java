@@ -174,12 +174,14 @@ public class ReportParameterDataType extends DataType {
 								parserParameter,
 								reportParameter);
 
-		if (this.type == ReportType.HTML || this.type == ReportType.CSV || this.type == ReportType.TSV) {
+		if (this.type == ReportType.HTML || this.type == ReportType.VISUALIZE || this.type == ReportType.CSV || this.type == ReportType.TSV) {
 
 			String templateFileRecourcePath = "/net/mikaboshi/intra_mart/tools/log_stats/formatter/";
 
 			if (this.type == ReportType.HTML) {
 				templateFileRecourcePath += "HtmlFileReportTemplate.html";
+			} else if (this.type == ReportType.VISUALIZE) {
+				templateFileRecourcePath += "VisualizeFileReportTemplate.html";
 			} else {
 				templateFileRecourcePath += "SvFileReportTemplate.txt";
 
