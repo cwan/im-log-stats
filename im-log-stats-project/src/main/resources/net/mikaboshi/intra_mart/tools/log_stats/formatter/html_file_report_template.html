@@ -15,6 +15,16 @@
   HTMLテンプレート
   @version 1.0,10
 -->
+<#--
+  TRタグのclass値を取得する
+-->
+<#function getTrClass idx>
+	<#if idx % 2 == 0>
+		<#return "odd_row">
+	<#else>
+		<#return "even_row">
+	</#if>
+</#function>
 <!DOCTYPE html>
 <#if logFiles.transitionLogOnly>
 	<#assign requestUrl="遷移先画面パス">
@@ -291,8 +301,7 @@
 			</thead>
 			<tbody>
 				<#list timeSpanStat.list as row>
-					<#if row_index % 2 = 0><tr class="odd_row"></#if>
-					<#if row_index % 2 = 1><tr class="even_row"></#if>
+					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="date_time">
 							${row.startDate?string("yyyy-MM-dd HH:mm")}
@@ -351,8 +360,7 @@
 			</thead>
 			<tbody>
 				<#list requestPageTimeRank.list as row>
-					<#if row_index % 2 = 0><tr class="odd_row"></#if>
-					<#if row_index % 2 = 1><tr class="even_row"></#if>
+					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="url">${row.requestUrl}</td>
 						<td class="numeric">${row.requestPageTime}</td>
@@ -421,8 +429,7 @@
 			</thead>
 			<tbody>
 				<#list requestUrlRank.list as row>
-					<#if row_index % 2 = 0><tr class="odd_row"></#if>
-					<#if row_index % 2 = 1><tr class="even_row"></#if>
+					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="url">${row.url}</td>
 						<td class="numeric">${row.count}</td>
@@ -506,8 +513,7 @@
 			</thead>
 			<tbody>
 				<#list sessionRank.list as row>
-					<#if row_index % 2 = 0><tr class="odd_row"></#if>
-					<#if row_index % 2 = 1><tr class="even_row"></#if>
+					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="text">${row.sessionId}</td>
 						<td class="text">${row.userId}<br/></td>
@@ -567,8 +573,7 @@
 			</thead>
 			<tbody>
 				<#list exceptionList as row>
-					<#if row_index % 2 = 0><tr class="odd_row"></#if>
-					<#if row_index % 2 = 1><tr class="even_row"></#if>
+					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<#if reportParameter.version.version7>
 						<td class="text"><#if row.level??>${row.level?html}</#if><br/></td>
