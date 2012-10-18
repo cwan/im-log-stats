@@ -179,11 +179,11 @@ public class ReportParameterDataType extends DataType {
 			String templateFileRecourcePath = "/net/mikaboshi/intra_mart/tools/log_stats/formatter/";
 
 			if (this.type == ReportType.HTML) {
-				templateFileRecourcePath += "HtmlFileReportTemplate.html";
+				templateFileRecourcePath += "html_file_report_template.html";
 			} else if (this.type == ReportType.VISUALIZE) {
-				templateFileRecourcePath += "VisualizeFileReportTemplate.html";
+				templateFileRecourcePath += "visualize_file_report_template.html";
 			} else {
-				templateFileRecourcePath += "SvFileReportTemplate.txt";
+				templateFileRecourcePath += "xsv_file_report_template.txt";
 
 				if (this.type == ReportType.CSV) {
 					reportFormatter.setSeparator(",");
