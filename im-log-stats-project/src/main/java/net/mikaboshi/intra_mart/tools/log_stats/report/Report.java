@@ -40,7 +40,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.8
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -359,6 +359,15 @@ public class Report {
 	 */
 	public int getRequestCount() {
 		return getGrossStatistics().getRequestCount();
+	}
+
+	/**
+	 * 処理時間合計を取得する。
+	 * @return
+	 * @since 1.0.10
+	 */
+	public long getTotalPageTime() {
+		return getGrossStatistics().getTotalPageTime();
 	}
 
 	/**

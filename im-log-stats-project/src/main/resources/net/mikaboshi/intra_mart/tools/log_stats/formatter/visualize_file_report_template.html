@@ -259,6 +259,12 @@
 
 				$('table.time_span_stat_source').visualize(
 						{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: timeSapnStatMaxResTime, bottomValue: 0});
+
+				// リクエストURL別・処理時間合計ランク
+				$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+
+				// セッション別・処理時間合計ランク
+				$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
 			});
 		</script>
 	</head>
@@ -532,6 +538,42 @@
 			</tbody>
 		</table>
 
+		<div>
+			<#assign requestUrlRankGraphLimit = 5>
+			<#assign requestUrlRankGraphOthersPageTime = totalPageTime>
+
+			<table id="request_url_rank_source" class="line_graph_source">
+				<caption>${requestUrl}別・処理時間合計ランク（合計比率）</caption>
+				<thead>
+					<tr>
+						<#list requestUrlRank.list as row>
+							<th>#${row_index + 1}</th>
+							<#if (row_index + 1 >= requestUrlRankGraphLimit)><#break></#if>
+						</#list>
+						<#if (requestUrlRank.list?size > requestUrlRankGraphLimit)>
+							<th>その他</th>
+						</#if>
+					</tr>
+				</thead>
+				<tbody>
+					<#list requestUrlRank.list as row>
+						<tr>
+							<th>#${row_index + 1}</th>
+							<td>${row.pageTimeSum?c}</td>
+							<#assign requestUrlRankGraphOthersPageTime = requestUrlRankGraphOthersPageTime - row.pageTimeSum>
+						</tr>
+						<#if (row_index + 1 >= requestUrlRankGraphLimit)><#break></#if>
+					</#list>
+					<#if (requestUrlRank.list?size > requestUrlRankGraphLimit)>
+						<tr>
+							<th>その他</th>
+							<td>${requestUrlRankGraphOthersPageTime?c}</td>
+						</tr>
+					</#if>
+				</tbody>
+			</table>
+		</div>
+
 
 		<div class="section_header clearfix">
 			<h2><a name="session_rank"></a>セッション別・処理時間合計ランク</h2>
@@ -618,6 +660,42 @@
 				</#list>
 			</tbody>
 		</table>
+
+		<div>
+			<#assign sessionRankGraphLimit = 5>
+			<#assign sessionRankGraphOthersPageTime = totalPageTime>
+
+			<table id="session_rank_source" class="line_graph_source">
+				<caption>セッション別・処理時間合計ランク（合計比率）</caption>
+				<thead>
+					<tr>
+						<#list sessionRank.list as row>
+							<th>#${row_index + 1}</th>
+							<#if (row_index + 1 >= sessionRankGraphLimit)><#break></#if>
+						</#list>
+						<#if (sessionRank.list?size > sessionRankGraphLimit)>
+							<th>その他</th>
+						</#if>
+					</tr>
+				</thead>
+				<tbody>
+					<#list sessionRank.list as row>
+						<tr>
+							<th>#${row_index + 1}</th>
+							<td>${row.pageTimeSum?c}</td>
+							<#assign sessionRankGraphOthersPageTime = sessionRankGraphOthersPageTime - row.pageTimeSum>
+						</tr>
+						<#if (row_index + 1 >= sessionRankGraphLimit)><#break></#if>
+					</#list>
+					<#if (sessionRank.list?size > sessionRankGraphLimit)>
+						<tr>
+							<th>その他</th>
+							<td>${sessionRankGraphOthersPageTime?c}</td>
+						</tr>
+					</#if>
+				</tbody>
+			</table>
+		</div>
 
 
 		<div class="section_header clearfix">

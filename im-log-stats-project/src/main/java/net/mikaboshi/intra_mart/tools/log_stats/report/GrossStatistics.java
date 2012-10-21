@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 全体の統計情報
  *
- * @version 1.0.8
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GrossStatistics {
@@ -75,6 +75,9 @@ public class GrossStatistics {
 	 */
 	private final boolean transitionLogOnly;
 
+	/** 処理時間合計 */
+	private long totalPageTime = 0L;
+
 	/**
 	 * コンストラクタ
 	 * @param requestPageTimeRankSize　処理時間順のリクエストランクサイズ
@@ -96,8 +99,6 @@ public class GrossStatistics {
 		}
 
 		addRequestInfo(log, log.getRequestUrlWithImAction(), log.requestPageTime);
-
-
 	}
 
 	/**
@@ -176,6 +177,15 @@ public class GrossStatistics {
 		return sessionMap;
 	}
 
+	/**
+	 * 処理時間合計を取得する。
+	 * @return
+	 * @since 1.0.10
+	 */
+	public long getTotalPageTime() {
+		return totalPageTime;
+	}
+
 	public static class RequestEntry {
 		public String url  = null;
 		public long time = 0L;
@@ -186,6 +196,7 @@ public class GrossStatistics {
 	private void addRequestInfo(Log log, String url, long responseTime) {
 
 		this.requestCount++;
+		this.totalPageTime += responseTime;
 
 		if (StringUtils.isNotEmpty(url)) {
 			this.urlPageTimesMap.get(url).add(responseTime);

@@ -55,7 +55,7 @@ import freemarker.template.TemplateException;
 /**
  * FreeMarkerのテンプレートを使用して、レポートを生成する。
  *
- * @version 1.0.8
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
@@ -179,6 +179,8 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			rootMap.put("signature", report.getParameter().getSignature());
 			rootMap.put("generatedTime", new Date());
 			rootMap.put("separator", this.separator);
+			rootMap.put("totalPageTime", report.getTotalPageTime());
+			rootMap.put("totalRequestCount", report.getRequestCount());
 
 			setParameters(rootMap);
 			setTimeSpanStatistics(report, rootMap);
