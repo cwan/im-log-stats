@@ -251,10 +251,14 @@
 		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
 			$(function() {
-//				$('table').visualize({type: 'pie', height: '300px', width: '420px'});
-//				$('table').visualize({type: 'bar', width: '420px'});
-//				$('table').visualize({type: 'area', width: '420px'});
-				$('table.line_graph_source').visualize({type: 'line', width: '960px', height: '450px', parseDirection: 'y'});
+				// 期間別統計
+				var timeSapnStatMaxResTime = -1;
+				$("#time_span_stat_detail tbody tr").each(function() {
+					timeSapnStatMaxResTime = Math.max(timeSapnStatMaxResTime, parseInt(("" + $("td:eq(8)", this).html()).replace(/,/g, "")));
+				});
+
+				$('table.time_span_stat_source').visualize(
+						{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: timeSapnStatMaxResTime, bottomValue: 0});
 			});
 		</script>
 	</head>
@@ -288,7 +292,7 @@
 			<li>ログを${timeSpanStat.span}分毎に集計しています。</li>
 		</ul>
 
-		<table class="detail">
+		<table class="detail" id="time_span_stat_detail">
 			<thead>
 				<tr>
 					<th rowspan="2">#</th>
@@ -372,15 +376,15 @@
 		</table>
 
 		<div class="vertical-x">
-		<#-- 数が多いと見づらくなるので、50件で分割する。ただし、最後が5件以下の場合は、前のグラフに含める。 -->
-		<#assign timeSpanStatGraphLimit=25>
+		<#-- 数が多いと見づらくなるので、40件で分割する。ただし、最後が5件以下の場合は、前のグラフに含める。 -->
+		<#assign timeSpanStatGraphLimit=40>
 		<#list timeSpanStat.list as row>
 		<#if row_index % timeSpanStatGraphLimit == 0 && (row_index == 0 || (timeSpanStat.list?size - row_index >= 5))>
 			<#if (row_index > 0)>
 				</tbody>
 			</table>
 			</#if>
-			<table class="line_graph_source">
+			<table class="line_graph_source time_span_stat_source">
 				<caption>
 					期間別統計 - リクエスト処理時間 [ms]
 					(${timeSpanStat.list[row_index].startDate?string("yyyy-MM-dd HH:mm")} ～)
