@@ -220,7 +220,15 @@ $.fn.visualize = function(options, container){
 			        var labely = Math.round(centery - Math.cos(sliceMiddle * Math.PI * 2) * (distance));
 			        var leftRight = (labelx > centerx) ? 'right' : 'left';
 			        var topBottom = (labely > centery) ? 'bottom' : 'top';
-			        var percentage = parseFloat((fraction*100).toFixed(2));
+//			        var percentage = parseFloat((fraction*100).toFixed(2));
+			        
+					if (fraction < 0.01) {
+						var percentage = parseFloat((fraction*100).toFixed(2));
+					} else if (fraction < 0.1) {
+						var percentage = parseFloat((fraction*100).toFixed(1));
+					} else {
+						var percentage = parseFloat((fraction*100).toFixed(0));
+					}
 
 			        if(percentage){
 			        	var labelval = (o.pieLabelsAsPercent) ? percentage + '%' : this;
