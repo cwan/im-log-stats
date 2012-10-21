@@ -7,6 +7,11 @@ im-log-stats
 - [report_sample.html](/downloads/cwan/im-log-stats/report_sample.html)
 - [report_sample.csv](/downloads/cwan/im-log-stats/report_sample.csv)
 
+**ダウンロード**
+
+- [master](/cwan/im-log-stats/zipball/master) : 最新（β版）
+- [tags](/cwan/im-log-stats/tags) : 過去バージョン
+
 ## 1. 動作要件
 
 **解析対象のログ**
@@ -91,10 +96,11 @@ delay | ログファイルのパース中に挿入される遅延時間（ミリ
 
 名称 | 説明 | 必須 | デフォルト
 :--|:--|:--|:--
-charset | ログファイルの文字コード<br/>（Ver.6.x では IM のシステム文字コード、Ver.7.x, 7.x ではIM実行環境の JVM の文字コード） | No | Ant 実行環境の JVM デフォルト文字コード
+charset | ログファイルの文字コード<br/>（Ver.6.x では IM のシステム文字コード、Ver.7.x, 8.x ではIM実行環境の JVM の文字コード） | No | Ant 実行環境の JVM デフォルト文字コード
 begin | 開始日時（これより前のログは切り捨てる） | No | 下限なし
 end | 終了日時（これより後のログは切り捨てる） | No | 上限なし
 exceptionGroupingType | 例外のグルーピング方法<br/>cause : 根本原因となっているの Caused by の1行目でグルーピング<br/>first-line : 例外メッセージ + スタックトレース1行目でグルーピング | No | cause
+errorLimit | パーサエラーの上限。この回数を超えてエラーが発生した場合、処理を打ち切る（レポートは生成されない）。<br/>(@since 1.0.10) | No | 1000
 
 begin および end では、以下のいずれかの形式で日時を指定してください。  
 時刻を省略した場合、begin では 00:00、end では 24:00 で補完されます。
@@ -437,7 +443,7 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 ## 7. 更新履歴
 
 ### Ver.1.0.9 (2012-10-12)
-- [#1 パラメータの parser/@begin, parser/@EnD, report/@output を動的に設定できるようにした。](/cwan/im-log-stats/issues/1)
+- [#1 パラメータの parser/@begin, parser/@end, report/@output を動的に設定できるようにした。](/cwan/im-log-stats/issues/1)
 
 ### Ver.1.0.8 (2012-10-08)
 - 一般公開
