@@ -400,19 +400,10 @@ public class Report {
 			return;
 		}
 
-		long countTotal = 0;
-		long pageTimeTotal = 0;
-
 		for (PageTimeStat stat : stats) {
 
-			countTotal += stat.count;
-			pageTimeTotal += stat.pageTimeSum;
-		}
-
-		for (PageTimeStat stat : stats) {
-
-			stat.countRate = MathUtil.getRate(stat.count, countTotal, 0.0d);
-			stat.pageTimeRate = MathUtil.getRate(stat.pageTimeSum, pageTimeTotal, 0.0d);
+			stat.countRate = MathUtil.getRate(stat.count, getRequestCount(), 0.0d);
+			stat.pageTimeRate = MathUtil.getRate(stat.pageTimeSum, getTotalPageTime(), 0.0d);
 		}
 	}
 
