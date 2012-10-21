@@ -5,7 +5,7 @@ im-log-stats
 
 **生成されるレポートのサンプル**
 - [report_sample.html](/downloads/cwan/im-log-stats/report_sample.html) : HTML（シンプル）
-- [report_sample.html](/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
+- [report_sample_visualize.html](/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
 - [report_sample.csv](/downloads/cwan/im-log-stats/report_sample.csv) : CSV
 
 **ダウンロード**
