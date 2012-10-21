@@ -86,20 +86,30 @@ $.fn.visualize = function(options, container){
 					return dataSum
 				},	
 				topValue: function(){
-						var topValue = 0;
-						var allData = this.allData().join(',').split(',');
-						$(allData).each(function(){
-							if(parseFloat(this,10)>topValue) topValue = parseFloat(this);
-						});
-						return topValue;
+						if (o.topValue===false) {
+							var topValue = 0;
+							var allData = this.allData().join(',').split(',');
+							$(allData).each(function(){
+								if(parseFloat(this,10)>topValue) topValue = parseFloat(this);
+							});
+							return topValue;
+						}
+						else {
+							return o.topValue;
+						}
 				},
 				bottomValue: function(){
-						var bottomValue = 0;
-						var allData = this.allData().join(',').split(',');
-						$(allData).each(function(){
-							if(this<bottomValue) bottomValue = parseFloat(this);
-						});
-						return bottomValue;
+						if (o.bottomValue===false) {
+							var bottomValue = 0;
+							var allData = this.allData().join(',').split(',');
+							$(allData).each(function(){
+								if(this<bottomValue) bottomValue = parseFloat(this);
+							});
+							return bottomValue;
+						}
+						else {
+							return o.bottomValue;
+						}
 				},
 				memberTotals: function(){
 					var memberTotals = [];
