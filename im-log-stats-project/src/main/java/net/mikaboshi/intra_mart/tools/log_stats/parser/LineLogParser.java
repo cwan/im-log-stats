@@ -37,7 +37,7 @@ import org.apache.commons.logging.Log;
 /**
  * 行ログパーサ
  *
- * @version 1.0.8
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public abstract class LineLogParser extends GenericLogParser {
@@ -153,6 +153,7 @@ public abstract class LineLogParser extends GenericLogParser {
 
 		if (!matcher.matches()) {
 			warn("Unparsable line");
+			this.parameter.getErrorCounter().increment();
 			return null;
 		}
 
@@ -175,6 +176,7 @@ public abstract class LineLogParser extends GenericLogParser {
 						lineMap.put(item.type, item.dateFormat.parse(value));
 					} catch (ParseException e) {
 						warn("Invalid date : %s", value);
+						this.parameter.getErrorCounter().increment();
 					}
 
 					break;
@@ -193,6 +195,7 @@ public abstract class LineLogParser extends GenericLogParser {
 						lineMap.put(item.type, Integer.parseInt(value));
 					} catch (NumberFormatException e) {
 						warn("Invalid integer : %s", value);
+						this.parameter.getErrorCounter().increment();
 					}
 
 					break;
@@ -208,6 +211,7 @@ public abstract class LineLogParser extends GenericLogParser {
 
 					} catch (NumberFormatException e) {
 						warn("Invalid long : %s", value);
+						this.parameter.getErrorCounter().increment();
 					}
 
 					break;
@@ -218,6 +222,7 @@ public abstract class LineLogParser extends GenericLogParser {
 						lineMap.put(item.type, this.requestAcceptTimeFormat.parse(value));
 					} catch (ParseException e) {
 						warn("Invalid request accept time : %s", value);
+						this.parameter.getErrorCounter().increment();
 					}
 
 					break;

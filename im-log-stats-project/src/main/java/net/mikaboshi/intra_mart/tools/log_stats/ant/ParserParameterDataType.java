@@ -23,6 +23,7 @@ import java.util.Date;
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.RequestLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.TransitionLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
+import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserErrorCounter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
 
@@ -33,7 +34,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログファイルパーサ設定のネスト要素
  *
- * @version 1.0.9
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameterDataType extends DataType {
@@ -55,6 +56,9 @@ public class ParserParameterDataType extends DataType {
 
 	/** 終了日時（これ以降のログは切り捨てる） */
 	private Date end = null;
+
+	/** パーサエラーの上限 */
+	private Integer errorLimit = null;
 
 	/** 例外のグルーピング方法 */
 	private ExceptionLog.GroupingType exceptionGroupingType = null;
@@ -127,6 +131,15 @@ public class ParserParameterDataType extends DataType {
 	}
 
 	/**
+	 *
+	 * @param errorLimit
+	 * @since 1.0.10
+	 */
+	public void setErrorLimit(int errorLimit) {
+		this.errorLimit = errorLimit;
+	}
+
+	/**
 	 * 自身の内容をParserParameterインスタンスに変換する。
 	 * @param version
 	 * @return
@@ -154,6 +167,10 @@ public class ParserParameterDataType extends DataType {
 
 		if (this.exceptionGroupingType != null) {
 			parameter.setExceptionGroupingType(this.exceptionGroupingType);
+		}
+
+		if (this.errorLimit != null) {
+			parameter.setErrorCounter(new ParserErrorCounter(this.errorLimit));
 		}
 
 		return parameter;

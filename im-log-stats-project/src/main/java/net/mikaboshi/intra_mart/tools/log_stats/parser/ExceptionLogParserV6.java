@@ -26,7 +26,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 /**
  * Ver.6.xの例外ログパーサ
  *
- * @version 1.0.9
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ExceptionLogParserV6 extends ExceptionLogParser {
@@ -60,6 +60,7 @@ public class ExceptionLogParserV6 extends ExceptionLogParser {
 				log.date = dateFormat.parse(lines[0].substring(GENERATING_TIME_PREFIX.length()));
 			} catch (ParseException e) {
 				warn("invalid date : " + lines[0]);
+				this.parameter.getErrorCounter().increment();
 				return null;
 			}
 

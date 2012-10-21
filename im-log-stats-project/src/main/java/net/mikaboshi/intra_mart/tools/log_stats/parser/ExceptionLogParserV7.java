@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Ver.7x, 8.xの例外ログパーサ
  *
- * @version 1.0.9
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ExceptionLogParserV7 extends ExceptionLogParser {
@@ -71,6 +71,7 @@ public class ExceptionLogParserV7 extends ExceptionLogParser {
 
 		if (lines.length < 9) {
 			warn("invalid exception log");
+			this.parameter.getErrorCounter().increment();
 			return null;
 		}
 
@@ -83,6 +84,7 @@ public class ExceptionLogParserV7 extends ExceptionLogParser {
 
 		} catch (ParseException e) {
 			warn("invalid date : " + lines[0]);
+			this.parameter.getErrorCounter().increment();
 			return null;
 		}
 

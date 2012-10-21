@@ -22,7 +22,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 /**
  * ログファイルのパースに関するパラメータ。
  *
- * @version 1.0.8
+ * @version 1.0.10
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameter {
@@ -47,6 +47,9 @@ public class ParserParameter {
 
 	/** 例外のグルーピング方法 */
 	private ExceptionLog.GroupingType exceptionGroupingType = ExceptionLog.GroupingType.CAUSE;
+
+	/** パーサエラーカンター */
+	private ParserErrorCounter errorCounter = new ParserErrorCounter(1000);
 
 	/**
 	 * @return charset
@@ -172,6 +175,24 @@ public class ParserParameter {
 	public void setExceptionGroupingType(
 			ExceptionLog.GroupingType exceptionGroupingType) {
 		this.exceptionGroupingType = exceptionGroupingType;
+	}
+
+	/**
+	 *
+	 * @param errorCounter
+	 * @since 1.0,10
+	 */
+	public void setErrorCounter(ParserErrorCounter errorCounter) {
+		this.errorCounter = errorCounter;
+	}
+
+	/**
+	 *
+	 * @return
+	 * @since 1.0,10
+	 */
+	public ParserErrorCounter getErrorCounter() {
+		return errorCounter;
 	}
 
 }
