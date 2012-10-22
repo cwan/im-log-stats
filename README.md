@@ -11,7 +11,7 @@ im-log-stats
 **ダウンロード**
 
 - [master](/cwan/im-log-stats/zipball/master) : 最新（β版）
-- [tags](/cwan/im-log-stats/tags) : 過去バージョン
+- [tags](/cwan/im-log-stats/tags) : 過去バージョン（安定板）
 
 ## 1. 動作要件
 
