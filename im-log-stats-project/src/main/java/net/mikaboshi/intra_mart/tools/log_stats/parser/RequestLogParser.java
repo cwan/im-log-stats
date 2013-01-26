@@ -16,9 +16,13 @@ package net.mikaboshi.intra_mart.tools.log_stats.parser;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.LogLayoutItemType;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -28,6 +32,8 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class RequestLogParser extends LineLogParser implements LogParser<RequestLog> {
+
+	private static final Pattern TRUNCATE_URL_PATTERN = Pattern.compile("(?:[^(\\:/)]+\\:)?//(?:[^(\\:/)]+)(?:\\:\\d+)?(/.+)");
 
 	public RequestLogParser(ParserParameter parameter, String layout) {
 
@@ -53,7 +59,7 @@ public class RequestLogParser extends LineLogParser implements LogParser<Request
 		log.requestRemoteHost = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_REMOTE_HOST);
 		log.requestRemoteAddress = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_REMOTE_ADDRESS);
 		log.requestMethod = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_METHOD);
-		log.requestUrl = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_URL);
+		log.requestUrl = getUrl((String) lineMap.get(LogLayoutItemType.MDC_REQUEST_URL));
 		log.requestQueryString = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_QUERY_STRING);
 		log.requestUrlReferer = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_URL_REFERER);
 		log.requestAcceptTime = (Date) lineMap.get(LogLayoutItemType.MDC_REQUEST_ACCEPT_TIME);
@@ -65,5 +71,33 @@ public class RequestLogParser extends LineLogParser implements LogParser<Request
 		}
 
 		return log;
+	}
+
+	/**
+	 * リクエストURLを取得する。
+	 * @param url
+	 * @return
+	 * @since 1.0.11
+	 */
+	private String getUrl(String url) {
+
+		if (url == null) {
+			return StringUtils.EMPTY;
+		}
+
+		if (this.parameter.isTruncateRequestUrl()) {
+
+			Matcher matcher = TRUNCATE_URL_PATTERN.matcher(url);
+
+			if (matcher.matches()) {
+				return matcher.group(1);
+			} else {
+				return url;
+			}
+
+		} else {
+			return url;
+		}
+
 	}
 }

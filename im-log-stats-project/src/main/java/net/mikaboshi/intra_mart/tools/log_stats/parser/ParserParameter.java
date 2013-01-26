@@ -52,6 +52,12 @@ public class ParserParameter {
 	private ParserErrorCounter errorCounter = new ParserErrorCounter(1000);
 
 	/**
+	 * リクエストURLのスキーム、ネットロケーション部を削除するかどうか
+	 * @since 1.0.11
+	 */
+	private boolean truncateRequestUrl = false;
+
+	/**
 	 * @return charset
 	 */
 	public String getCharset() {
@@ -193,6 +199,24 @@ public class ParserParameter {
 	 */
 	public ParserErrorCounter getErrorCounter() {
 		return errorCounter;
+	}
+
+	/**
+	 * リクエストURLのスキーム、ネットロケーション部を削除するかどうかを取得する。
+	 * @return
+	 * @since 1.0.11
+	 */
+	public boolean isTruncateRequestUrl() {
+		return truncateRequestUrl;
+	}
+
+	/**
+	 * リクエストURLのスキーム、ネットロケーション部を削除するかどうかを設定する。
+	 * @param truncateRequestUrl
+	 * @since 1.0.11
+	 */
+	public void setTruncateRequestUrl(boolean truncateRequestUrl) {
+		this.truncateRequestUrl = truncateRequestUrl;
 	}
 
 }

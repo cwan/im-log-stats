@@ -19,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.RequestLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.TransitionLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
@@ -62,6 +61,12 @@ public class ParserParameterDataType extends DataType {
 
 	/** 例外のグルーピング方法 */
 	private ExceptionLog.GroupingType exceptionGroupingType = null;
+
+	/**
+	 * リクエストURLのスキーム、ネットロケーション部を削除するかどうか
+	 * @since 1.0.11
+	 */
+	private Boolean truncateRequestUrl = null;
 
 	public void addConfigured(RequestLogLayout requestLogLayout) {
 		this.requestLogLayout = requestLogLayout;
@@ -140,6 +145,15 @@ public class ParserParameterDataType extends DataType {
 	}
 
 	/**
+	 * リクエストURLのスキーム、ネットロケーション部を削除するかどうかを設定する。
+	 * @param truncateRequestUrl
+	 * @since 1.0.11
+	 */
+	public void setTruncateRequestUrl(boolean truncateRequestUrl) {
+		this.truncateRequestUrl = truncateRequestUrl;
+	}
+
+	/**
 	 * 自身の内容をParserParameterインスタンスに変換する。
 	 * @param version
 	 * @return
@@ -171,6 +185,10 @@ public class ParserParameterDataType extends DataType {
 
 		if (this.errorLimit != null) {
 			parameter.setErrorCounter(new ParserErrorCounter(this.errorLimit));
+		}
+
+		if (this.truncateRequestUrl != null) {
+			parameter.setTruncateRequestUrl(this.truncateRequestUrl.booleanValue());
 		}
 
 		return parameter;
