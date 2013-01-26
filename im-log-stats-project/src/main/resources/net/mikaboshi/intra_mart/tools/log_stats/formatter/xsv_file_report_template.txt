@@ -58,7 +58,7 @@ ${(row_index + 1)?c}${separator}${esc(row.sessionId)}${separator}${esc(row.userI
 
 例外
 <#if parserParameter.exceptionGroupingByCause>
-#${separator}<#if reportParameter.version.version7>レベル${separator}</#if>根本のCaused byの1行目${separator}回数▼
+#${separator}<#if reportParameter.version.version7>レベル${separator}</#if>発端のCaused byの1行目${separator}回数▼
 <#list exceptionList as row>
 ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.level)}${separator}</#if>${esc(row.groupingLineOfStackTrace)}${separator}${row.count?c}
 </#list>
@@ -92,4 +92,4 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.
 リクエスト処理時間ランクの出力件数${separator}${reportParameter.requestPageTimeRankSize?c}
 リクエストURLランクの出力件数${separator}${reportParameter.requestUrlRankSize?c}
 セッションランクの出力件数${separator}${reportParameter.sessionRankSize?c}
-例外のグルーピング方法${separator}<#if parserParameter.exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
+例外のグルーピング方法${separator}<#if parserParameter.exceptionGroupingByCause>発端のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>

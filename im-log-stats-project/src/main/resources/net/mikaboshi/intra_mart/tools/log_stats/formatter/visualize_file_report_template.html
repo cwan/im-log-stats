@@ -705,7 +705,7 @@
 
 		<ul class="notation">
 			<li>エラーログに出力された例外の集計です。</li>
-			<li>レベル・<#if parserParameter.exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレース1行目</#if>の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
+			<li>レベル・<#if parserParameter.exceptionGroupingByCause>発端のCaused byの1行目<#else>メッセージ・スタックトレース1行目</#if>の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
 		</ul>
 
 		<table class="detail">
@@ -718,7 +718,7 @@
 					</th>
 					</#if>
 					<#if parserParameter.exceptionGroupingByCause>
-					<th title="根本のCaused byの1行目です。">
+					<th title="発端のCaused byの1行目です。">
 						Caused by:1行目
 					</th>
 					<#else>
@@ -827,7 +827,7 @@
 				セッションランクの出力件数 : ${reportParameter.sessionRankSize}
 			</li>
 			<li>
-				例外のグルーピング方法 : <#if parserParameter.exceptionGroupingByCause>根本のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
+				例外のグルーピング方法 : <#if parserParameter.exceptionGroupingByCause>発端のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>
 			</li>
 		</ul>
 

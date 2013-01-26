@@ -74,7 +74,7 @@ public class ExceptionLog extends Log {
 	}
 
 	/**
-	 * スタックトレースの根本のCause行を取得する。
+	 * スタックトレースの発端のCause行を取得する。
 	 * @return
 	 * @since 1.0.8
 	 */
