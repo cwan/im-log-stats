@@ -335,9 +335,9 @@
 		<ul class="notation">
 			<li>
 				<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>
-					全てのログから、リクエスト処理時間が大きいものから順に${requestPageTimeRank.size}件抽出しました。
+					リクエスト処理時間が大きいものから順に${requestPageTimeRank.size}件抽出しました。
 				<#else>
-					全てのログから、リクエスト処理時間が${reportParameter.requestPageTimeRankThresholdMillis}ミリ秒以上のものを抽出しました。
+					リクエスト処理時間が${reportParameter.requestPageTimeRankThresholdMillis}ミリ秒以上のものを抽出しました。
 				</#if>
 			</li>
 			<li>リクエスト数の合計は、${requestPageTimeRank.requestCount}件です。</li>
@@ -385,7 +385,7 @@
 		</div>
 
 		<ul class="notation">
-			<li>全てのログから${requestUrl}毎に処理時間を集計し、処理時間の合計が大きいものから順に${requestUrlRank.size}件抽出しました。</li>
+			<li>${requestUrl}毎に処理時間を集計し、処理時間の合計が大きいものから順に${requestUrlRank.size}件抽出しました。</li>
 			<li>${requestUrl}の合計は、${requestUrlRank.total}件です。</li>
 		</ul>
 
@@ -460,7 +460,7 @@
 		</div>
 
 		<ul class="notation">
-			<li>全てのログからセッション毎に処理時間を集計し、処理時間の合計が大きいものから順に${sessionRank.size}件抽出しました。</li>
+			<li>セッション毎に処理時間を集計し、処理時間の合計が大きいものから順に${sessionRank.size}件抽出しました。</li>
 			<li>セッション数の合計は、${sessionRank.total}件です。</li>
 		</ul>
 
