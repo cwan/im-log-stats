@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.mikaboshi.intra_mart.tools.log_stats.Application;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.report.GrossStatistics.RequestEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.PageTimeStat;
@@ -181,6 +182,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			rootMap.put("separator", this.separator);
 			rootMap.put("totalPageTime", report.getTotalPageTime());
 			rootMap.put("totalRequestCount", report.getRequestCount());
+			rootMap.put("projectVersion", Application.getInstance().getProjectVersion());
 
 			setParameters(rootMap);
 			setTimeSpanStatistics(report, rootMap);
