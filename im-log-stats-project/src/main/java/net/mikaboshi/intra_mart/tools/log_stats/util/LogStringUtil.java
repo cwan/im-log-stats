@@ -14,7 +14,10 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.util;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -28,6 +31,8 @@ public final class LogStringUtil {
 	private static final Pattern LINE_SPLIT_PATTERN = Pattern.compile("\\r?\\n");
 
 	private static final String[] ENPTY_STRING_ARRAY = new String[0];
+
+	private static final Pattern TRUNCATE_URL_PATTERN = Pattern.compile("(?:[^(\\:/)]+\\:)?//(?:[^(\\:/)]+)(?:\\:\\d+)?(/.+)");
 
 	private LogStringUtil() {}
 
@@ -44,6 +49,26 @@ public final class LogStringUtil {
 		}
 
 		return LINE_SPLIT_PATTERN.split(s);
+	}
+
+	/**
+	 * URLからスキーム、ホスト、ポートを削除する。
+	 * @param url
+	 * @return
+	 */
+	public static String truncateUrl(String url) {
+
+		if (url == null) {
+			return StringUtils.EMPTY;
+		}
+
+		Matcher matcher = TRUNCATE_URL_PATTERN.matcher(url);
+
+		if (matcher.matches()) {
+			return matcher.group(1);
+		} else {
+			return url;
+		}
 	}
 
 }

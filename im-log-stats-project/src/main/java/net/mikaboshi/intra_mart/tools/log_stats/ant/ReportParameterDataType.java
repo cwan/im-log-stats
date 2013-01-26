@@ -62,6 +62,12 @@ public class ReportParameterDataType extends DataType {
 	/** セッションランクの出力件数  */
 	private int sessionRankSize = 0;
 
+	/**
+	 * JSSPページパスを表示するかどうか
+	 * @since 1.0.11
+	 */
+	private Boolean jsspPath = null;
+
 	/** レポート名 */
 	private String name = null;
 
@@ -134,6 +140,15 @@ public class ReportParameterDataType extends DataType {
 	 */
 	public void setSessionRankSize(int sessionRankSize) {
 		this.sessionRankSize = sessionRankSize;
+	}
+
+	/**
+	 *
+	 * @param jsspPath
+	 * @since 1.0.11
+	 */
+	public void setJsspPath(Boolean jsspPath) {
+		this.jsspPath = jsspPath;
 	}
 
 	/**
@@ -261,6 +276,10 @@ public class ReportParameterDataType extends DataType {
 
 		if (this.sessionRankSize > 0) {
 			parameter.setSessionRankSize(this.sessionRankSize);
+		}
+
+		if (this.jsspPath != null) {
+			parameter.setJsspPath(this.jsspPath.booleanValue());
 		}
 
 		if (this.name != null) {

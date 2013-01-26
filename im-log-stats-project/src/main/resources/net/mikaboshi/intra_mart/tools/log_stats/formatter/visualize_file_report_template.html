@@ -442,6 +442,9 @@
 					<th title="リクエスト先のURLまたは遷移先画面パスです。">
 						${requestUrl}
 					</th>
+					<#if reportParameter.jsspPath>
+						<th title="JSSPページのパスです。">JSSPページパス</th>
+					</#if>
 					<th title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
 						処理時間 [ms]<span class="sort_mark">▼</span>
 					</th>
@@ -461,6 +464,9 @@
 					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="url">${row.requestUrl}</td>
+						<#if reportParameter.jsspPath>
+							<td>${row.jsspPath?html}<br/></td>
+						</#if>
 						<td class="numeric">${row.requestPageTime}</td>
 						<td class="date_time">${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
 						<td class="text">${row.sessionId}</td>
@@ -488,6 +494,9 @@
 					<th rowspan="2" title="リクエスト先のURLまたは遷移先画面パスです。">
 						${requestUrl}
 					</th>
+					<#if reportParameter.jsspPath>
+						<th title="JSSPページのパスです。" rowspan="2">JSSPページパス</th>
+					</#if>
 					<th rowspan="2" title="このURLまたは画面パスに対するリクエスト受信回数の合計です。">
 						リクエスト<br/>回数
 					</th>
@@ -530,6 +539,9 @@
 					<tr class="${getTrClass(row_index)}">
 						<td class="seq">${row_index + 1}</td>
 						<td class="url">${row.url}</td>
+						<#if reportParameter.jsspPath>
+							<td>${row.jsspPath?html}<br/></td>
+						</#if>
 						<td class="numeric">${row.count}</td>
 						<td class="numeric">${row.pageTimeSum}</td>
 						<td class="numeric">${row.pageTimeAverage}</td>

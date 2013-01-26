@@ -39,15 +39,15 @@ ${(row_index + 1)?c}${separator}${row.startDate?string("yyyy-MM-dd HH:mm")} - ${
 </#list>
 
 リクエスト処理時間総合ランク${separator}<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>${requestPageTimeRank.size?c}<#else>${reportParameter.requestPageTimeRankThresholdMillis?c}ms以上</#if>/${requestPageTimeRank.requestCount?c}
-#${separator}リクエストURL${separator}処理時間(ms)▼${separator}ログ出力日時${separator}セッションID${separator}ユーザID
+#${separator}リクエストURL${separator}<#if reportParameter.jsspPath>JSSPページパス${separator}</#if>処理時間(ms)▼${separator}ログ出力日時${separator}セッションID${separator}ユーザID
 <#list requestPageTimeRank.list as row>
-${(row_index + 1)?c}${separator}${esc(row.requestUrl)}${separator}${row.requestPageTime?c}${separator}${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}
+${(row_index + 1)?c}${separator}${esc(row.requestUrl)}${separator}<#if reportParameter.jsspPath>${esc(row.jsspPath)}${separator}</#if>${row.requestPageTime?c}${separator}${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}
 </#list>
 
 ${requestUrl}別・処理時間合計ランク${separator}${requestUrlRank.size?c}/${requestUrlRank.total?c}
-#${separator}リクエストURL${separator}リクエスト回数${separator}処理時間合計(ms)▼${separator}処理時間平均(ms)${separator}処理時間最小値(ms)${separator}処理時間中央値(ms)${separator}処理時間90%Line(ms)${separator}処理時間最大値(ms)${separator}処理時間標準偏差(ms)${separator}リクエスト回数%${separator}処理時間%
+#${separator}リクエストURL${separator}<#if reportParameter.jsspPath>JSSPページパス${separator}</#if>リクエスト回数${separator}処理時間合計(ms)▼${separator}処理時間平均(ms)${separator}処理時間最小値(ms)${separator}処理時間中央値(ms)${separator}処理時間90%Line(ms)${separator}処理時間最大値(ms)${separator}処理時間標準偏差(ms)${separator}リクエスト回数%${separator}処理時間%
 <#list requestUrlRank.list as row>
-${(row_index + 1)?c}${separator}${esc(row.url)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%
+${(row_index + 1)?c}${separator}${esc(row.url)}${separator}<#if reportParameter.jsspPath>${esc(row.jsspPath)}${separator}</#if>${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%
 </#list>
 
 セッション別・処理時間合計ランク${separator}${sessionRank.size?c}/${sessionRank.total?c}

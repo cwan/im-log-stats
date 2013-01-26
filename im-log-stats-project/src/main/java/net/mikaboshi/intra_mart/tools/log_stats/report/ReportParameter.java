@@ -56,6 +56,12 @@ public class ReportParameter {
 	private int sessionRankSize = 20;
 
 	/**
+	 * JSSPページパスを表示するかどうか
+	 * @since 1.0.11
+	 */
+	private boolean jsspPath = false;
+
+	/**
 	 * レポート名
 	 */
 	private String name = "intra-mart ログ統計レポート";
@@ -164,6 +170,24 @@ public class ReportParameter {
 	 */
 	public void setSessionRankSize(int sessionRankSize) {
 		this.sessionRankSize = sessionRankSize;
+	}
+
+	/**
+	 * JSSPページパスを表示するかどうかを取得する。
+	 * @return
+	 * @since 1.0.11
+	 */
+	public boolean isJsspPath() {
+		return jsspPath;
+	}
+
+	/**
+	 * JSSPページパスを表示するかどうかを設定する。
+	 * @param jsspPath
+	 * @since 1.0.11
+	 */
+	public void setJsspPath(boolean jsspPath) {
+		this.jsspPath = jsspPath;
 	}
 
 	/**

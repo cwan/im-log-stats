@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.mikaboshi.intra_mart.tools.log_stats.Application;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
@@ -46,6 +48,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.report.TimeSpanStatistics;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -62,6 +65,8 @@ import freemarker.template.TemplateException;
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 	private static final Log logger = LogFactory.getLog(TemplateFileReportFormatter.class);
+
+	private static final Pattern JSSPS_URL_PATTERN = Pattern.compile(".*/(.+?)\\.jssp[s|(rpc)]?.*");
 
 	/** テンプレートファイル */
 	private File templateFile = null;
@@ -292,6 +297,10 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("date", req.date);
 			row.put("sessionId", req.sessionId);
 			row.put("userId", report.getUserIdFromSessionId(req.sessionId, ""));
+
+			if (reportParameter.isJsspPath()) {
+				row.put("jsspPath", getJsspPath(req.url));
+			}
 		}
 	}
 
@@ -337,6 +346,10 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("pageTimeStandardDeviation", entry.pageTimeStandardDeviation);
 			row.put("countRate", new BigDecimal(entry.countRate * 100, percentMathContext).doubleValue());
 			row.put("pageTimeRate", new BigDecimal(entry.pageTimeRate * 100, percentMathContext).doubleValue());
+
+			if (reportParameter.isJsspPath()) {
+				row.put("jsspPath", getJsspPath(entry.url));
+			}
 		}
 	}
 
@@ -437,5 +450,31 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 
 		logFiles.put("transitionLogOnly",
 				CollectionUtils.isEmpty(report.getRequestLogFiles()));
+	}
+
+	/**
+	 * JSSPページパスを取得する。
+	 * @param url
+	 * @return
+	 * @since 1.0.11
+	 */
+	private String getJsspPath(String url) {
+
+		if (url == null) {
+			return StringUtils.EMPTY;
+		}
+
+		Matcher matcher = JSSPS_URL_PATTERN.matcher(url);
+
+		if (!matcher.matches()) {
+			return StringUtils.EMPTY;
+		}
+
+		String path = matcher.group(1);
+
+		path = StringUtils.replace(path, "(2f)", "/");
+		path = StringUtils.replace(path, "(5f)", "_");
+
+		return path;
 	}
 }
