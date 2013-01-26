@@ -101,7 +101,8 @@ charset | ログファイルの文字コード<br/>（Ver.6.x では IM のシ�
 begin | 開始日時（これより前のログは切り捨てる） | No | 下限なし
 end | 終了日時（これより後のログは切り捨てる） | No | 上限なし
 exceptionGroupingType | 例外のグルーピング方法<br/>cause : 根本原因となっているの Caused by の1行目でグルーピング<br/>first-line : 例外メッセージ + スタックトレース1行目でグルーピング | No | cause
-errorLimit | パーサエラーの上限。この回数を超えてエラーが発生した場合、処理を打ち切る（レポートは生成されない）。 | No | 1000
+errorLimit | パーサエラーの上限。この回数を超えてエラーが発生した場合、処理を打ち切る（レポートは生成されない） | No | 1000
+truncateRequestUrl | true の場合、リクエストURLからスキーム、ホスト、ポートを除去したもので集計する | No | false
 
 begin および end では、以下のいずれかの形式で日時を指定してください。  
 時刻を省略した場合、begin では 00:00、end では 24:00 で補完されます。
@@ -171,6 +172,8 @@ output | レポートの出力先ファイルパス(※1) | No | カレントデ
 charset | レポートファイルの文字コード | No | Ant 実行環境の JVM デフォルト文字コード
 templateFile | カスタムテンプレートのファイルパス<br/>（@type="template" 以外の場合は無視される） | No | デフォルトのHTMLテンプレート
 templateCharset | カスタムテンプレートファイルの文字コード<br/>（@type="template" 以外の場合および @template を指定していない場合は無視される） | No | Ant実行環境のJVMデフォルト文字コード
+requestPageTimeRankThresholdMillis | 0以上の値を指定した場合、処理時間がこの値（ミリ秒）以上のリクエストを全てリクエスト処理時間総合ランクに表示する<br/>（この属性を設定した場合、requestPageTimeRankSize の設定は無視される） | No | false
+jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc のページパスが表示される<br/>（ (2f) を /、(5f) を _ に変換 ） | No | false
 
 (※1)   
  `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
@@ -228,12 +231,15 @@ templateCharset | カスタムテンプレートファイルの文字コード<b
 
 ### 4.2. リクエスト処理時間総合ランク
 
-クエスト処理時間が大きいものから順にN件抽出したものです。  
+リクエスト処理時間が大きいものから順にN件抽出したものです。  
 この統計からは、最も性能の悪いリクエストURL（機能）が分かります。
+
+report パラメータの requestPageTimeRankThresholdMillis 属性を設定した場合、上位N件ではなく、処理時間が requestPageTimeRankThresholdMillis（ミリ秒）以上のリクエストを全て抽出します。
 
 ログ項目 | 説明 | 集計元
 :--|:--|:--
 リクエストURL<br/>（遷移先画面パス） | リクエスト先のURLまたは遷移先画面パス ([*](#request_url)) | リクエストログ
+JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パラメータの @jsspPath を "true" に設定した場合のみ表示される） | リクエストログ
 処理時間 | Application Runtime がリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
 ログ出力日時 | ログが出力された日時（INの場合はリクエスト受信直後、OUTの場合はレスポンス送信前） | リクエストログ
 セッションID | このリクエストを送信したセッション | リクエストログ
@@ -247,6 +253,7 @@ templateCharset | カスタムテンプレートファイルの文字コード<b
 ログ項目 | 説明 | 集計元
 :--|:--|:--
 リクエストURL<br/>（遷移先画面パス） | リクエスト先のURLまたは遷移先画面パス ([*](#request_url)) | リクエストログ、画面遷移ログ
+JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パラメータの @jsspPath を "true" に設定した場合のみ表示される） | リクエストログ
 リクエスト回数 | このURL（または遷移先画面パス）に対するリクエスト受信回数の合計 | リクエストログ、画面遷移ログ
 リクエスト処理時間 [ms] | Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒）([*](#response_time)) | リクエストログ、画面遷移ログ
 リクエスト回数% | 全リクエストの合計に対する、このURLの回数が占める比率 | リクエストログ、画面遷移ログ
@@ -318,6 +325,8 @@ signature | java.lang.String | 署名
 generatedTime | java.util.Date | レポート生成日時
 totalPageTime | long | 合計処理時間（ミリ秒）
 totalRequestCount | int | 合計リクエスト回数
+projectVersion | java.lang.String | im-log-stats のバージョン
+projectUrl | java.lang.String | im-log-stats プロジェクトのURL
 
 ### 5.2. パーサパラメータ
 
@@ -329,7 +338,8 @@ parserParameter.transitionLogLayout | java.lang.String | 画面遷移ログの�
 parserParameter.begin | java.util.Date | 開始日時（未設定の場合はnull）
 parserParameter.end | java.util.Date | 終了日時（未設定の場合はnull）
 parserParameter.version.name | java.lang.String | バージョン
-parserParameter.exceptionGroupingByCause | boolean | 根本原因の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
+parserParameter.exceptionGroupingByCause | boolean | 発端の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
+parserParameter.truncateUrl | boolean | リクエストURLからスキーム、ホスト、ポートを除去するならば true、しないならば false
 
 ### 5.3. レポートパラメータ
 
@@ -337,10 +347,12 @@ parserParameter.exceptionGroupingByCause | boolean | 根本原因の Caused by �
 :--|:--|:--
 reportParameter.span | long | 期間別統計の間隔（分）
 reportParameter.sessionTimeout | int | セッションタイムアウト時間（分）
-reportParameter.requestPageTimeRankSize | int | リクエスト処理時間ランクの出力件数
-reportParameter.requestUrlRankSize | int | リクエストURLランクの出力件数
+reportParameter.requestPageTimeRankSize | int | リクエスト処理時間総合ランクの出力件数
+reportParameter.requestUrlRankSize | int | リクエストURL（遷移先画面パス）別・処理時間合計ランクの出力件数
 reportParameter.sessionRankSize | int | セッションランクの出力件数
 reportParameter.version.name | java.lang.String | バージョン
+reportParameter.requestPageTimeRankThresholdMillis | long | リクエスト処理時間総合ランクを閾値で抽出する場合のミリ秒
+reportParameter.jsspPath | boolean | リクエスト処理時間総合ランク、リクエストURL別・処理時間合計ランクに、JSSPページパスの列を表示するかどうか
 
 ### 5.4. 期間別統計
 
@@ -373,6 +385,7 @@ requestPageTimeRank.size | int | リクエスト処理時間総合ランクの�
 requestPageTimeRank.requestCount | int | リクエスト数合計
 requestPageTimeRank.list | java.util.List | リクエスト処理時間総合ランクリスト
 - requestUrl | java.lang.String | リクエストURL（または遷移先画面パス）
+- jsspPath | java.lang.String | JSSPページパス（ parser パラメータの @jsspPath を "true" に設定した場合のみ設定される）
 - requestPageTime | long | リクエスト処理時間
 - date | java.util.Date | ログ出力日時
 - sessionId | java.lang.String | セッションID
@@ -386,6 +399,7 @@ requestUrlRank.size | int | リクエストURL別・処理時間合計ランク�
 requestUrlRank.total | int | リクエストURL（または遷移先画面パス）数合計
 requestUrlRank.list | java.util.List | リクエストURL別・処理時間合計ランクリスト
 - url | java.lang.String | リクエストURL（または遷移先画面パス）
+- jsspPath | java.lang.String | JSSPページパス（ parser パラメータの @jsspPath を "true" に設定した場合のみ設定される）
 - count | int | リクエスト回数
 - pageTimeSum | long | リクエスト処理時間合計
 - pageTimeAverage | long | リクエスト処理時間平均値
@@ -444,6 +458,12 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 [Apache License, Version 2.0](/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
+
+### Ver.1.0.10 (2013-01-XX)
+- [#5 リクエスト処理時間総合ランクを、処理時間の閾値で抽出できるようにする。](/cwan/im-log-stats/issues/5)
+- [#6 jssp ページのソースパスを表示できるようにする。](/cwan/im-log-stats/issues/6)
+- [#7 レポートのリクエストURLから、スキーム、ホスト、ポートを除去できるようにする。](/cwan/im-log-stats/issues/7)
+- [#8 im-log-stats のバージョンをレポートに表示する。](/cwan/im-log-stats/issues/8)
 
 ### Ver.1.0.10 (2012-10-22)
 - [#2 レポートにグラフを表示できるようにする。](/cwan/im-log-stats/issues/2)
