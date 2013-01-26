@@ -424,7 +424,13 @@
 		</div>
 
 		<ul class="notation">
-			<li>全てのログから、リクエスト処理時間が大きいものから順に${requestPageTimeRank.size}件抽出しました。</li>
+			<li>
+				<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>
+					全てのログから、リクエスト処理時間が大きいものから順に${requestPageTimeRank.size}件抽出しました。
+				<#else>
+					全てのログから、リクエスト処理時間が${reportParameter.requestPageTimeRankThresholdMillis}ミリ秒以上のものを抽出しました。
+				</#if>
+			</li>
 			<li>リクエスト数の合計は、${requestPageTimeRank.requestCount}件です。</li>
 		</ul>
 
@@ -818,7 +824,11 @@
 				セッションタイムアウト時間 : ${reportParameter.sessionTimeout}分
 			</li>
 			<li>
-				リクエスト処理時間ランクの出力件数 : ${reportParameter.requestPageTimeRankSize}
+				<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>
+					リクエスト処理時間ランクの出力件数 : ${reportParameter.requestPageTimeRankSize}
+				<#else>
+					リクエスト処理時間ランクの閾値 : ${reportParameter.requestPageTimeRankThresholdMillis}ミリ秒
+				</#if>
 			</li>
 			<li>
 				リクエストURLランクの出力件数 : ${reportParameter.requestUrlRankSize}

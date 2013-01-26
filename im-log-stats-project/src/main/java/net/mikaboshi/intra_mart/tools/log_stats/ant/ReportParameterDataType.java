@@ -50,6 +50,12 @@ public class ReportParameterDataType extends DataType {
 	/** リクエスト処理時間ランクの出力件数  */
 	private int requestPageTimeRankSize = 0;
 
+	/**
+	 * リクエスト処理時間ランクの閾値（ミリ秒）
+	 * @since 1.0.11
+	 */
+	private long requestPageTimeRankThresholdMillis = -1L;
+
 	/** リクエストURLランクの出力件数  */
 	private int requestUrlRankSize = 0;
 
@@ -105,6 +111,15 @@ public class ReportParameterDataType extends DataType {
 	 */
 	public void setRequestPageTimeRankSize(int requestPageTimeRankSize) {
 		this.requestPageTimeRankSize = requestPageTimeRankSize;
+	}
+
+	/**
+	 *
+	 * @param requestPageTimeRankThresholdMillis
+	 * @since 1.0.11
+	 */
+	public void setRequestPageTimeRankThresholdMillis(long requestPageTimeRankThresholdMillis) {
+		this.requestPageTimeRankThresholdMillis = requestPageTimeRankThresholdMillis;
 	}
 
 	/**
@@ -234,7 +249,9 @@ public class ReportParameterDataType extends DataType {
 			parameter.setSessionTimeout(this.sessionTimeout);
 		}
 
-		if (this.requestPageTimeRankSize > 0) {
+		if (this.requestPageTimeRankThresholdMillis >= 0L) {
+			parameter.setRequestPageTimeRankThresholdMillis(this.requestPageTimeRankThresholdMillis);
+		} else if (this.requestPageTimeRankSize > 0) {
 			parameter.setRequestPageTimeRankSize(this.requestPageTimeRankSize);
 		}
 

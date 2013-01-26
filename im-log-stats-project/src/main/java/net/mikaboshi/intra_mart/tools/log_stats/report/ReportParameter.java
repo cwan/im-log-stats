@@ -40,6 +40,12 @@ public class ReportParameter {
 	private int requestPageTimeRankSize = 20;
 
 	/**
+	 * リクエスト処理時間ランクの閾値（ミリ秒）
+	 * @since 1.0.11
+	 */
+	private long requestPageTimeRankThresholdMillis = -1L;
+
+	/**
 	 * リクエストURLランクの出力件数
 	 */
 	private int requestUrlRankSize = 20;
@@ -116,6 +122,24 @@ public class ReportParameter {
 	 */
 	public int getRequestUrlRankSize() {
 		return requestUrlRankSize;
+	}
+
+	/**
+	 * リクエスト処理時間ランクの閾値（ミリ秒）を設定する。
+	 * @param requestPageTimeRankThresholdMillis
+	 * @since 1.0.11
+	 */
+	public void setRequestPageTimeRankThresholdMillis(long requestPageTimeRankThresholdMillis) {
+		this.requestPageTimeRankThresholdMillis = requestPageTimeRankThresholdMillis;
+	}
+
+	/**
+	 * リクエスト処理時間ランクの閾値（ミリ秒）を取得する。
+	 * @return
+	 * @since 1.0.11
+	 */
+	public long getRequestPageTimeRankThresholdMillis() {
+		return requestPageTimeRankThresholdMillis;
 	}
 
 	/**

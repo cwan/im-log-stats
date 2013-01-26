@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
@@ -269,7 +268,7 @@ public class Report {
 	}
 
 	/**
-	 * リクエスト処理時間の大きい順のトップNを取得する。(N=requestPageTimeRankSize)
+	 * リクエスト処理時間のランクを取得する。
 	 * 同一のリクエストURLが複数含まれる場合がある。
 	 * @return
 	 */
@@ -464,9 +463,17 @@ public class Report {
 	private GrossStatistics getGrossStatistics() {
 
 		if (this.grossStatistics == null) {
-			this.grossStatistics = new GrossStatistics(
-											this.parameter.getRequestPageTimeRankSize(),
-											CollectionUtils.isEmpty(getRequestLogFiles()));
+
+			if (this.parameter.getRequestPageTimeRankThresholdMillis() < 0L) {
+
+				this.grossStatistics = new GrossStatistics(
+												this.parameter.getRequestPageTimeRankSize(),
+												CollectionUtils.isEmpty(getRequestLogFiles()));
+			} else {
+				this.grossStatistics = new GrossStatistics(
+												this.parameter.getRequestPageTimeRankThresholdMillis(),
+												CollectionUtils.isEmpty(getRequestLogFiles()));
+			}
 		}
 
 		return grossStatistics;

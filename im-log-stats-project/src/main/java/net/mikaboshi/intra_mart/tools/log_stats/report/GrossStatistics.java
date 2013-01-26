@@ -14,11 +14,13 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.report;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Log;
@@ -61,6 +63,19 @@ public class GrossStatistics {
 	private final RequestEntry[] requestPageTimeRank;
 
 	/**
+	 * 処理時間ランクの閾値（ms）
+	 * @since 1.0.11
+	 */
+	private final long requestPageTimeRankThresholdMillis;
+
+	/**
+	 * 処理時間順のリクエストランクリスト。
+	 * requestPageTimeRankThresholdMillisを指定した場合に使用する。
+	 * @since 1.0.11
+	 */
+	private final List<RequestEntry> requestPageTimeRankList;
+
+	/**
 	 * リクエスト数合計
 	 */
 	private int requestCount = 0;
@@ -79,13 +94,33 @@ public class GrossStatistics {
 	private long totalPageTime = 0L;
 
 	/**
-	 * コンストラクタ
-	 * @param requestPageTimeRankSize　処理時間順のリクエストランクサイズ
+	 * 処理時間順のリクエストランクサイズを指定するコンストラクタ
+	 * @param requestPageTimeRankSize 処理時間順のリクエストランクサイズ
 	 * @param transitionLogOnly 画面遷移ログのみ（リクエストログなし）かどうか
 	 */
 	public GrossStatistics(int requestPageTimeRankSize, boolean transitionLogOnly) {
 		this.requestPageTimeRank = new RequestEntry[requestPageTimeRankSize];
 		this.transitionLogOnly = transitionLogOnly;
+		this.requestPageTimeRankThresholdMillis = -1L;
+		this.requestPageTimeRankList = null;
+	}
+
+	/**
+	 * 処理時間順のリクエストランクの閾値（ミリ秒）を指定するコンストラクタ
+	 * @param requestPageTimeRankThresholdMillis
+	 * @param transitionLogOnly
+	 * @since 1.0.11
+	 */
+	public GrossStatistics(long requestPageTimeRankThresholdMillis, boolean transitionLogOnly) {
+
+		if (requestPageTimeRankThresholdMillis < 0) {
+			throw new IllegalArgumentException("requestPageTimeRankThresholdMillis must be >= 0.");
+		}
+
+		this.requestPageTimeRank = null;
+		this.transitionLogOnly = transitionLogOnly;
+		this.requestPageTimeRankThresholdMillis = requestPageTimeRankThresholdMillis;
+		this.requestPageTimeRankList = new ArrayList<GrossStatistics.RequestEntry>();
 	}
 
 	/**
@@ -166,7 +201,29 @@ public class GrossStatistics {
 	 * @return
 	 */
 	public RequestEntry[] getRequestPageTimeRank() {
-		return requestPageTimeRank;
+
+		if (this.requestPageTimeRank != null) {
+			return this.requestPageTimeRank;
+
+		} else {
+			// レスポンスタイムでソートして返す
+
+			Collections.sort(this.requestPageTimeRankList, new Comparator<RequestEntry>() {
+
+				public int compare(RequestEntry e1, RequestEntry e2) {
+
+					if (e1.time > e2.time) {
+						return -1;
+					} else if (e1.time < e2.time) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+
+			return this.requestPageTimeRankList.toArray(new RequestEntry[this.requestPageTimeRankList.size()]);
+		}
 	}
 
 	/**
@@ -207,34 +264,50 @@ public class GrossStatistics {
 		registerSessionAccess(log);
 
 
-		// 処理時間ランクを設定
-		int size = this.requestPageTimeRank.length;
+		if (this.requestPageTimeRank != null) {
 
-		if (this.requestPageTimeRank[size - 1] == null ||
-				responseTime > this.requestPageTimeRank[size - 1].time) {
+			// 処理時間ランクを設定
+			int size = this.requestPageTimeRank.length;
 
-			// ランクの入れ替え
-			for (int i = 0; i < size; i++) {
+			if (this.requestPageTimeRank[size - 1] == null ||
+					responseTime > this.requestPageTimeRank[size - 1].time) {
 
-				if (this.requestPageTimeRank[i] != null &&
-						responseTime <= this.requestPageTimeRank[i].time) {
-					continue;
+				// ランクの入れ替え
+				for (int i = 0; i < size; i++) {
+
+					if (this.requestPageTimeRank[i] != null &&
+							responseTime <= this.requestPageTimeRank[i].time) {
+						continue;
+					}
+
+					// シフト
+					for (int j = size - 1; j >= i + 1; j--) {
+						this.requestPageTimeRank[j] = this.requestPageTimeRank[j - 1];
+					}
+
+					RequestEntry requestEntry = new RequestEntry();
+					this.requestPageTimeRank[i] = requestEntry;
+
+					requestEntry.url = url;
+					requestEntry.time = responseTime;
+					requestEntry.date = log.date;
+					requestEntry.sessionId = log.clientSessionId;
+
+					break;
 				}
+			}
 
-				// シフト
-				for (int j = size - 1; j >= i + 1; j--) {
-					this.requestPageTimeRank[j] = this.requestPageTimeRank[j - 1];
-				}
+		} else {
+			if (responseTime >= this.requestPageTimeRankThresholdMillis) {
 
 				RequestEntry requestEntry = new RequestEntry();
-				this.requestPageTimeRank[i] = requestEntry;
 
 				requestEntry.url = url;
 				requestEntry.time = responseTime;
 				requestEntry.date = log.date;
 				requestEntry.sessionId = log.clientSessionId;
 
-				break;
+				this.requestPageTimeRankList.add(requestEntry);
 			}
 		}
 	}

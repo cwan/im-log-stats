@@ -38,7 +38,7 @@ ${esc(reportName)}${separator}${generatedTime?string("yyyy-MM-dd HH:mm:ss")}${se
 ${(row_index + 1)?c}${separator}${row.startDate?string("yyyy-MM-dd HH:mm")} - ${row.endDate?string("HH:mm")}${separator}${row.requestCount?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.uniqueUserCount?c}${separator}${row.uniqueSessionCount?c}${separator}${row.activeSessionCount?c}${separator}${row.exceptionCount?c}${separator}${row.transitionCount?c}${separator}${row.transitionExceptionCount?c}
 </#list>
 
-リクエスト処理時間総合ランク${separator}${requestPageTimeRank.size?c}/${requestPageTimeRank.requestCount?c}
+リクエスト処理時間総合ランク${separator}<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>${requestPageTimeRank.size?c}<#else>${reportParameter.requestPageTimeRankThresholdMillis?c}ms以上</#if>/${requestPageTimeRank.requestCount?c}
 #${separator}リクエストURL${separator}処理時間(ms)▼${separator}ログ出力日時${separator}セッションID${separator}ユーザID
 <#list requestPageTimeRank.list as row>
 ${(row_index + 1)?c}${separator}${esc(row.requestUrl)}${separator}${row.requestPageTime?c}${separator}${row.date?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}
@@ -89,7 +89,11 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.
 画面遷移ログレイアウト${separator}${esc(parserParameter.transitionLogLayout)}
 期間別統計の間隔${separator}${reportParameter.span?c}分
 セッションタイムアウト時間${separator}${reportParameter.sessionTimeout?c}分
+<#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>
 リクエスト処理時間ランクの出力件数${separator}${reportParameter.requestPageTimeRankSize?c}
+<#else>
+リクエスト処理時間ランクの閾値${separator}${reportParameter.requestPageTimeRankThresholdMillis?c}ミリ秒
+</#if>
 リクエストURLランクの出力件数${separator}${reportParameter.requestUrlRankSize?c}
 セッションランクの出力件数${separator}${reportParameter.sessionRankSize?c}
 例外のグルーピング方法${separator}<#if parserParameter.exceptionGroupingByCause>発端のCaused byの1行目<#else>メッセージ・スタックトレースの1行目</#if>

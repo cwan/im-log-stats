@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mikaboshi</groupId>
   <artifactId>im-log-stats</artifactId>
-  <version>1.0.10</version>
+  <version>1.0.11</version>
   <build>
     <plugins>
       <plugin>
