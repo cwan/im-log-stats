@@ -183,6 +183,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			rootMap.put("totalPageTime", report.getTotalPageTime());
 			rootMap.put("totalRequestCount", report.getRequestCount());
 			rootMap.put("projectVersion", Application.getInstance().getProjectVersion());
+			rootMap.put("projectUrl", Application.getInstance().getProjectUrl());
 
 			setParameters(rootMap);
 			setTimeSpanStatistics(report, rootMap);

@@ -60,4 +60,12 @@ public class Application {
 	public String getProjectVersion() {
 		return this.config.getProperty("project.version", "");
 	}
+
+	/**
+	 * プロジェクトURLを取得する。
+	 * @return
+	 */
+	public String getProjectUrl() {
+		return this.config.getProperty("project.url", "");
+	}
 }
