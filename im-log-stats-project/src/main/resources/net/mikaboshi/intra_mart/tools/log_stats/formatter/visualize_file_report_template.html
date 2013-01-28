@@ -84,7 +84,7 @@
 				font-size: 140%;
 				font-weight: bold;
 				color: #030;
-				margin: 20px 0 5px 0;
+				margin: 30px 0 5px 0;
 				padding: 0;
 				float: left;
 			}
@@ -191,6 +191,11 @@
 				font-size: 140% !important;
 			}
 
+			#time_span_stat_graph_area {
+				width: 1040px;
+				margin: 18px 0 0 0;
+			}
+
 			div.vertical-x ul.visualize-labels-x span.label {
 				/* 縦書き */
 				-webkit-transform: rotate(-90deg);
@@ -226,6 +231,15 @@
 				text-align: center;
 				white-space: nowrap;
 			}
+
+			#time_span_stat_graph_option div {
+				float: right;
+				padding: 0 0 0 12px;
+			}
+
+			#time_span_stat_graph_option select {
+				font-size: 90%;
+			}
 		</style>
 		<style type="text/css" media="print">
 			#toc {
@@ -244,117 +258,162 @@
 				text-align: center;
 				white-space: nowrap;
 			}
+
+			#time_span_stat_graph_option {
+				display: none;
+			}
 		</style>
 
 		<!--[if IE]><script type="text/javascript" src="visualize/js/excanvas.js"></script><![endif]-->
 		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
-		$(function() {
+			$(function() {
 
-			// 期間別統計
-			var timeSpanStatData = [];
-			var $verticalX = $(".vertical-x");
+				// 期間別統計
+				var timeSpanStatData = [];
+				var $verticalX = $(".vertical-x");
 
-			$("#time_span_stat_detail tbody tr").each(function() {
+				var timeSpanTimeSelectOptions = "";
 
-				timeSpanStatData.push({
-					datetime: $("td:eq(1)", this).html().replace(/^\s+/, "").substring(0, 16)
-					, average: parseInt($("td:eq(4)", this).html().replace(/,/g, ""), 10)
-					, min: parseInt($("td:eq(5)", this).html().replace(/,/g, ""), 10)
-					, median: parseInt($("td:eq(6)", this).html().replace(/,/g, ""), 10)
-					, l90: parseInt($("td:eq(7)", this).html().replace(/,/g, ""), 10)
-					, max: parseInt($("td:eq(8)", this).html().replace(/,/g, ""), 10)
+				$("#time_span_stat_detail tbody tr").each(function() {
+
+					var datetime = $("td:eq(1)", this).html().replace(/^\s+/, "").substring(0, 16);
+
+					timeSpanStatData.push({
+						datetime: datetime
+						, average: parseInt($("td:eq(4)", this).html().replace(/,/g, ""), 10)
+						, min: parseInt($("td:eq(5)", this).html().replace(/,/g, ""), 10)
+						, median: parseInt($("td:eq(6)", this).html().replace(/,/g, ""), 10)
+						, l90: parseInt($("td:eq(7)", this).html().replace(/,/g, ""), 10)
+						, max: parseInt($("td:eq(8)", this).html().replace(/,/g, ""), 10)
+					});
+
+					timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
 				});
-			});
 
-			function buildTimeSpanStatGraph(option) {
+				$(timeSpanTimeSelectOptions).appendTo("#time_span_stat_graph_opt_begin_time");
+				$(timeSpanTimeSelectOptions).appendTo("#time_span_stat_graph_opt_end_time");
 
-				if (timeSpanStatData.length === 0) {
-					return;
-				}
+				$("#time_span_stat_graph_opt_end_time option:last").attr("selected", true);
 
-				$verticalX.empty();
+				function buildTimeSpanStatGraph(option) {
 
-				var maxResTime = 0;
+					if (timeSpanStatData.length === 0) {
+						return;
+					}
 
-				var sizePerGraph = Math.ceil(timeSpanStatData.length / (parseInt((timeSpanStatData.length - 1) / 45) + 1));
+					$verticalX.empty();
 
-				var sTable = "";
+					var data = [];
+					var beginTime = $("#time_span_stat_graph_opt_begin_time").val();
+					var endTime = $("#time_span_stat_graph_opt_end_time").val();
 
-				$(timeSpanStatData).each(function(i, e) {
+					$(timeSpanStatData).each(function(i, e) {
 
-					if (i % sizePerGraph === 0) {
-
-						if (i > 0) {
-							sTable += "</tbody></table>";
+						if (e.datetime < beginTime) {
+							return true;
 						}
 
-						sTable += '<table class="line_graph_source time_span_stat_source">';
-						sTable += '<caption>期間別統計 - リクエスト処理時間 [ms] (' + e.datetime + ' ～)</caption>';
-						sTable += '<thead><tr><td></td>';
+						if (e.datetime > endTime) {
+							return false;
+						}
 
-						if (option.average) sTable += '<th>平均値</th>';
-						if (option.min) sTable += '<th>最小値</th>';
-						if (option.median) sTable += '<th>中央値</th>';
-						if (option.l90) sTable += '<th>90% Line</th>';
-						if (option.max) sTable += '<th>最大値</th>';
+						data.push(e);
+					});
 
-						sTable += '</tr></thead><tbody>'
-					}
 
-					sTable += '<tr><th>' + e.datetime.substring(11) + '</th>';
+					var maxResTime = 0;
 
-					if (option.average) {
-						sTable += '<td>' + e.average + '</td>';
-						maxResTime = Math.max(maxResTime, e.average);
-					}
+					var sizePerGraph = Math.ceil(data.length / (parseInt((data.length - 1) / 45) + 1));
 
-					if (option.min) {
-						sTable += '<td>' + e.min + '</td>';
-						maxResTime = Math.max(maxResTime, e.min);
-					}
+					var sTable = "";
 
-					if (option.median) {
-						sTable += '<td>' + e.median + '</td>';
-						maxResTime = Math.max(maxResTime, e.median);
-					}
+					$(data).each(function(i, e) {
 
-					if (option.l90) {
-						sTable += '<td>' + e.l90 + '</td>';
-						maxResTime = Math.max(maxResTime, e.l90);
-					}
+						if (i % sizePerGraph === 0) {
 
-					if (option.max) {
-						sTable += '<td>' + e.max + '</td>';
-						maxResTime = Math.max(maxResTime, e.max);
-					}
+							if (i > 0) {
+								sTable += "</tbody></table>";
+							}
 
-					sTable += '</tr>';
+							sTable += '<table class="line_graph_source time_span_stat_source">';
+							sTable += '<caption>期間別統計 - リクエスト処理時間 [ms] (' + e.datetime + ' ～)</caption>';
+							sTable += '<thead><tr><td></td>';
+
+							if (option.average) sTable += '<th>平均値</th>';
+							if (option.min) sTable += '<th>最小値</th>';
+							if (option.median) sTable += '<th>中央値</th>';
+							if (option.l90) sTable += '<th>90% Line</th>';
+							if (option.max) sTable += '<th>最大値</th>';
+
+							sTable += '</tr></thead><tbody>'
+						}
+
+						sTable += '<tr><th>' + e.datetime.substring(11) + '</th>';
+
+						if (option.average) {
+							sTable += '<td>' + e.average + '</td>';
+							maxResTime = Math.max(maxResTime, e.average);
+						}
+
+						if (option.min) {
+							sTable += '<td>' + e.min + '</td>';
+							maxResTime = Math.max(maxResTime, e.min);
+						}
+
+						if (option.median) {
+							sTable += '<td>' + e.median + '</td>';
+							maxResTime = Math.max(maxResTime, e.median);
+						}
+
+						if (option.l90) {
+							sTable += '<td>' + e.l90 + '</td>';
+							maxResTime = Math.max(maxResTime, e.l90);
+						}
+
+						if (option.max) {
+							sTable += '<td>' + e.max + '</td>';
+							maxResTime = Math.max(maxResTime, e.max);
+						}
+
+						sTable += '</tr>';
+					});
+
+					sTable += '</tbody></table>';
+
+					$(sTable).appendTo($verticalX);
+
+					$('table.time_span_stat_source').visualize(
+							{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: maxResTime, bottomValue: 0});
+				}
+
+				buildTimeSpanStatGraph({
+					average: true
+					, min: true
+					, median: true
+					, l90: true
+					, max: true
 				});
 
-				sTable += '</tbody></table>';
+				// グラフ更新
+				$("#time_span_stat_graph_update").click(function() {
 
-				$(sTable).appendTo($verticalX);
+					buildTimeSpanStatGraph({
+						average: $("#time_span_stat_graph_opt_average").attr("checked")
+						, min: $("#time_span_stat_graph_opt_min").attr("checked")
+						, median: $("#time_span_stat_graph_opt_median").attr("checked")
+						, l90: $("#time_span_stat_graph_opt_l90").attr("checked")
+						, max: $("#time_span_stat_graph_opt_max").attr("checked")
+					});
+				});
 
-				$('table.time_span_stat_source').visualize(
-						{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: maxResTime, bottomValue: 0});
-			}
+				// リクエストURL別・処理時間合計ランク
+				$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
 
-			buildTimeSpanStatGraph({
-				average: true
-				, min: true
-				, median: true
-				, l90: true
-				, max: true
+				// セッション別・処理時間合計ランク
+				$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
 			});
-
-			// リクエストURL別・処理時間合計ランク
-			$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
-
-			// セッション別・処理時間合計ランク
-			$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
-		});
 		</script>
 	</head>
 
@@ -471,7 +530,41 @@
 			</tbody>
 		</table>
 
-		<div class="vertical-x"></div>
+		<div id="time_span_stat_graph_area">
+			<div id="time_span_stat_graph_option" class="clearfix">
+				<div>
+					<input type="button" value="更新" id="time_span_stat_graph_update">
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_max" checked="checked">
+					<label for="time_span_stat_graph_opt_max">最大値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_l90" checked="checked">
+					<label for="time_span_stat_graph_opt_l90">90% Line</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_median" checked="checked">
+					<label for="time_span_stat_graph_opt_median">中央値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_min" checked="checked">
+					<label for="time_span_stat_graph_opt_min">最小値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_average" checked="checked">
+					<label for="time_span_stat_graph_opt_average">平均値</label>
+				</div>
+				<div>
+					終:<select id="time_span_stat_graph_opt_end_time"></select>
+				</div>
+				<div>
+					始:<select id="time_span_stat_graph_opt_begin_time"></select>
+				</div>
+			</div>
+
+			<div class="vertical-x"></div>
+		</div>
 
 		<div class="section_header clearfix">
 			<h2><a name="request_page_time_rank"></a>リクエスト処理時間総合ランク</h2>
