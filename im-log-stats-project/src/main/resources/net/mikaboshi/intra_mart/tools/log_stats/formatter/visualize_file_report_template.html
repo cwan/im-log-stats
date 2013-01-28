@@ -250,22 +250,111 @@
 		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
-			$(function() {
-				// 期間別統計
-				var timeSapnStatMaxResTime = -1;
-				$("#time_span_stat_detail tbody tr").each(function() {
-					timeSapnStatMaxResTime = Math.max(timeSapnStatMaxResTime, parseInt(("" + $("td:eq(8)", this).html()).replace(/,/g, "")));
+		$(function() {
+
+			// 期間別統計
+			var timeSpanStatData = [];
+			var $verticalX = $(".vertical-x");
+
+			$("#time_span_stat_detail tbody tr").each(function() {
+
+				timeSpanStatData.push({
+					datetime: $("td:eq(1)", this).html().replace(/^\s+/, "").substring(0, 16)
+					, average: parseInt($("td:eq(4)", this).html().replace(/,/g, ""), 10)
+					, min: parseInt($("td:eq(5)", this).html().replace(/,/g, ""), 10)
+					, median: parseInt($("td:eq(6)", this).html().replace(/,/g, ""), 10)
+					, l90: parseInt($("td:eq(7)", this).html().replace(/,/g, ""), 10)
+					, max: parseInt($("td:eq(8)", this).html().replace(/,/g, ""), 10)
+				});
+			});
+
+			function buildTimeSpanStatGraph(option) {
+
+				if (timeSpanStatData.length === 0) {
+					return;
+				}
+
+				$verticalX.empty();
+
+				var maxResTime = 0;
+
+				var sizePerGraph = Math.ceil(timeSpanStatData.length / (parseInt((timeSpanStatData.length - 1) / 45) + 1));
+
+				var sTable = "";
+
+				$(timeSpanStatData).each(function(i, e) {
+
+					if (i % sizePerGraph === 0) {
+
+						if (i > 0) {
+							sTable += "</tbody></table>";
+						}
+
+						sTable += '<table class="line_graph_source time_span_stat_source">';
+						sTable += '<caption>期間別統計 - リクエスト処理時間 [ms] (' + e.datetime + ' ～)</caption>';
+						sTable += '<thead><tr><td></td>';
+
+						if (option.average) sTable += '<th>平均値</th>';
+						if (option.min) sTable += '<th>最小値</th>';
+						if (option.median) sTable += '<th>中央値</th>';
+						if (option.l90) sTable += '<th>90% Line</th>';
+						if (option.max) sTable += '<th>最大値</th>';
+
+						sTable += '</tr></thead><tbody>'
+					}
+
+					sTable += '<tr><th>' + e.datetime.substring(11) + '</th>';
+
+					if (option.average) {
+						sTable += '<td>' + e.average + '</td>';
+						maxResTime = Math.max(maxResTime, e.average);
+					}
+
+					if (option.min) {
+						sTable += '<td>' + e.min + '</td>';
+						maxResTime = Math.max(maxResTime, e.min);
+					}
+
+					if (option.median) {
+						sTable += '<td>' + e.median + '</td>';
+						maxResTime = Math.max(maxResTime, e.median);
+					}
+
+					if (option.l90) {
+						sTable += '<td>' + e.l90 + '</td>';
+						maxResTime = Math.max(maxResTime, e.l90);
+					}
+
+					if (option.max) {
+						sTable += '<td>' + e.max + '</td>';
+						maxResTime = Math.max(maxResTime, e.max);
+					}
+
+					sTable += '</tr>';
 				});
 
+				sTable += '</tbody></table>';
+
+				$(sTable).appendTo($verticalX);
+
 				$('table.time_span_stat_source').visualize(
-						{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: timeSapnStatMaxResTime, bottomValue: 0});
+						{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: maxResTime, bottomValue: 0});
+			}
 
-				// リクエストURL別・処理時間合計ランク
-				$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
-
-				// セッション別・処理時間合計ランク
-				$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+			buildTimeSpanStatGraph({
+				average: true
+				, min: true
+				, median: true
+				, l90: true
+				, max: true
 			});
+
+			// リクエストURL別・処理時間合計ランク
+			$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+
+			// セッション別・処理時間合計ランク
+			$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+		});
 		</script>
 	</head>
 
@@ -382,42 +471,7 @@
 			</tbody>
 		</table>
 
-		<div class="vertical-x">
-		<#-- 数が多いと見づらくなるので、40件で分割する。ただし、最後が5件以下の場合は、前のグラフに含める。 -->
-		<#assign timeSpanStatGraphLimit=40>
-		<#list timeSpanStat.list as row>
-		<#if row_index % timeSpanStatGraphLimit == 0 && (row_index == 0 || (timeSpanStat.list?size - row_index >= 5))>
-			<#if (row_index > 0)>
-				</tbody>
-			</table>
-			</#if>
-			<table class="line_graph_source time_span_stat_source">
-				<caption>
-					期間別統計 - リクエスト処理時間 [ms]
-					(${timeSpanStat.list[row_index].startDate?string("yyyy-MM-dd HH:mm")} ～)
-				</caption>
-				<thead>
-					<tr>
-						<td></td>
-						<th>平均値</th>
-						<th>中央値</th>
-						<th>90% Line</th>
-						<th>最大値</th>
-					</tr>
-				</thead>
-				<tbody>
-		</#if>
-					<tr>
-						<th>${row.startDate?string("HH:mm")}</th>
-						<td>${row.pageTimeAverage?c}</td>
-						<td>${row.pageTimeMedian?c}</td>
-						<td>${row.pageTime90Percent?c}</td>
-						<td>${row.pageTimeMax?c}</td>
-					</tr>
-			</#list>
-				</tbody>
-			</table>
-		</div>
+		<div class="vertical-x"></div>
 
 		<div class="section_header clearfix">
 			<h2><a name="request_page_time_rank"></a>リクエスト処理時間総合ランク</h2>
