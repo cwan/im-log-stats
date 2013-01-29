@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="generate_report">
+
+	<property environment="env" />
+
+	<!-- 実行時クラスパス -->
+	<path id="execute.classpath">
+		<fileset dir="${basedir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- カスタムタスク、ネスト要素の定義 -->
+	<taskdef
+		resource="net/mikaboshi/intra_mart/tools/log_stats/ant/taskdef.properties"
+		classpathref="execute.classpath"
+		loaderref="loader1" />
+
+	<typedef
+		resource="net/mikaboshi/intra_mart/tools/log_stats/ant/typedef.properties"
+		classpathref="execute.classpath"
+		loaderref="loader1" />
+
+	<property name="log.dir" value="C:\imart\log" />
+
+	<target name="generate_report">
+
+		<imLogStats version="7.2" delay="0">
+
+			<parser
+				charset="UTF-8"
+				begin="2012/10/01"
+				end="2012/10/07"
+				exceptionGroupingType="cause"
+				errorLimit="500"
+				truncateRequestUrl="true">
+				
+				<requestLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{log.id}	-	%X{client.session.id}	%X{request.remote.host}	%X{request.method}	%X{request.url}	%X{request.query_string}	%X{request.url.referer}	%X{request.page.time}	%X{request.accept.time}	%X{request.id}%nopex%n</requestLogLayout>
+				<transitionLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{log.id}	-	%X{transition.log.type.id}	%X{request.remote.address}	%X{request.remote.host}	%X{transition.access.user.id}	%X{client.session.id}	%X{transition.path.page.next}	%X{transition.time.response}	%X{transition.exception.name}	%X{transition.exception.message}	%X{transition.path.page.previous}	%X{request.id}%nopex%n</transitionLogLayout>
+			</parser>
+
+			<report
+				type="template"
+				span="5"
+				sessionTimeout="60"
+				requestPageTimeRankThresholdMillis="3000"
+				requestUrlRankSize="50"
+				sessionRankSize="50"
+				name="ログ統計レポート（サンプル）"
+				signature="株式会社○○○"
+				output="./report_sample.html"
+				charset="Windows-31J"
+				templateFile="./custom_template.txt"
+				templateCharset="Windows-31J"
+				jsspPath="true" />
+
+			<requestLogFiles dir="${log.dir}/platform">
+				<include name="request*.log"/>
+			</requestLogFiles>
+
+			<transitionLogFiles dir="${log.dir}/platform">
+				<include name="transition*.log"/>
+			</transitionLogFiles>
+
+			<exceptionLogFiles dir="${log.dir}/platform/exception">
+				<include name="exception*.log"/>
+			</exceptionLogFiles>
+
+		</imLogStats>
+
+	</target>
+
+</project>
