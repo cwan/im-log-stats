@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mikaboshi</groupId>
   <artifactId>im-log-stats</artifactId>
-  <version>1.0.11-BATA</version>
+  <version>1.0.11</version>
   <url>https://github.com/cwan/im-log-stats</url>
   <build>
     <plugins>
