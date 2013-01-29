@@ -18,7 +18,7 @@ im-log-stats
 **解析対象のログ**
 
 - intra-mart WebPlatform/AppFramework Ver.6.0, 6,1, 7.0, 7,1, 7,2
-- intra-mart Accel Platform 2012 Autumn (8.0)
+- intra-mart Accel Platform (8.0)
 
 **ツール実行環境**
 
@@ -51,7 +51,7 @@ Ant 実行中に OutOfMemoryError が発生する場合は、Ant オプション
 
 build.xml を編集し、解析対象のログファイルと生成するレポートの設定を行います。
 
-記述例は、[build_sample.xml](/downloads/cwan/im-log-stats/build_sample.xml) を参照してください。
+記述例は、[build_sample.xml](/cwan/im-log-stats/blob/master/build_sample.xml) を参照してください。
 
 ### 3.1. 共通設定
 
@@ -459,7 +459,8 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 ## 7. 更新履歴
 
-### Ver.1.0.10 (2013-01-XX)
+### Ver.1.0.11 (2013-01-29)
+- [#4 期間別統計グラフの改善](/cwan/im-log-stats/issues/4)
 - [#5 リクエスト処理時間総合ランクを、処理時間の閾値で抽出できるようにする。](/cwan/im-log-stats/issues/5)
 - [#6 jssp ページのソースパスを表示できるようにする。](/cwan/im-log-stats/issues/6)
 - [#7 レポートのリクエストURLから、スキーム、ホスト、ポートを除去できるようにする。](/cwan/im-log-stats/issues/7)
