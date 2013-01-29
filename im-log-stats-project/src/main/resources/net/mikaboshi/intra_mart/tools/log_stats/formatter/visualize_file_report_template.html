@@ -233,9 +233,17 @@
 			}
 
 			#time_span_stat_graph_option div {
-				float: right;
-				padding: 0 0 0 12px;
+				float: left;
+				padding: 0 12px 0 0;
 			}
+
+			#time_span_stat_graph_option select {
+				margin-bottom: 2px;
+			}
+
+			#time_span_stat_graph_update {
+				float: right;
+			}}
 
 			#time_span_stat_graph_option select {
 				font-size: 90%;
@@ -268,34 +276,72 @@
 		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
+
+			// 期間別統計
+			var timeSpanStatData = [];
+			var timeSpanTimeSelectOptions = "";
+			var datetime;
+
+		<#list timeSpanStat.list as row>
+			timeSpanStatData[${row_index}] = {
+				datetime: { date: "${row.startDate?string("yyyy-MM-dd")}", beginTime: "${row.startDate?string("HH:mm")}", endTime: "${row.endDate?string("HH:mm")}" }
+				, requests: ${row.requestCount?c}
+				, pageTime: { sum: ${row.pageTimeSum?c}, ave: ${row.pageTimeAverage?c}, min: ${row.pageTimeMin?c}, med: ${row.pageTimeMedian?c}, l90: ${row.pageTime90Percent?c}, max: ${row.pageTimeMax?c}, sd: ${row.pageTimeStandardDeviation?c} }
+				, users: ${row.uniqueUserCount?c}
+				, sessions: ${row.uniqueSessionCount?c}
+				, activeSessions: ${row.activeSessionCount?c}
+				, exceptions: ${row.exceptionCount?c}
+				, transitions: ${row.transitionCount?c}
+				, tranExceptions: ${row.transitionExceptionCount?c}
+			};
+
+			datetime = timeSpanStatData[${row_index}].datetime.date + " " + timeSpanStatData[${row_index}].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+		</#list>
+
+			function formatNumber(n) {
+				var s = new String(n);
+				while (s != (s = s.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+				return s;
+			}
+
 			$(function() {
 
-				// 期間別統計
-				var timeSpanStatData = [];
-				var $verticalX = $(".vertical-x");
+				var timeSpanStatTableBody = "";
 
-				var timeSpanTimeSelectOptions = "";
+				$(timeSpanStatData).each(function(i) {
 
-				$("#time_span_stat_detail tbody tr").each(function() {
-
-					var datetime = $("td:eq(1)", this).html().replace(/^\s+/, "").substring(0, 16);
-
-					timeSpanStatData.push({
-						datetime: datetime
-						, average: parseInt($("td:eq(4)", this).html().replace(/,/g, ""), 10)
-						, min: parseInt($("td:eq(5)", this).html().replace(/,/g, ""), 10)
-						, median: parseInt($("td:eq(6)", this).html().replace(/,/g, ""), 10)
-						, l90: parseInt($("td:eq(7)", this).html().replace(/,/g, ""), 10)
-						, max: parseInt($("td:eq(8)", this).html().replace(/,/g, ""), 10)
-					});
-
-					timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+					timeSpanStatTableBody += '<tr class="' + (i % 2 === 0 ? 'even_row' : 'odd_row') + '">';
+					timeSpanStatTableBody += '<td class="seq">' + (i + 1) + '</td>';
+					timeSpanStatTableBody += '<td class="date_time">' + this.datetime.date + ' ' + this.datetime.beginTime + '<span class="end_date">- ' + this.datetime.endTime + '</span></td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.requests) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.sum) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.ave) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.min) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.med) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.l90) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.max) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.sd) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.users) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.sessions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.activeSessions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.exceptions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.transitions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.tranExceptions) + '</td>';
+					timeSpanStatTableBody += '</tr>'
 				});
 
-				$(timeSpanTimeSelectOptions).appendTo("#time_span_stat_graph_opt_begin_time");
-				$(timeSpanTimeSelectOptions).appendTo("#time_span_stat_graph_opt_end_time");
+				$(timeSpanStatTableBody).appendTo("#time_span_stat_detail tbody");
 
-				$("#time_span_stat_graph_opt_end_time option:last").attr("selected", true);
+				var $timeSpanStatGraphs = $("#time_span_stat_graphs");
+				var $timeSpanStatOptBeginTime = $("#time_span_stat_graph_opt_begin_time");
+				var $timeSpanStatOptEndTime = $("#time_span_stat_graph_opt_end_time");
+
+				$(timeSpanTimeSelectOptions).appendTo($timeSpanStatOptBeginTime);
+				$(timeSpanTimeSelectOptions).appendTo($timeSpanStatOptEndTime);
+
+				$("option:last", $timeSpanStatOptEndTime).attr("selected", true);
+
 
 				function buildTimeSpanStatGraph(option) {
 
@@ -303,33 +349,33 @@
 						return;
 					}
 
-					$verticalX.empty();
+					$timeSpanStatGraphs.empty();
 
 					var data = [];
-					var beginTime = $("#time_span_stat_graph_opt_begin_time").val();
-					var endTime = $("#time_span_stat_graph_opt_end_time").val();
+					var beginTime = $timeSpanStatOptBeginTime.val();
+					var endTime = $timeSpanStatOptEndTime.val();
 
-					$(timeSpanStatData).each(function(i, e) {
+					$(timeSpanStatData).each(function() {
 
-						if (e.datetime < beginTime) {
+						if ((this.datetime.date + ' ' + this.datetime.beginTime) < beginTime) {
 							return true;
 						}
 
-						if (e.datetime > endTime) {
+						if ((this.datetime.date + ' ' + this.datetime.endTime) > endTime) {
 							return false;
 						}
 
-						data.push(e);
+						data.push(this);
 					});
 
 
-					var maxResTime = 0;
+					var topValue = 0;
 
 					var sizePerGraph = Math.ceil(data.length / (parseInt((data.length - 1) / 45) + 1));
 
 					var sTable = "";
 
-					$(data).each(function(i, e) {
+					$(data).each(function(i) {
 
 						if (i % sizePerGraph === 0) {
 
@@ -338,43 +384,97 @@
 							}
 
 							sTable += '<table class="line_graph_source time_span_stat_source">';
-							sTable += '<caption>期間別統計 - リクエスト処理時間 [ms] (' + e.datetime + ' ～)</caption>';
+							sTable += '<caption>期間別統計 (' + this.datetime.date + ' ' + this.datetime.beginTime + ' ～)</caption>';
 							sTable += '<thead><tr><td></td>';
 
-							if (option.average) sTable += '<th>平均値</th>';
-							if (option.min) sTable += '<th>最小値</th>';
-							if (option.median) sTable += '<th>中央値</th>';
-							if (option.l90) sTable += '<th>90% Line</th>';
-							if (option.max) sTable += '<th>最大値</th>';
+							if (option.requests) sTable += '<th>リクエスト数合計</th>';
+							if (option.sum) sTable += '<th>処理時間合計</th>';
+							if (option.ave) sTable += '<th>処理時間平均値</th>';
+							if (option.min) sTable += '<th>処理時間最小値</th>';
+							if (option.med) sTable += '<th>処理時間中央値</th>';
+							if (option.l90) sTable += '<th>処理時間90% Line</th>';
+							if (option.max) sTable += '<th>処理時間最大値</th>';
+							if (option.sd) sTable += '<th>処理時間標準偏差</th>';
+							if (option.users) sTable += '<th>ユニークユーザ数</th>';
+							if (option.sessions) sTable += '<th>ユニークセッション数</th>';
+							if (option.activeSessions) sTable += '<th>有効セッション数</th>';
+							if (option.exceptions) sTable += '<th>例外数合計</th>';
+							if (option.transitions) sTable += '<th>画面遷移数合計</th>';
+							if (option.tranExceptions) sTable += '<th>画面遷移例外数合計</th>';
 
 							sTable += '</tr></thead><tbody>'
 						}
 
-						sTable += '<tr><th>' + e.datetime.substring(11) + '</th>';
+						sTable += '<tr><th>' + this.datetime.beginTime + '</th>';
 
-						if (option.average) {
-							sTable += '<td>' + e.average + '</td>';
-							maxResTime = Math.max(maxResTime, e.average);
+						if (option.requests) {
+							sTable += '<td>' + this.requests + '</td>';
+							topValue = Math.max(topValue, this.requests);
+						}
+
+						if (option.sum) {
+							sTable += '<td>' + this.pageTime.sum + '</td>';
+							topValue = Math.max(topValue, this.pageTime.sum);
+						}
+
+						if (option.ave) {
+							sTable += '<td>' + this.pageTime.ave + '</td>';
+							topValue = Math.max(topValue, this.pageTime.ave);
 						}
 
 						if (option.min) {
-							sTable += '<td>' + e.min + '</td>';
-							maxResTime = Math.max(maxResTime, e.min);
+							sTable += '<td>' + this.pageTime.min + '</td>';
+							topValue = Math.max(topValue, this.pageTime.min);
 						}
 
-						if (option.median) {
-							sTable += '<td>' + e.median + '</td>';
-							maxResTime = Math.max(maxResTime, e.median);
+						if (option.med) {
+							sTable += '<td>' + this.pageTime.med + '</td>';
+							topValue = Math.max(topValue, this.pageTime.med);
 						}
 
 						if (option.l90) {
-							sTable += '<td>' + e.l90 + '</td>';
-							maxResTime = Math.max(maxResTime, e.l90);
+							sTable += '<td>' + this.pageTime.l90 + '</td>';
+							topValue = Math.max(topValue, this.pageTime.l90);
 						}
 
 						if (option.max) {
-							sTable += '<td>' + e.max + '</td>';
-							maxResTime = Math.max(maxResTime, e.max);
+							sTable += '<td>' + this.pageTime.max + '</td>';
+							topValue = Math.max(topValue, this.pageTime.max);
+						}
+
+						if (option.sd) {
+							sTable += '<td>' + this.pageTime.sd + '</td>';
+							topValue = Math.max(topValue, this.pageTime.sd);
+						}
+
+						if (option.users) {
+							sTable += '<td>' + this.users + '</td>';
+							topValue = Math.max(topValue, this.users);
+						}
+
+						if (option.sessions) {
+							sTable += '<td>' + this.sessions + '</td>';
+							topValue = Math.max(topValue, this.sessions);
+						}
+
+						if (option.activeSessions) {
+							sTable += '<td>' + this.activeSessions + '</td>';
+							topValue = Math.max(topValue, this.activeSessions);
+						}
+
+						if (option.exceptions) {
+							sTable += '<td>' + this.exceptions + '</td>';
+							topValue = Math.max(topValue, this.exceptions);
+						}
+
+						if (option.transitions) {
+							sTable += '<td>' + this.transitions + '</td>';
+							topValue = Math.max(topValue, this.transitions);
+						}
+
+						if (option.tranExceptions) {
+							sTable += '<td>' + this.tranExceptions + '</td>';
+							topValue = Math.max(topValue, this.tranExceptions);
 						}
 
 						sTable += '</tr>';
@@ -382,30 +482,42 @@
 
 					sTable += '</tbody></table>';
 
-					$(sTable).appendTo($verticalX);
+					$(sTable).appendTo($timeSpanStatGraphs);
 
 					$('table.time_span_stat_source').visualize(
-							{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: maxResTime, bottomValue: 0});
+							{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: topValue, bottomValue: 0});
 				}
 
-				buildTimeSpanStatGraph({
-					average: true
-					, min: true
-					, median: true
-					, l90: true
-					, max: true
-				});
+				function getTimeSpanGraphOption() {
+
+					return {
+						requests: $("#time_span_stat_graph_opt_requests").attr("checked")
+						, sum: $("#time_span_stat_graph_opt_sum").attr("checked")
+						, ave: $("#time_span_stat_graph_opt_average").attr("checked")
+						, min: $("#time_span_stat_graph_opt_min").attr("checked")
+						, med: $("#time_span_stat_graph_opt_median").attr("checked")
+						, l90: $("#time_span_stat_graph_opt_l90").attr("checked")
+						, max: $("#time_span_stat_graph_opt_max").attr("checked")
+						, sd: $("#time_span_stat_graph_opt_sd").attr("checked")
+						, users: $("#time_span_stat_graph_opt_users").attr("checked")
+						, sessions: $("#time_span_stat_graph_opt_sessions").attr("checked")
+						, activeSessions: $("#time_span_stat_graph_opt_active_sessions").attr("checked")
+						, exceptions: $("#time_span_stat_graph_opt_exceptions").attr("checked")
+						, transitions: $("#time_span_stat_graph_opt_transitions").attr("checked")
+						, trasExceptions: $("#time_span_stat_graph_opt_tran_exceptions").attr("checked")
+					};
+				}
+
+				buildTimeSpanStatGraph(getTimeSpanGraphOption());
 
 				// グラフ更新
 				$("#time_span_stat_graph_update").click(function() {
 
-					buildTimeSpanStatGraph({
-						average: $("#time_span_stat_graph_opt_average").attr("checked")
-						, min: $("#time_span_stat_graph_opt_min").attr("checked")
-						, median: $("#time_span_stat_graph_opt_median").attr("checked")
-						, l90: $("#time_span_stat_graph_opt_l90").attr("checked")
-						, max: $("#time_span_stat_graph_opt_max").attr("checked")
-					});
+					$timeSpanStatGraphs
+						.animate({ opacity: 0.1}, "fast", function() {
+							buildTimeSpanStatGraph(getTimeSpanGraphOption());
+						})
+						.animate({ opacity: 1}, "fast");
 				});
 
 				// リクエストURL別・処理時間合計ランク
@@ -504,66 +616,75 @@
 				</tr>
 			</thead>
 			<tbody>
-				<#list timeSpanStat.list as row>
-					<tr class="${getTrClass(row_index)}">
-						<td class="seq">${row_index + 1}</td>
-						<td class="date_time">
-							${row.startDate?string("yyyy-MM-dd HH:mm")}
-							<span class="end_date">- ${row.endDate?string("HH:mm")}</span>
-						</td>
-						<td class="numeric">${row.requestCount}</td>
-						<td class="numeric">${row.pageTimeSum}</td>
-						<td class="numeric">${row.pageTimeAverage}</td>
-						<td class="numeric">${row.pageTimeMin}</td>
-						<td class="numeric">${row.pageTimeMedian}</td>
-						<td class="numeric">${row.pageTime90Percent}</td>
-						<td class="numeric">${row.pageTimeMax}</td>
-						<td class="numeric">${row.pageTimeStandardDeviation}</td>
-						<td class="numeric">${row.uniqueUserCount}</td>
-						<td class="numeric">${row.uniqueSessionCount}</td>
-						<td class="numeric">${row.activeSessionCount}</td>
-						<td class="numeric">${row.exceptionCount}</td>
-						<td class="numeric">${row.transitionCount}</td>
-						<td class="numeric">${row.transitionExceptionCount}</td>
-					</tr>
-				</#list>
 			</tbody>
 		</table>
 
 		<div id="time_span_stat_graph_area">
 			<div id="time_span_stat_graph_option" class="clearfix">
 				<div>
-					<input type="button" value="更新" id="time_span_stat_graph_update">
-				</div>
-				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_max" checked="checked">
-					<label for="time_span_stat_graph_opt_max">最大値</label>
-				</div>
-				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_l90" checked="checked">
-					<label for="time_span_stat_graph_opt_l90">90% Line</label>
-				</div>
-				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_median" checked="checked">
-					<label for="time_span_stat_graph_opt_median">中央値</label>
-				</div>
-				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_min" checked="checked">
-					<label for="time_span_stat_graph_opt_min">最小値</label>
-				</div>
-				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_average" checked="checked">
-					<label for="time_span_stat_graph_opt_average">平均値</label>
-				</div>
-				<div>
+					始:<select id="time_span_stat_graph_opt_begin_time"></select><br/>
 					終:<select id="time_span_stat_graph_opt_end_time"></select>
 				</div>
 				<div>
-					始:<select id="time_span_stat_graph_opt_begin_time"></select>
+					<input type="checkbox" id="time_span_stat_graph_opt_requests">
+					<label for="time_span_stat_graph_opt_requests">リクエスト数合計</label>
 				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sum">
+					<label for="time_span_stat_graph_opt_sum">処理時間合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_average" checked="checked">
+					<label for="time_span_stat_graph_opt_average">処理時間平均値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_min" checked="checked">
+					<label for="time_span_stat_graph_opt_min">処理時間最小値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_median" checked="checked">
+					<label for="time_span_stat_graph_opt_median">処理時間中央値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_l90" checked="checked">
+					<label for="time_span_stat_graph_opt_l90">処理時間90% Line</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_max">
+					<label for="time_span_stat_graph_opt_max">処理時間最大値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sd">
+					<label for="time_span_stat_graph_opt_sd">標準偏差</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_users">
+					<label for="time_span_stat_graph_opt_users">ユニークユーザ数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sessions">
+					<label for="time_span_stat_graph_opt_sessions">ユニークセッション数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_active_sessions">
+					<label for="time_span_stat_graph_opt_active_sessions">有効セッション数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_exceptions">
+					<label for="time_span_stat_graph_opt_exceptions">例外数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_transitions">
+					<label for="time_span_stat_graph_opt_transitions">画面遷移数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_tran_exceptions">
+					<label for="time_span_stat_graph_opt_tran_exceptions">画面遷移例外数合計</label>
+				</div>
+				<input type="button" value="更新" id="time_span_stat_graph_update">
 			</div>
 
-			<div class="vertical-x"></div>
+			<div id="time_span_stat_graphs" class="vertical-x"></div>
 		</div>
 
 		<div class="section_header clearfix">
