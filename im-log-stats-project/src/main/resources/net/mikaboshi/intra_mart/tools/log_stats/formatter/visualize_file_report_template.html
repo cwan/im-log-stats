@@ -283,7 +283,7 @@
 			var datetime;
 
 		<#list timeSpanStat.list as row>
-			timeSpanStatData[${row_index}] = {
+			timeSpanStatData[${row_index?c}] = {
 				datetime: { date: "${row.startDate?string("yyyy-MM-dd")}", beginTime: "${row.startDate?string("HH:mm")}", endTime: "${row.endDate?string("HH:mm")}" }
 				, requests: ${row.requestCount?c}
 				, pageTime: { sum: ${row.pageTimeSum?c}, ave: ${row.pageTimeAverage?c}, min: ${row.pageTimeMin?c}, med: ${row.pageTimeMedian?c}, l90: ${row.pageTime90Percent?c}, max: ${row.pageTimeMax?c}, sd: ${row.pageTimeStandardDeviation?c} }
@@ -295,8 +295,9 @@
 				, tranExceptions: ${row.transitionExceptionCount?c}
 			};
 
-			datetime = timeSpanStatData[${row_index}].datetime.date + " " + timeSpanStatData[${row_index}].datetime.beginTime;
+			datetime = "${row.startDate?string("yyyy-MM-dd HH:mm")}";
 			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+
 		</#list>
 
 			function formatNumber(n) {
