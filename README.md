@@ -4,14 +4,14 @@ im-log-stats
 [イントラマート](http://www.intra-mart.jp/) のログ（リクエストログ、画面遷移ログ、例外ログ）を解析し、統計レポートを作成するツールです。
 
 **生成されるレポートのサンプル**
-- [report_sample.html](/downloads/cwan/im-log-stats/report_sample.html) : HTML（シンプル）
-- [report_sample_visualize.html](/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
-- [report_sample.csv](/downloads/cwan/im-log-stats/report_sample.csv) : CSV
+- [report_sample.html](https://github.com/downloads/cwan/im-log-stats/report_sample.html) : HTML（シンプル）
+- [report_sample_visualize.html](https://github.com/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
+- [report_sample.csv](https://github.com/downloads/cwan/im-log-stats/report_sample.csv) : CSV
 
 **ダウンロード**
 
-- [master](/cwan/im-log-stats/zipball/master) : 最新（β版）
-- [tags](/cwan/im-log-stats/tags) : 過去バージョン（安定板）
+- [master](https://github.com/cwan/im-log-stats/zipball/master) : 最新（β版）
+- [tags](https://github.com/cwan/im-log-stats/tags) : 過去バージョン（安定板）
 
 ## 1. 動作要件
 
@@ -51,7 +51,7 @@ Ant 実行中に OutOfMemoryError が発生する場合は、Ant オプション
 
 build.xml を編集し、解析対象のログファイルと生成するレポートの設定を行います。
 
-記述例は、[build_sample.xml](/cwan/im-log-stats/blob/master/build_sample.xml) を参照してください。
+記述例は、[build_sample.xml](https://github.com/cwan/im-log-stats/blob/master/build_sample.xml) を参照してください。
 
 ### 3.1. 共通設定
 
@@ -455,26 +455,26 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 ## 6. ライセンス
 
-[Apache License, Version 2.0](/cwan/im-log-stats/blob/master/LICENSE.txt)
+[Apache License, Version 2.0](https://github.com/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
 
 ### Ver.1.0.12 (2013-02-05)
-- [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](/cwan/im-log-stats/issues/9)
+- [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
 
 ### Ver.1.0.11 (2013-01-29)
-- [#4 期間別統計グラフの改善](/cwan/im-log-stats/issues/4)
-- [#5 リクエスト処理時間総合ランクを、処理時間の閾値で抽出できるようにする。](/cwan/im-log-stats/issues/5)
-- [#6 jssp ページのソースパスを表示できるようにする。](/cwan/im-log-stats/issues/6)
-- [#7 レポートのリクエストURLから、スキーム、ホスト、ポートを除去できるようにする。](/cwan/im-log-stats/issues/7)
-- [#8 im-log-stats のバージョンをレポートに表示する。](/cwan/im-log-stats/issues/8)
+- [#4 期間別統計グラフの改善](https://github.com/cwan/im-log-stats/issues/4)
+- [#5 リクエスト処理時間総合ランクを、処理時間の閾値で抽出できるようにする。](https://github.com/cwan/im-log-stats/issues/5)
+- [#6 jssp ページのソースパスを表示できるようにする。](https://github.com/cwan/im-log-stats/issues/6)
+- [#7 レポートのリクエストURLから、スキーム、ホスト、ポートを除去できるようにする。](https://github.com/cwan/im-log-stats/issues/7)
+- [#8 im-log-stats のバージョンをレポートに表示する。](https://github.com/cwan/im-log-stats/issues/8)
 
 ### Ver.1.0.10 (2012-10-22)
-- [#2 レポートにグラフを表示できるようにする。](/cwan/im-log-stats/issues/2)
-- [#3 パース時のエラーが多い場合に、処理を打ち切るようにする。](/cwan/im-log-stats/issues/3)
+- [#2 レポートにグラフを表示できるようにする。](https://github.com/cwan/im-log-stats/issues/2)
+- [#3 パース時のエラーが多い場合に、処理を打ち切るようにする。](https://github.com/cwan/im-log-stats/issues/3)
 
 ### Ver.1.0.9 (2012-10-12)
-- [#1 パラメータの parser/@begin, parser/@end, report/@output を動的に設定できるようにした。](/cwan/im-log-stats/issues/1)
+- [#1 パラメータの parser/@begin, parser/@end, report/@output を動的に設定できるようにした。](https://github.com/cwan/im-log-stats/issues/1)
 
 ### Ver.1.0.8 (2012-10-08)
 - 一般公開
