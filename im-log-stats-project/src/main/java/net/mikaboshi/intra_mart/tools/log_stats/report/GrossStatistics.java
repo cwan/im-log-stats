@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest.EventType;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Log;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
@@ -36,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 全体の統計情報
  *
- * @version 1.0.10
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GrossStatistics {
@@ -94,6 +96,18 @@ public class GrossStatistics {
 	private long totalPageTime = 0L;
 
 	/**
+	 * 最大同時リクエスト数を表示するかどうか
+	 * @since 1.0.13
+	 */
+	private boolean maxConcurrentRequest = false;
+
+	/**
+	 * 最大同時リクエスト数集計トリスト
+	 * @since 1.0.13
+	 */
+	private List<ConcurrentRequest> concurrentRequestList = new ArrayList<ConcurrentRequest>();
+
+	/**
 	 * 処理時間順のリクエストランクサイズを指定するコンストラクタ
 	 * @param requestPageTimeRankSize 処理時間順のリクエストランクサイズ
 	 * @param transitionLogOnly 画面遷移ログのみ（リクエストログなし）かどうか
@@ -124,6 +138,15 @@ public class GrossStatistics {
 	}
 
 	/**
+	 * 最大同時リクエスト数を表示するかどうかを設定する。
+	 * @param maxConcurrentRequest
+	 * @since 1.0.13
+	 */
+	public void setMaxConcurrentRequest(boolean maxConcurrentRequest) {
+		this.maxConcurrentRequest = maxConcurrentRequest;
+	}
+
+	/**
 	 * リクエストログを追加する。
 	 * @param log
 	 */
@@ -134,6 +157,19 @@ public class GrossStatistics {
 		}
 
 		addRequestInfo(log, log.getRequestUrlWithImAction(), log.requestPageTime);
+
+		if (this.maxConcurrentRequest) {
+			// 最大同時リクエスト数集計のため、受信時刻・返信時刻を記録する
+			if (log.requestAcceptTime != null) {
+				this.concurrentRequestList.add(
+						new ConcurrentRequest(EventType.ACCEPT_TIME, log.requestAcceptTime.getTime()));
+			}
+
+			if (log.date != null) {
+				this.concurrentRequestList.add(
+						new ConcurrentRequest(EventType.RESPONSE_TIME, log.date.getTime()));
+			}
+		}
 	}
 
 	/**
@@ -241,6 +277,45 @@ public class GrossStatistics {
 	 */
 	public long getTotalPageTime() {
 		return totalPageTime;
+	}
+
+	/**
+	 * 同時リクエスト数リストを取得する。
+	 * @return
+	 * @since 1.0.13
+	 */
+	public List<ConcurrentRequest> getConcurrentRequestList() {
+
+		// 時刻でソート
+		Collections.sort(this.concurrentRequestList, new Comparator<ConcurrentRequest>() {
+
+			public int compare(ConcurrentRequest e1, ConcurrentRequest e2) {
+
+				if (e1.getTime() < e2.getTime()) {
+					return -1;
+				} else if (e1.getTime() > e2.getTime()) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		int count = 0;
+
+		// その時点でのリクエスト数を集計する
+		for (ConcurrentRequest req : this.concurrentRequestList) {
+
+			if (req.getType() == EventType.ACCEPT_TIME) {
+				count++;
+			} else if (req.getType() == EventType.RESPONSE_TIME) {
+				count--;
+			}
+
+			req.setCount(count);
+		}
+
+		return this.concurrentRequestList;
 	}
 
 	public static class RequestEntry {

@@ -19,7 +19,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
 /**
  * レポートパラメータ
  *
- * @version 1.0.8
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameter {
@@ -60,6 +60,12 @@ public class ReportParameter {
 	 * @since 1.0.11
 	 */
 	private boolean jsspPath = false;
+
+	/**
+	 * 最大同時リクエスト数を表示するかどうか
+	 * @since 1.0.13
+	 */
+	private boolean maxConcurrentRequest = true;
 
 	/**
 	 * レポート名
@@ -188,6 +194,24 @@ public class ReportParameter {
 	 */
 	public void setJsspPath(boolean jsspPath) {
 		this.jsspPath = jsspPath;
+	}
+
+	/**
+	 * 最大同時リクエスト数を表示するかどうかを取得する。
+	 * @return
+	 * @since 1.0.13
+	 */
+	public boolean isMaxConcurrentRequest() {
+		return maxConcurrentRequest;
+	}
+
+	/**
+	 * 最大同時リクエスト数を表示するかどうかを設定する。
+	 * @param maxConcurrentRequest
+	 * @since 1.0.13
+	 */
+	public void setMaxConcurrentRequest(boolean maxConcurrentRequest) {
+		this.maxConcurrentRequest = maxConcurrentRequest;
 	}
 
 	/**

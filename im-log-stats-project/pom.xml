@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mikaboshi</groupId>
   <artifactId>im-log-stats</artifactId>
-  <version>1.0.11</version>
+  <version>1.0.13</version>
   <url>https://github.com/cwan/im-log-stats</url>
   <build>
     <plugins>
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>[3.2.1, ]</version>
+      <version>3.2.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

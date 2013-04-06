@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
@@ -39,7 +40,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.10
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -216,13 +217,24 @@ public class Report {
 			return list;
 		}
 
+		long spanMills = this.parameter.getSpan() * 60L * 1000L;
+
 		// ログ出力日時の昇順にならびかえ
 		List<Date> startDates = new ArrayList<Date>(this.timeSpanStatMap.keySet());
 		Collections.sort(startDates);
 
+		// 最大同時リクエスト数
+		List<ConcurrentRequest> concurrentRequestList = getGrossStatistics().getConcurrentRequestList();
+
 		for (Date startDate : startDates) {
 			TimeSpanStatistics stat = this.timeSpanStatMap.get(startDate);
 			stat.setStartDate(startDate);
+			stat.setEndDate(new Date(stat.getStartDate().getTime() + spanMills));
+
+			if (this.parameter.isMaxConcurrentRequest()) {
+				stat.countMaxConcurrentRequest(concurrentRequestList);
+			}
+
 			list.add(stat);
 		}
 
@@ -474,6 +486,8 @@ public class Report {
 												this.parameter.getRequestPageTimeRankThresholdMillis(),
 												CollectionUtils.isEmpty(getRequestLogFiles()));
 			}
+
+			this.grossStatistics.setMaxConcurrentRequest(this.parameter.isMaxConcurrentRequest());
 		}
 
 		return grossStatistics;

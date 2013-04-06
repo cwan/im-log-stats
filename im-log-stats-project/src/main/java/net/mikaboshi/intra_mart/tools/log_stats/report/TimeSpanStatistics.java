@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionLog;
@@ -29,7 +30,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionType;
 /**
  * 時間分割統計
  *
- * @version 1.0.8
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TimeSpanStatistics {
@@ -80,9 +81,21 @@ public class TimeSpanStatistics {
 	private Date startDate = null;
 
 	/**
+	 * スパン終了日時
+	 * @since 1.0.13
+	 */
+	private Date endDate = null;
+
+	/**
 	 * 画面遷移ログのみ（リクエストログなし）ならばtrue
 	 */
 	private final boolean transitionLogOnly;
+
+	/**
+	 * 最大同時リクエスト数
+	 * @since 1.0.13
+	 */
+	private int maxConcurrentRequest = 0;
 
 	/**
 	 * コンストラクタ
@@ -178,6 +191,23 @@ public class TimeSpanStatistics {
 	}
 
 	/**
+	 * スパン終了日時を設定する。
+	 * @param endDate スパン終了日時
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	/**
+	 * スパン終了日時を取得する。
+	 * @return
+	 * @since 1.0.13
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	/**
 	 * リクエスト数を取得する。
 	 * @return
 	 */
@@ -230,6 +260,41 @@ public class TimeSpanStatistics {
 	 */
 	public int getTransitionExceptionCount() {
 		return transitionExceptionCount;
+	}
+
+	/**
+	 * 同時リクエスト数の最大値を調べる。
+	 * @param concurrentRequestList
+	 * @since 1.0.13
+	 */
+	public void countMaxConcurrentRequest(List<ConcurrentRequest> concurrentRequestList) {
+
+		long lStartTime = this.startDate.getTime();
+		long lEndTime = this.endDate.getTime();
+
+		for (ConcurrentRequest req : concurrentRequestList) {
+
+			if (req.getTime() < lStartTime) {
+				continue;
+			}
+
+			if (req.getTime() >= lEndTime) {
+				break;
+			}
+
+			if (req.getCount() > this.maxConcurrentRequest) {
+				this.maxConcurrentRequest = req.getCount();
+			}
+		}
+	}
+
+	/**
+	 * 同時リクエスト数の最大値を取得する。
+	 * @return
+	 * @since 1.0.13
+	 */
+	public int getMaxConcurrentRequest() {
+		return maxConcurrentRequest;
 	}
 
 }

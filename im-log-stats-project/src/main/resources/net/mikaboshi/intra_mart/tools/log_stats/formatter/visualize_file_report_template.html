@@ -293,6 +293,7 @@
 				, exceptions: ${row.exceptionCount?c}
 				, transitions: ${row.transitionCount?c}
 				, tranExceptions: ${row.transitionExceptionCount?c}
+				<#if reportParameter.maxConcurrentRequest>, maxConcurrent: ${row.maxConcurrentRequestCount?c}</#if>
 			};
 
 			datetime = timeSpanStatData[${row_index}].datetime.date + " " + timeSpanStatData[${row_index}].datetime.beginTime;
@@ -328,6 +329,9 @@
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.exceptions) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.transitions) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.tranExceptions) + '</td>';
+					<#if reportParameter.maxConcurrentRequest>
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.maxConcurrent) + '</td>';
+					</#if>
 					timeSpanStatTableBody += '</tr>'
 				});
 
@@ -401,6 +405,9 @@
 							if (option.exceptions) sTable += '<th>例外数合計</th>';
 							if (option.transitions) sTable += '<th>画面遷移数合計</th>';
 							if (option.tranExceptions) sTable += '<th>画面遷移例外数合計</th>';
+							<#if reportParameter.maxConcurrentRequest>
+							if (option.maxConcurrent) sTable += '<th>最大同時リクエスト数</th>';
+							</#if>
 
 							sTable += '</tr></thead><tbody>'
 						}
@@ -477,6 +484,13 @@
 							topValue = Math.max(topValue, this.tranExceptions);
 						}
 
+						<#if reportParameter.maxConcurrentRequest>
+						if (option.maxConcurrent) {
+							sTable += '<td>' + this.maxConcurrent + '</td>';
+							topValue = Math.max(topValue, this.maxConcurrent);
+						}
+						</#if>
+
 						sTable += '</tr>';
 					});
 
@@ -505,6 +519,9 @@
 						, exceptions: $("#time_span_stat_graph_opt_exceptions").attr("checked")
 						, transitions: $("#time_span_stat_graph_opt_transitions").attr("checked")
 						, tranExceptions: $("#time_span_stat_graph_opt_tran_exceptions").attr("checked")
+						<#if reportParameter.maxConcurrentRequest>
+						, maxConcurrent: $("#time_span_stat_graph_opt_max_concurrent").attr("checked")
+						</#if>
 					};
 				}
 
@@ -590,6 +607,11 @@
 					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
 						画面遷移<br>例外数合計
 					</th>
+					<#if reportParameter.maxConcurrentRequest>
+					<th rowspan="2"	title="この期間内に発生した同時リクエスト数の最大値です。">
+						最大同時<br>リクエスト数
+					</th>
+					</#if>
 				</tr>
 				<tr>
 					<th title="リクエスト処理時間の合計です。">
@@ -681,6 +703,12 @@
 					<input type="checkbox" id="time_span_stat_graph_opt_tran_exceptions">
 					<label for="time_span_stat_graph_opt_tran_exceptions">画面遷移例外数合計</label>
 				</div>
+				<#if reportParameter.maxConcurrentRequest>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_max_concurrent">
+					<label for="time_span_stat_graph_opt_max_concurrent">最大同時リクエスト数</label>
+				</div>
+				</#if>
 				<input type="button" value="更新" id="time_span_stat_graph_update">
 			</div>
 

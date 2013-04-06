@@ -52,7 +52,8 @@
 				charset="Windows-31J"
 				templateFile="./custom_template.txt"
 				templateCharset="Windows-31J"
-				jsspPath="true" />
+				jsspPath="true"
+				maxConcurrentRequest="true" />
 
 			<requestLogFiles dir="${log.dir}/platform">
 				<include name="request*.log"/>

@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログ統計レポート設定のネスト要素
  *
- * @version 1.0.10
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameterDataType extends DataType {
@@ -67,6 +67,12 @@ public class ReportParameterDataType extends DataType {
 	 * @since 1.0.11
 	 */
 	private Boolean jsspPath = null;
+
+	/**
+	 * 最大同時リクエスト数を表示するかどうか
+	 * @since 1.0.13
+	 */
+	private Boolean maxConcurrentRequest = null;
 
 	/** レポート名 */
 	private String name = null;
@@ -149,6 +155,15 @@ public class ReportParameterDataType extends DataType {
 	 */
 	public void setJsspPath(Boolean jsspPath) {
 		this.jsspPath = jsspPath;
+	}
+
+	/**
+	 *
+	 * @param maxConcurrentRequest
+	 * @since 1.0.13
+	 */
+	public void setMaxConcurrentRequest(Boolean maxConcurrentRequest) {
+		this.maxConcurrentRequest = maxConcurrentRequest;
 	}
 
 	/**
@@ -280,6 +295,10 @@ public class ReportParameterDataType extends DataType {
 
 		if (this.jsspPath != null) {
 			parameter.setJsspPath(this.jsspPath.booleanValue());
+		}
+
+		if (this.maxConcurrentRequest != null) {
+			parameter.setMaxConcurrentRequest(this.maxConcurrentRequest.booleanValue());
 		}
 
 		if (this.name != null) {

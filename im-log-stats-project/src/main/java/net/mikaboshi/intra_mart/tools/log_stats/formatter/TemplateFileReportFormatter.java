@@ -59,7 +59,7 @@ import freemarker.template.TemplateException;
 /**
  * FreeMarkerのテンプレートを使用して、レポートを生成する。
  *
- * @version 1.0.10
+ * @version 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
@@ -236,8 +236,6 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		timeSpanStat.put("list", list);
 
-		long spanMills = report.getParameter().getSpan() * 60 * 1000;
-
 		for (TimeSpanStatistics stat : report.getTimeSpanStatisticsList()) {
 
 			Map<String, Object> row = new HashMap<String, Object>();
@@ -249,7 +247,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			report.setPageTimeStat(pageTimeStat, pageTimes);
 
 			row.put("startDate", stat.getStartDate());
-			row.put("endDate", new Date(stat.getStartDate().getTime() + spanMills));
+			row.put("endDate", stat.getEndDate());
 			row.put("requestCount", stat.getRequestCount());
 			row.put("pageTimeSum", pageTimeStat.pageTimeSum);
 			row.put("pageTimeAverage", pageTimeStat.pageTimeAverage);
@@ -264,6 +262,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("exceptionCount", stat.getExceptionCount());
 			row.put("transitionCount", stat.getTransitionCount());
 			row.put("transitionExceptionCount", stat.getTransitionExceptionCount());
+			row.put("maxConcurrentRequestCount", stat.getMaxConcurrentRequest());
 		}
 	}
 

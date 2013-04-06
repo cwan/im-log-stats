@@ -13,7 +13,7 @@
 -->
 <#--
   HTMLテンプレート
-  @version 1.0,10
+  @version 1.0.13
 -->
 <#--
   TRタグのclass値を取得する
@@ -275,6 +275,11 @@
 					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
 						画面遷移<br>例外数合計
 					</th>
+					<#if reportParameter.maxConcurrentRequest>
+					<th rowspan="2"	title="この期間内に発生した同時リクエスト数の最大値です。">
+						最大同時<br>リクエスト数
+					</th>
+					</#if>
 				</tr>
 				<tr>
 					<th title="リクエスト処理時間の合計です。">
@@ -322,6 +327,9 @@
 						<td class="numeric">${row.exceptionCount}</td>
 						<td class="numeric">${row.transitionCount}</td>
 						<td class="numeric">${row.transitionExceptionCount}</td>
+						<#if reportParameter.maxConcurrentRequest>
+						<td class="numeric">${row.maxConcurrentRequestCount}</td>
+						</#if>
 					</tr>
 				</#list>
 			</tbody>
