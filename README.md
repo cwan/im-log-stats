@@ -4,9 +4,9 @@ im-log-stats
 [イントラマート](http://www.intra-mart.jp/) のログ（リクエストログ、画面遷移ログ、例外ログ）を解析し、統計レポートを作成するツールです。
 
 **生成されるレポートのサンプル**
-- [report_sample.html](https://github.com/downloads/cwan/im-log-stats/report_sample.html) : HTML（シンプル）
-- [report_sample_visualize.html](https://github.com/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
-- [report_sample.csv](https://github.com/downloads/cwan/im-log-stats/report_sample.csv) : CSV
+- [report_sample.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.html) : HTML（シンプル）
+- [report_sample_visualize.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample_visualize.html) : HTML（グラフ付き）
+- [report_sample.csv](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.csv) : CSV
 
 **ダウンロード**
 
