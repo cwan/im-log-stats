@@ -188,6 +188,19 @@ public class GrossStatistics {
 			// 画面遷移ログ（type=REQUEST）からリクエスト統計を構築する
 
 			addRequestInfo(log, log.transitionPathPageNext, log.transitionTimeResponse);
+
+			if (this.maxConcurrentRequest && log.date != null) {
+				// 最大同時リクエスト数集計のため、受信時刻・返信時刻を記録する
+
+				long responseTime = log.date.getTime();
+				long acceptTime = responseTime - log.transitionTimeResponse;
+
+				this.concurrentRequestList.add(
+						new ConcurrentRequest(EventType.ACCEPT_TIME, acceptTime));
+
+				this.concurrentRequestList.add(
+						new ConcurrentRequest(EventType.RESPONSE_TIME, responseTime));
+			}
 		}
 
 		registerSessionAccess(log);
