@@ -4,9 +4,9 @@ im-log-stats
 [イントラマート](http://www.intra-mart.jp/) のログ（リクエストログ、画面遷移ログ、例外ログ）を解析し、統計レポートを作成するツールです。
 
 **生成されるレポートのサンプル**
-- [report_sample.html](https://github.com/downloads/cwan/im-log-stats/report_sample.html) : HTML（シンプル）
-- [report_sample_visualize.html](https://github.com/downloads/cwan/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
-- [report_sample.csv](https://github.com/downloads/cwan/im-log-stats/report_sample.csv) : CSV
+- [report_sample.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.html) : HTML（シンプル）
+- [report_sample_visualize.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample_visualize.html) : HTML（グラフ付き）
+- [report_sample.csv](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.csv) : CSV
 
 **ダウンロード**
 
@@ -174,6 +174,7 @@ templateFile | カスタムテンプレートのファイルパス<br/>（@type=
 templateCharset | カスタムテンプレートファイルの文字コード<br/>（@type="template" 以外の場合および @template を指定していない場合は無視される） | No | Ant実行環境のJVMデフォルト文字コード
 requestPageTimeRankThresholdMillis | 0以上の値を指定した場合、処理時間がこの値（ミリ秒）以上のリクエストを全てリクエスト処理時間総合ランクに表示する<br/>（この属性を設定した場合、requestPageTimeRankSize の設定は無視される） | No | false
 jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc のページパスが表示される<br/>（ (2f) を /、(5f) を _ に変換 ） | No | false
+maxConcurrentRequest | true を指定した場合、期間別統計レポートに最大同時リクエスト数が表示される | No | true
 
 (※1)   
  `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
@@ -228,6 +229,7 @@ jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc の
 例外数合計 | この期間内に発生した例外の数 | 例外ログ
 画面遷移数合計 | この期間内の期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計 | 画面遷移ログ
 画面遷移例外数合計 | この期間内の画面遷移ログにおいて検出されたエラーの合計 | 画面遷移ログ
+最大同時リクエスト数 | この期間内において、同時実行中のリクエスト数の最大値 | リクエストログ
 
 ### 4.2. リクエスト処理時間総合ランク
 
@@ -353,6 +355,7 @@ reportParameter.sessionRankSize | int | セッションランクの出力件数
 reportParameter.version.name | java.lang.String | バージョン
 reportParameter.requestPageTimeRankThresholdMillis | long | リクエスト処理時間総合ランクを閾値で抽出する場合のミリ秒
 reportParameter.jsspPath | boolean | リクエスト処理時間総合ランク、リクエストURL別・処理時間合計ランクに、JSSPページパスの列を表示するかどうか
+reportParameter.maxConcurrentRequest | boolean | 期間別統計に、最大同時リクエスト数の列を表示するかどうか
 
 ### 5.4. 期間別統計
 
@@ -376,6 +379,7 @@ timeSpanStat.list | java.util.List | 期間別統計リスト
 - exceptionCount | int | 例外発生数
 - transitionCount | int | 画面遷移数
 - transitionExceptionCount | int | 画面遷移例外発生数
+- maxConcurrentRequestCount | int | 最大同時リクエスト数
 
 ### 5.5. リクエスト処理時間総合ランク
 
@@ -458,6 +462,10 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 [Apache License, Version 2.0](https://github.com/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
+
+### Ver.1.0.13 (2013-04-06)
+- [#10 期間別統計に最大同時リクエスト数を追加した。](https://github.com/cwan/im-log-stats/issues/10)
+- [#11 期間別統計グラフに、画面遷移例外数合計が表示できなかった不具合を修正。](https://github.com/cwan/im-log-stats/issues/11)
 
 ### Ver.1.0.12 (2013-02-05)
 - [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
