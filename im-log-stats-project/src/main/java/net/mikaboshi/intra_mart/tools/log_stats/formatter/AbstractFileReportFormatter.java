@@ -14,6 +14,7 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.formatter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-
 
 import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report;
@@ -102,7 +102,7 @@ public abstract class AbstractFileReportFormatter implements ReportFormatter {
 
 		try {
 			out = new FileOutputStream(this.output);
-			this.writer = new PrintWriter(new OutputStreamWriter(out, this.charset));
+			this.writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, this.charset)));
 
 			doFormat(report);
 
