@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.util.LongListFactory;
 
 import org.apache.commons.collections.map.LazyMap;
@@ -104,9 +103,7 @@ public class SessionMap {
 	 * @param pageTime
 	 */
 	public void addPageTime(String sessionId, long pageTime) {
-		if (isValidId(sessionId)) {
-			this.sessionPageTimesMap.get(sessionId).add(pageTime);
-		}
+		this.sessionPageTimesMap.get(sessionId).add(pageTime);
 	}
 
 	/**

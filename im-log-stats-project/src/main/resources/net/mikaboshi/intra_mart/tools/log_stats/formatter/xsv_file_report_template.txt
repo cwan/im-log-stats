@@ -53,7 +53,7 @@ ${(row_index + 1)?c}${separator}${esc(row.url)}${separator}<#if reportParameter.
 セッション別・処理時間合計ランク${separator}${sessionRank.size?c}/${sessionRank.total?c}
 #${separator}セッションID${separator}ユーザID${separator}リクエスト回数${separator}処理時間合計(ms)▼${separator}処理時間平均(ms)${separator}処理時間最小値(ms)${separator}処理時間中央値(ms)${separator}処理時間90%Line(ms)${separator}処理時間最大値(ms)${separator}処理時間標準偏差(ms)${separator}リクエスト回数%${separator}処理時間%${separator}初回アクセス日時${separator}最終アクセス日時
 <#list sessionRank.list as row>
-${(row_index + 1)?c}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%${separator}${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}${separator}${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}
+${(row_index + 1)?c}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTime90Percent?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%${separator}<#if row.firstAccessTime??>${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if>${separator}<#if row.lastAccessTime??>${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if>
 </#list>
 
 例外

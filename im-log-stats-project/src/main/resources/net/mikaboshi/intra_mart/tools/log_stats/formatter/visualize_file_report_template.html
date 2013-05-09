@@ -969,8 +969,8 @@
 						<td class="numeric">${row.pageTimeStandardDeviation}</td>
 						<td class="numeric">${row.countRate}%</td>
 						<td class="numeric">${row.pageTimeRate}%</td>
-						<td class="date_time">${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
-						<td class="date_time">${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}</td>
+						<td class="date_time"><#if row.firstAccessTime??>${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if></td>
+						<td class="date_time"><#if row.lastAccessTime??>${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if></td>
 					</tr>
 				</#list>
 			</tbody>
