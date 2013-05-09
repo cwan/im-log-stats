@@ -10,8 +10,8 @@ im-log-stats
 
 **ダウンロード**
 
-- [master](https://github.com/cwan/im-log-stats/zipball/master) : 最新（β版）
-- [tags](https://github.com/cwan/im-log-stats/tags) : 過去バージョン（安定板）
+- [master](https://github.com/cwan/im-log-stats/archive/master.zip) : SNAPSHOT
+- [tags](https://github.com/cwan/im-log-stats/tags) : 安定板
 
 ## 1. 動作要件
 
