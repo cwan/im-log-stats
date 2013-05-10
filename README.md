@@ -190,7 +190,7 @@ maxConcurrentRequest | true を指定した場合、期間別統計レポート�
 形式は、Ant 標準の [`<fileset>`](http://ant.apache.org/manual/Types/fileset.html) と同じです。  
 省略した場合、リクエストログは解析しません。
 
-### 3.6. imLogStats のネスト要素 transitionLogFile
+### 3.6. imLogStats のネスト要素 transitionLogFiles
 
 解析対象の画面遷移ログファイルを指定します（複数記述可能）。  
 形式は、Ant 標準の [`<fileset>`](http://ant.apache.org/manual/Types/fileset.html) と同じです。  
@@ -270,7 +270,7 @@ JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パ
 
 ログ項目 | 説明 | 集計元
 :--|:--|:--
-セッションID | Servletコンテナが発行したセッションIDです。 | リクエストログ、画面遷移ログ
+セッションID | Servletコンテナが発行したセッションIDです。(※1)  | リクエストログ、画面遷移ログ
 ユーザID | このセッションに紐付くユーザ（未ログイン状態の場合は、不明の場合がある） | 画面遷移ログ
 リクエスト回数 | のセッションからのリクエスト受信回数の合計 | リクエストログ
 処理時間 | このセッションからのリクエスト処理時間の合計（ミリ秒）([*](#response_time)) | リクエストログ
@@ -278,6 +278,8 @@ JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パ
 処理時間% | 全リクエストの合計に対する、このセッションの処理時間が占める比率 | リクエストログ
 初回アクセス日時 | このセッションが最初にリクエストを送信した日時 | リクエストログ、画面遷移ログ
 最終アクセス日時 | このセッションが最後にリクエストを送信した日時 | リクエストログ、画面遷移ログ
+
+(※1)  セッションIDを含まないリクエストは、「-」となります。このランクでは、セッションIDを含まないリクエストは、異なるユーザ（リモートホスト）からのものでも全て1つにまとめて集計しています。
 
 ### 4.5. 例外
 
@@ -464,6 +466,12 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 [Apache License, Version 2.0](https://github.com/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
+
+### Ver.1.0.14 (2013-05-11)
+- [#12 visualizeテンプレートのCSS文法エラーを修正。](https://github.com/cwan/im-log-stats/issues/12)
+- [#13 レポート出力の性能改善](https://github.com/cwan/im-log-stats/issues/13)
+- [#14 セッション別・処理時間合計ランクに、セッションID無しのリクエストを含めるようにした。](https://github.com/cwan/im-log-stats/issues/14)
+- [#15 レポート生成時のログを見やすくした。](https://github.com/cwan/im-log-stats/issues/15)
 
 ### Ver.1.0.13 (2013-04-07)
 - [#10 期間別統計に最大同時リクエスト数を追加した。](https://github.com/cwan/im-log-stats/issues/10)
