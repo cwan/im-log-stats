@@ -13,7 +13,7 @@
 -->
 <#--
   HTML（グラフ付き）テンプレート
-  @version 1.0.13
+  @version 1.0.14
 -->
 <#--
   TRタグのclass値を取得する
@@ -898,6 +898,7 @@
 		<ul class="notation">
 			<li>セッション毎に処理時間を集計し、処理時間の合計が大きいものから順に${sessionRank.size}件抽出しました。</li>
 			<li>セッション数の合計は、${sessionRank.total}件です。</li>
+			<li>セッションIDを含まないリクエストについては、異なるユーザからのものも1つにまとめられています。</li>
 		</ul>
 
 		<table class="detail">
