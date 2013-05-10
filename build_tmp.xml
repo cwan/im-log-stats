@@ -20,7 +20,7 @@
 		classpathref="execute.classpath"
 		loaderref="loader1" />
 
-	<property name="log.dir" value="C:\imart\log" />
+	<property name="log.dir" value="C:\imart\resin-pro-4.0.31\webapps\imart\WEB-INF\log" />
 
 	<target name="generate_report">
 
@@ -30,22 +30,22 @@
 
 			<report
 				type="html"
-				span="5"
-				sessionTimeout="60"
+				span="1"
+				sessionTimeout="10"
 				name="ログ統計レポート（サンプル）"
 				output="${basedir}/report.html"
 				charset="Windows-31J"/>
 
-			<requestLogFiles dir="${log.dir}/platform">
-				<include name="request*.log"/>
+			<requestLogFiles dir="${log.dir}">
+				<include name="**/request*.log"/>
 			</requestLogFiles>
 
-			<transitionLogFiles dir="${log.dir}/platform">
-				<include name="transition*.log"/>
+			<transitionLogFiles dir="${log.dir}">
+				<include name="**/transition*.log"/>
 			</transitionLogFiles>
 
-			<exceptionLogFiles dir="${log.dir}/platform/exception">
-				<include name="exception*.log"/>
+			<exceptionLogFiles dir="${log.dir}">
+				<include name="**/exception*.log"/>
 			</exceptionLogFiles>
 
 		</imLogStats>

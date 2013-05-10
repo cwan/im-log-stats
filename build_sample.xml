@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="generate_report">
+<project default="generate_report" basedir=".">
 
 	<property environment="env" />
 
@@ -8,6 +8,7 @@
 		<fileset dir="${basedir}/lib">
 			<include name="*.jar" />
 		</fileset>
+		<pathelement path="${basedir}/conf" />
 	</path>
 
 	<!-- カスタムタスク、ネスト要素の定義 -->
@@ -48,9 +49,9 @@
 				sessionRankSize="50"
 				name="ログ統計レポート（サンプル）"
 				signature="株式会社○○○"
-				output="./report_sample.html"
+				output="${basedir}/report_sample.html"
 				charset="Windows-31J"
-				templateFile="./custom_template.txt"
+				templateFile="${basedir}/custom_template.txt"
 				templateCharset="Windows-31J"
 				jsspPath="true"
 				maxConcurrentRequest="true" />
