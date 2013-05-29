@@ -13,7 +13,7 @@
 -->
 <#--
   HTML（グラフ付き）テンプレート
-  @version 1.0.14
+  @version 1.0.15
 -->
 <#--
   TRタグのclass値を取得する
@@ -199,9 +199,9 @@
 			div.vertical-x ul.visualize-labels-x span.label {
 				/* 縦書き */
 				-webkit-transform: rotate(-90deg);
+				-ms-transform: rotate(-90deg);
 				-moz-transform: rotate(-90deg);-moz-transform-origin: 20px 0px;
 				filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-				cursor: pointer;
 			}
 		</style>
 		<style type="text/css" media="screen">
@@ -531,10 +531,10 @@
 				$("#time_span_stat_graph_update").click(function() {
 
 					$timeSpanStatGraphs
-						.animate({ opacity: 0.1}, "fast", function() {
+						.animate({ opacity: 0.1 }, "fast", function() {
 							buildTimeSpanStatGraph(getTimeSpanGraphOption());
 						})
-						.animate({ opacity: 1}, "fast");
+						.animate({ opacity: 1 }, "fast");
 				});
 
 				// リクエストURL別・処理時間合計ランク
