@@ -374,7 +374,7 @@ timeSpanStat.list | java.util.List | 期間別統計リスト
 - pageTimeAverage | long | リクエスト処理時間平均値
 - pageTimeMin | long | リクエスト処理時間最小値
 - pageTimeMedian | long | リクエスト処理時間中央値
-- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeP90 | long | リクエスト処理時間90% Line
 - pageTimeMax | long | リクエスト処理時間最大値
 - pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
 - uniqueUserCount | int | ユニークユーザ数
@@ -413,7 +413,7 @@ requestUrlRank.list | java.util.List | リクエストURL別・処理時間合�
 - pageTimeAverage | long | リクエスト処理時間平均値
 - pageTimeMin | long | リクエスト処理時間最小値
 - pageTimeMedian | long | リクエスト処理時間中央値
-- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeP90 | long | リクエスト処理時間90% Line
 - pageTimeMax | long | リクエスト処理時間最大値
 - pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
 - countRate | double | リクエスト回数%
@@ -433,7 +433,7 @@ sessionRank | java.util.List | セッション別・処理時間合計ランク�
 - pageTimeAverage | long | リクエスト処理時間平均値
 - pageTimeMin | long | リクエスト処理時間最小値
 - pageTimeMedian | long | リクエスト処理時間中央値
-- pageTime90Percent | long | リクエスト処理時間90% Line
+- pageTimeP90 | long | リクエスト処理時間90% Line
 - pageTimeMax | long | リクエスト処理時間最大値
 - pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
 - countRate | double | リクエスト回数%
