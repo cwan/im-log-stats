@@ -286,7 +286,7 @@
 			timeSpanStatData[${row_index}] = {
 				datetime: { date: "${row.startDate?string("yyyy-MM-dd")}", beginTime: "${row.startDate?string("HH:mm")}", endTime: "${row.endDate?string("HH:mm")}" }
 				, requests: ${row.requestCount?c}
-				, pageTime: { sum: ${row.pageTimeSum?c}, ave: ${row.pageTimeAverage?c}, min: ${row.pageTimeMin?c}, med: ${row.pageTimeMedian?c}, l90: ${row.pageTime90Percent?c}, max: ${row.pageTimeMax?c}, sd: ${row.pageTimeStandardDeviation?c} }
+				, pageTime: { sum: ${row.pageTimeSum?c}, ave: ${row.pageTimeAverage?c}, min: ${row.pageTimeMin?c}, med: ${row.pageTimeMedian?c}, p90: ${row.pageTimeP90?c}, max: ${row.pageTimeMax?c}, sd: ${row.pageTimeStandardDeviation?c} }
 				, users: ${row.uniqueUserCount?c}
 				, sessions: ${row.uniqueSessionCount?c}
 				, activeSessions: ${row.activeSessionCount?c}
@@ -320,7 +320,7 @@
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.ave) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.min) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.med) + '</td>';
-					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.l90) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.p90) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.max) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.sd) + '</td>';
 					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.users) + '</td>';
@@ -396,7 +396,7 @@
 							if (option.ave) sTable += '<th>処理時間平均値</th>';
 							if (option.min) sTable += '<th>処理時間最小値</th>';
 							if (option.med) sTable += '<th>処理時間中央値</th>';
-							if (option.l90) sTable += '<th>処理時間90% Line</th>';
+							if (option.p90) sTable += '<th>処理時間90% Line</th>';
 							if (option.max) sTable += '<th>処理時間最大値</th>';
 							if (option.sd) sTable += '<th>処理時間標準偏差</th>';
 							if (option.users) sTable += '<th>ユニークユーザ数</th>';
@@ -439,9 +439,9 @@
 							topValue = Math.max(topValue, this.pageTime.med);
 						}
 
-						if (option.l90) {
-							sTable += '<td>' + this.pageTime.l90 + '</td>';
-							topValue = Math.max(topValue, this.pageTime.l90);
+						if (option.p90) {
+							sTable += '<td>' + this.pageTime.p90 + '</td>';
+							topValue = Math.max(topValue, this.pageTime.p90);
 						}
 
 						if (option.max) {
@@ -510,7 +510,7 @@
 						, ave: $("#time_span_stat_graph_opt_average").attr("checked")
 						, min: $("#time_span_stat_graph_opt_min").attr("checked")
 						, med: $("#time_span_stat_graph_opt_median").attr("checked")
-						, l90: $("#time_span_stat_graph_opt_l90").attr("checked")
+						, p90: $("#time_span_stat_graph_opt_p90").attr("checked")
 						, max: $("#time_span_stat_graph_opt_max").attr("checked")
 						, sd: $("#time_span_stat_graph_opt_sd").attr("checked")
 						, users: $("#time_span_stat_graph_opt_users").attr("checked")
@@ -668,8 +668,8 @@
 					<label for="time_span_stat_graph_opt_median">処理時間中央値</label>
 				</div>
 				<div>
-					<input type="checkbox" id="time_span_stat_graph_opt_l90" checked="checked">
-					<label for="time_span_stat_graph_opt_l90">処理時間90% Line</label>
+					<input type="checkbox" id="time_span_stat_graph_opt_p90" checked="checked">
+					<label for="time_span_stat_graph_opt_p90">処理時間90% Line</label>
 				</div>
 				<div>
 					<input type="checkbox" id="time_span_stat_graph_opt_max">
@@ -843,7 +843,7 @@
 						<td class="numeric">${row.pageTimeAverage}</td>
 						<td class="numeric">${row.pageTimeMin}</td>
 						<td class="numeric">${row.pageTimeMedian}</td>
-						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeP90}</td>
 						<td class="numeric">${row.pageTimeMax}</td>
 						<td class="numeric">${row.pageTimeStandardDeviation}</td>
 						<td class="numeric">${row.countRate}%</td>
@@ -965,7 +965,7 @@
 						<td class="numeric">${row.pageTimeAverage}</td>
 						<td class="numeric">${row.pageTimeMin}</td>
 						<td class="numeric">${row.pageTimeMedian}</td>
-						<td class="numeric">${row.pageTime90Percent}</td>
+						<td class="numeric">${row.pageTimeP90}</td>
 						<td class="numeric">${row.pageTimeMax}</td>
 						<td class="numeric">${row.pageTimeStandardDeviation}</td>
 						<td class="numeric">${row.countRate}%</td>

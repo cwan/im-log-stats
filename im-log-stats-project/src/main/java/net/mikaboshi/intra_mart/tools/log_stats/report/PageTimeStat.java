@@ -17,7 +17,7 @@ package net.mikaboshi.intra_mart.tools.log_stats.report;
 /**
  * 処理時間レポート
  *
- * @version 1.0.8
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class PageTimeStat {
@@ -38,7 +38,7 @@ public class PageTimeStat {
 	public long pageTimeMin = 0L;
 
 	/** リクエスト処理時間90% Line */
-	public long pageTime90Percent = 0L;
+	public long pageTimeP90 = 0L;
 
 	/** リクエスト処理時間最大値 */
 	public long pageTimeMax = 0L;

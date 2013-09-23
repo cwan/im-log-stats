@@ -59,7 +59,7 @@ import freemarker.template.TemplateException;
 /**
  * FreeMarkerのテンプレートを使用して、レポートを生成する。
  *
- * @version 1.0.13
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
@@ -253,7 +253,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("pageTimeAverage", pageTimeStat.pageTimeAverage);
 			row.put("pageTimeMin", pageTimeStat.pageTimeMin);
 			row.put("pageTimeMedian", pageTimeStat.pageTimeMedian);
-			row.put("pageTime90Percent", pageTimeStat.pageTime90Percent);
+			row.put("pageTimeP90", pageTimeStat.pageTimeP90);
 			row.put("pageTimeMax", pageTimeStat.pageTimeMax);
 			row.put("pageTimeStandardDeviation", pageTimeStat.pageTimeStandardDeviation);
 			row.put("uniqueUserCount", stat.getUniqueUserCount());
@@ -340,7 +340,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("pageTimeAverage", entry.pageTimeAverage);
 			row.put("pageTimeMin", entry.pageTimeMin);
 			row.put("pageTimeMedian", entry.pageTimeMedian);
-			row.put("pageTime90Percent", entry.pageTime90Percent);
+			row.put("pageTimeP90", entry.pageTimeP90);
 			row.put("pageTimeMax", entry.pageTimeMax);
 			row.put("pageTimeStandardDeviation", entry.pageTimeStandardDeviation);
 			row.put("countRate", new BigDecimal(entry.countRate * 100, percentMathContext).doubleValue());
@@ -390,7 +390,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("pageTimeAverage", entry.pageTimeAverage);
 			row.put("pageTimeMin", entry.pageTimeMin);
 			row.put("pageTimeMedian", entry.pageTimeMedian);
-			row.put("pageTime90Percent", entry.pageTime90Percent);
+			row.put("pageTimeP90", entry.pageTimeP90);
 			row.put("pageTimeMax", entry.pageTimeMax);
 			row.put("pageTimeStandardDeviation", entry.pageTimeStandardDeviation);
 			row.put("countRate", new BigDecimal(entry.countRate * 100, percentMathContext).doubleValue());

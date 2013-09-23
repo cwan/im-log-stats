@@ -40,7 +40,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.13
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -395,7 +395,7 @@ public class Report {
 		stat.count = pageTimes.size();
 		stat.pageTimeMin = pageTimes.get(0);
 		stat.pageTimeMedian = MathUtil.getMedian(pageTimes, 0L);
-		stat.pageTime90Percent = MathUtil.getPercentile(pageTimes, 90, 0L);
+		stat.pageTimeP90 = MathUtil.getPercentile(pageTimes, 90, 0L);
 		stat.pageTimeMax = pageTimes.get(stat.count - 1);
 		stat.pageTimeSum = MathUtil.getSum(pageTimes);
 		stat.pageTimeAverage = MathUtil.getAverage(pageTimes, stat.pageTimeSum, 0L);
