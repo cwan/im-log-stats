@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  *
- * @version 1.0.8
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public final class MathUtil {
@@ -99,5 +99,70 @@ public final class MathUtil {
 		}
 
 		return (double) numerator / (double) denominator;
+	}
+
+	/**
+	 * 中央値を計算する。
+	 * @param longList
+	 * @param defaultValue
+	 * @return
+	 * @since 1.0.15
+	 */
+	public static long getMedian(List<Long> longList, long defaultValue) {
+
+		if (longList == null || longList.isEmpty()) {
+			return defaultValue;
+		}
+
+		int size = longList.size();
+
+		if (size % 2 == 0) {
+
+			long a = longList.get(size / 2 - 1);
+			long b = longList.get(size / 2);
+
+			return (a + b) / 2L;
+
+		} else {
+			return longList.get((size - 1) / 2);
+		}
+	}
+
+	/**
+	 * 百分位数を求める
+	 * @param longList
+	 * @param p
+	 * @param defaultValue
+	 * @return
+	 */
+	public static long getPercentile(List<Long> longList, int p, long defaultValue) {
+
+		if (longList == null || longList.isEmpty()) {
+			return defaultValue;
+		}
+
+		if (p < 0 || p > 100) {
+			return defaultValue;
+		}
+
+		int size = longList.size();
+
+		if (((long) size * (long) p) % 100L == 0) {
+			// 割り切れる→二値の平均
+			int n = (int) (((long) size - 1L) * (long) p / 100L);
+			long a = longList.get(n);
+			long b = longList.get(n + 1);
+			return (a + b) / 2L;
+
+		} else {
+			// 割り切れない→切り上げ
+			int n = (int) ((long) size * (long) p / 100L);
+
+			if (n >= size) {
+				n = size - 1;
+			}
+
+			return longList.get(n);
+		}
 	}
 }

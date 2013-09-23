@@ -394,8 +394,8 @@ public class Report {
 
 		stat.count = pageTimes.size();
 		stat.pageTimeMin = pageTimes.get(0);
-		stat.pageTimeMedian = pageTimes.get((stat.count - 1) / 2);
-		stat.pageTime90Percent = pageTimes.get((int) ((stat.count - 1) * 0.9d));
+		stat.pageTimeMedian = MathUtil.getMedian(pageTimes, 0L);
+		stat.pageTime90Percent = MathUtil.getPercentile(pageTimes, 90, 0L);
 		stat.pageTimeMax = pageTimes.get(stat.count - 1);
 		stat.pageTimeSum = MathUtil.getSum(pageTimes);
 		stat.pageTimeAverage = MathUtil.getAverage(pageTimes, stat.pageTimeSum, 0L);
