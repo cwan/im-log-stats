@@ -160,7 +160,7 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
 
 名称 | 説明 | 必須 | デフォルト
 :--|:--|:--|:--
-type | レポートファイルの形式<br/>html : HTML<br/>visualize : グラフ付きHTML<br/>csv : CSV (Comma Separated Values)<br/>tsv (Tab Separated Values)<br/>template : 独自テンプレート（@templateFile, @templateCharset で指定）  | No | html
+type | レポートファイルの形式<br/>html : HTML<br/>visualize : グラフ付きHTML (※1)<br/>csv : CSV (Comma Separated Values)<br/>tsv (Tab Separated Values)<br/>template : 独自テンプレート（@templateFile, @templateCharset で指定）  | No | html
 span | 期間別統計の集計間隔（分）| No | 5
 sessionTimeout | IM環境のセッションタイムアウト時間（分）<br/>（有効セッション数の計算に利用する） | No | 10
 requestPageTimeRankSize | リクエスト処理時間総合ランクの行数 | No | 20
@@ -168,7 +168,7 @@ requestUrlRankSize | リクエストURL別・処理時間合計ランクの行�
 sessionRankSize | セッション別・処理時間合計ランクの行数 | No | 20
 name | レポートの名称（タイトル等に使用する） | No | intra-mart ログ統計レポート
 signature | レポートの署名 | No | （なし）
-output | レポートの出力先ファイルパス(※1) | No | カレントディレクトリ/report_yyyyMMdd-HHmmss (年月日-時分秒)
+output | レポートの出力先ファイルパス(※2) | No | カレントディレクトリ/report_yyyyMMdd-HHmmss (年月日-時分秒)
 charset | レポートファイルの文字コード | No | Ant 実行環境の JVM デフォルト文字コード
 templateFile | カスタムテンプレートのファイルパス<br/>（@type="template" 以外の場合は無視される） | No | デフォルトのHTMLテンプレート
 templateCharset | カスタムテンプレートファイルの文字コード<br/>（@type="template" 以外の場合および @template を指定していない場合は無視される） | No | Ant実行環境のJVMデフォルト文字コード
@@ -177,6 +177,9 @@ jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc の
 maxConcurrentRequest | true を指定した場合、期間別統計レポートに最大同時リクエスト数が表示される | No | true
 
 (※1)   
+ `visualize` 形式の場合、レポート HTML ファイルと同じフォルダに、`visualize` フォルダを配置いてください（配下の *.js, *.css, *.png ファイルが必要です）。
+
+(※2)   
  `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
  フォーマットの形式は、[java.text.SimpleDateFormat](http://docs.oracle.com/javase/jp/6/api/java/text/SimpleDateFormat.html) と同じです。
 
