@@ -347,6 +347,20 @@
 				$("option:last", $timeSpanStatOptEndTime).attr("selected", true);
 
 
+				function getMax() {
+					var max = arguments[0];
+					
+					for (var i = 1; i < arguments.length; i++) {
+						max = Math.max(max, arguments[i]);
+					}
+					
+					return max;
+				}
+				
+				function getProportion(value, top) {
+					return Math.round(value * 100 / top);
+				}
+
 				function buildTimeSpanStatGraph(option) {
 
 					if (timeSpanStatData.length === 0) {
@@ -358,6 +372,28 @@
 					var data = [];
 					var beginTime = $timeSpanStatOptBeginTime.val();
 					var endTime = $timeSpanStatOptEndTime.val();
+					
+					var maxValues = {
+						requests: 0
+						, pageTime: {
+							sum: 0
+							, ave: 0
+							, min: 0
+							, med: 0
+							, p90: 0
+							, max: 0
+							, sd: 0
+						}
+						, users: 0
+						, sessions: 0
+						, activeSessions: 0
+						, exceptions: 0
+						, transitions: 0
+						, tranExceptions: 0
+						<#if reportParameter.maxConcurrentRequest>, maxConcurrent: 0</#if>
+					};
+					
+					var topValue = option.proportion ? 100 : 0;
 
 					$(timeSpanStatData).each(function() {
 
@@ -370,14 +406,53 @@
 						}
 
 						data.push(this);
+						
+						maxValues.requests = Math.max(this.requests, maxValues.requests);
+						maxValues.pageTime.sum = Math.max(this.pageTime.sum, maxValues.pageTime.sum);
+						maxValues.pageTime.ave = Math.max(this.pageTime.ave, maxValues.pageTime.ave);
+						maxValues.pageTime.min = Math.max(this.pageTime.min, maxValues.pageTime.min);
+						maxValues.pageTime.med = Math.max(this.pageTime.med, maxValues.pageTime.med);
+						maxValues.pageTime.p90 = Math.max(this.pageTime.p90, maxValues.pageTime.p90);
+						maxValues.pageTime.sd = Math.max(this.pageTime.sd, maxValues.pageTime.sd);
+						maxValues.users = Math.max(this.users, maxValues.users);
+						maxValues.sessions = Math.max(this.sessions, maxValues.sessions);
+						maxValues.activeSessions = Math.max(this.activeSessions, maxValues.activeSessions);
+						maxValues.exceptions = Math.max(this.exceptions, maxValues.exceptions);
+						maxValues.transitions = Math.max(this.transitions, maxValues.transitions);
+						maxValues.tranExceptions = Math.max(this.tranExceptions, maxValues.tranExceptions);
+						<#if reportParameter.maxConcurrentRequest>maxValues.maxConcurrent = Math.max(this.maxConcurrent, maxValues.maxConcurrent);</#if>
+						
+						if (!option.proportion) {
+							topValue = getMax(
+											topValue
+											, maxValues.requests
+											, maxValues.pageTime.sum
+											, maxValues.pageTime.ave
+											, maxValues.pageTime.min
+											, maxValues.pageTime.med
+											, maxValues.pageTime.p90
+											, maxValues.pageTime.sd
+											, maxValues.users
+											, maxValues.sessions
+											, maxValues.activeSessions
+											, maxValues.exceptions
+											, maxValues.transitions
+											, maxValues.tranExceptions
+											<#if reportParameter.maxConcurrentRequest>, maxValues.maxConcurrent</#if>);
+						}
 					});
-
-
-					var topValue = 0;
 
 					var sizePerGraph = Math.ceil(data.length / (parseInt((data.length - 1) / 45) + 1));
 
 					var sTable = "";
+					
+					function getTd(value, maxValue) {
+						if (option.proportion) {
+							return '<td>' + getProportion(value, maxValue) + '</td>';
+						} else {
+							return '<td>' + value + '</td>';
+						}
+					}
 
 					$(data).each(function(i) {
 
@@ -415,79 +490,64 @@
 						sTable += '<tr><th>' + this.datetime.beginTime + '</th>';
 
 						if (option.requests) {
-							sTable += '<td>' + this.requests + '</td>';
-							topValue = Math.max(topValue, this.requests);
+							sTable += getTd(this.requests, maxValues.requests);
 						}
 
 						if (option.sum) {
-							sTable += '<td>' + this.pageTime.sum + '</td>';
-							topValue = Math.max(topValue, this.pageTime.sum);
+							sTable += getTd(this.pageTime.sum, maxValues.pageTime.sum);
 						}
 
 						if (option.ave) {
-							sTable += '<td>' + this.pageTime.ave + '</td>';
-							topValue = Math.max(topValue, this.pageTime.ave);
+							sTable += getTd(this.pageTime.ave, maxValues.pageTime.ave);
 						}
 
 						if (option.min) {
-							sTable += '<td>' + this.pageTime.min + '</td>';
-							topValue = Math.max(topValue, this.pageTime.min);
+							sTable += getTd(this.pageTime.min, maxValues.pageTime.min);
 						}
 
 						if (option.med) {
-							sTable += '<td>' + this.pageTime.med + '</td>';
-							topValue = Math.max(topValue, this.pageTime.med);
+							sTable += getTd(this.pageTime.med, maxValues.pageTime.med);
 						}
 
 						if (option.p90) {
-							sTable += '<td>' + this.pageTime.p90 + '</td>';
-							topValue = Math.max(topValue, this.pageTime.p90);
+							sTable += getTd(this.pageTime.p90, maxValues.pageTime.p90);
 						}
 
 						if (option.max) {
-							sTable += '<td>' + this.pageTime.max + '</td>';
-							topValue = Math.max(topValue, this.pageTime.max);
+							sTable += getTd(this.pageTime.max, maxValues.pageTime.max);
 						}
 
 						if (option.sd) {
-							sTable += '<td>' + this.pageTime.sd + '</td>';
-							topValue = Math.max(topValue, this.pageTime.sd);
+							sTable += getTd(this.pageTime.sd, maxValues.pageTime.sd);
 						}
 
 						if (option.users) {
-							sTable += '<td>' + this.users + '</td>';
-							topValue = Math.max(topValue, this.users);
+							sTable += getTd(this.users, maxValues.users);
 						}
 
 						if (option.sessions) {
-							sTable += '<td>' + this.sessions + '</td>';
-							topValue = Math.max(topValue, this.sessions);
+							sTable += getTd(this.sessions, maxValues.sessions);
 						}
 
 						if (option.activeSessions) {
-							sTable += '<td>' + this.activeSessions + '</td>';
-							topValue = Math.max(topValue, this.activeSessions);
+							sTable += getTd(this.activeSessions, maxValues.activeSessions);
 						}
 
 						if (option.exceptions) {
-							sTable += '<td>' + this.exceptions + '</td>';
-							topValue = Math.max(topValue, this.exceptions);
+							sTable += getTd(this.exceptions, maxValues.exceptions);
 						}
 
 						if (option.transitions) {
-							sTable += '<td>' + this.transitions + '</td>';
-							topValue = Math.max(topValue, this.transitions);
+							sTable += getTd(this.transitions, maxValues.transitions);
 						}
 
 						if (option.tranExceptions) {
-							sTable += '<td>' + this.tranExceptions + '</td>';
-							topValue = Math.max(topValue, this.tranExceptions);
+							sTable += getTd(this.tranExceptions, maxValues.tranExceptions);
 						}
 
 						<#if reportParameter.maxConcurrentRequest>
 						if (option.maxConcurrent) {
-							sTable += '<td>' + this.maxConcurrent + '</td>';
-							topValue = Math.max(topValue, this.maxConcurrent);
+							sTable += getTd(this.maxConcurrent, maxValues.maxConcurrent);
 						}
 						</#if>
 
@@ -522,6 +582,7 @@
 						<#if reportParameter.maxConcurrentRequest>
 						, maxConcurrent: $("#time_span_stat_graph_opt_max_concurrent").attr("checked")
 						</#if>
+						, proportion: $("#time_span_stat_graph_opt_proportion").attr("checked")
 					};
 				}
 
@@ -709,6 +770,10 @@
 					<label for="time_span_stat_graph_opt_max_concurrent">最大同時リクエスト数</label>
 				</div>
 				</#if>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_proportion" checked="checked">
+					<label for="time_span_stat_graph_opt_proportion">割合で表示</label>
+				</div>
 				<input type="button" value="更新" id="time_span_stat_graph_update">
 			</div>
 
