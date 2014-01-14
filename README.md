@@ -175,9 +175,10 @@ templateCharset | カスタムテンプレートファイルの文字コード<b
 requestPageTimeRankThresholdMillis | 0以上の値を指定した場合、処理時間がこの値（ミリ秒）以上のリクエストを全てリクエスト処理時間総合ランクに表示する<br/>（この属性を設定した場合、requestPageTimeRankSize の設定は無視される） | No | false
 jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc のページパスが表示される<br/>（ (2f) を /、(5f) を _ に変換 ） | No | false
 maxConcurrentRequest | true を指定した場合、期間別統計レポートに最大同時リクエスト数が表示される | No | true
+visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.css, *.png）が配置されたURLのベース部分 (v1.0.15以降) | No | visualize
 
 (※1)   
- `visualize` 形式の場合、レポート HTML ファイルと同じフォルダに、`visualize` フォルダを配置いてください（配下の *.js, *.css, *.png ファイルが必要です）。
+ `visualize` 形式の場合、レポート HTML ファイルと同じフォルダに、`visualize` フォルダを配置するか、visualizeBaseUrlを指定してください（配下の *.js, *.css, *.png ファイルが必要です）。
 
 (※2)   
  `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
@@ -363,6 +364,7 @@ reportParameter.version.name | java.lang.String | バージョン
 reportParameter.requestPageTimeRankThresholdMillis | long | リクエスト処理時間総合ランクを閾値で抽出する場合のミリ秒
 reportParameter.jsspPath | boolean | リクエスト処理時間総合ランク、リクエストURL別・処理時間合計ランクに、JSSPページパスの列を表示するかどうか
 reportParameter.maxConcurrentRequest | boolean | 期間別統計に、最大同時リクエスト数の列を表示するかどうか
+repoerParameter.visualizeBaseUrl | String | visualizeレポートの静的コンテンツベースURL（v1.0.15以降）
 
 ### 5.4. 期間別統計
 
@@ -470,6 +472,13 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 ## 7. 更新履歴
 
+### Ver.1.0.15 (2014-01-14)
+- [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
+- [#15 IEで期間別統計グラフの時刻が縦にならない不具合を修正。](https://github.com/cwan/im-log-stats/issues/15)
+- [#17 期間別統計グラフの縦軸を割合で表示できるようにした。](https://github.com/cwan/im-log-stats/issues/17)
+- [#19 中央値、90%Lineの計算方法を修正。](https://github.com/cwan/im-log-stats/issues/19)
+- [#21 visualizeレポートで使用しているjs等をWebから取得できるようにした。](https://github.com/cwan/im-log-stats/issues/21)
+
 ### Ver.1.0.14 (2013-05-11)
 - [#12 visualizeテンプレートのCSS文法エラーを修正。](https://github.com/cwan/im-log-stats/issues/12)
 - [#13 レポート出力の性能改善](https://github.com/cwan/im-log-stats/issues/13)
@@ -481,7 +490,7 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 - [#11 期間別統計グラフに、画面遷移例外数合計が表示できなかった不具合を修正。](https://github.com/cwan/im-log-stats/issues/11)
 
 ### Ver.1.0.12 (2013-02-05)
-- [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
+- ~~[#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)~~
 
 ### Ver.1.0.11 (2013-01-29)
 - [#4 期間別統計グラフの改善](https://github.com/cwan/im-log-stats/issues/4)
