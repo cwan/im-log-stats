@@ -19,7 +19,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
 /**
  * レポートパラメータ
  *
- * @version 1.0.13
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameter {
@@ -79,6 +79,12 @@ public class ReportParameter {
 
 	/** バージョン  */
 	private Version version = Version.V72;
+
+	/**
+	 * visualizeのベースURL
+	 * @since 1.0.15
+	 */
+	private String visualizeBaseUrl = "visualize";
 
 	/**
 	 * 解析間隔（分）を取得する。
@@ -252,5 +258,13 @@ public class ReportParameter {
 
 	public void setVersion(Version version) {
 		this.version = version;
+	}
+
+	public String getVisualizeBaseUrl() {
+		return visualizeBaseUrl;
+	}
+
+	public void setVisualizeBaseUrl(String visualizeBaseUrl) {
+		this.visualizeBaseUrl = visualizeBaseUrl;
 	}
 }

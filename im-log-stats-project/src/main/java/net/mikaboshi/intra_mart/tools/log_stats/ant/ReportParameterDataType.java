@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログ統計レポート設定のネスト要素
  *
- * @version 1.0.13
+ * @version 1.0.15
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameterDataType extends DataType {
@@ -95,6 +95,12 @@ public class ReportParameterDataType extends DataType {
 
 	/** レポートの文字コード */
 	private String charset = Charset.defaultCharset().toString();
+
+	/**
+	 * visualizeのベースURL
+	 * @since 1.0.15
+	 */
+	private String visualizeBaseUrl = null;
 
 	public void setType(String s) {
 		this.type = ReportType.toEnum(s);
@@ -199,6 +205,10 @@ public class ReportParameterDataType extends DataType {
 
 	public void setCharset(String charset) {
 		this.charset = charset;
+	}
+
+	public void setVisualizeBaseUrl(String visualizeBaseUrl) {
+		this.visualizeBaseUrl = visualizeBaseUrl;
 	}
 
 	/**
@@ -311,6 +321,10 @@ public class ReportParameterDataType extends DataType {
 
 		if (version != null) {
 			parameter.setVersion(version);
+		}
+
+		if (this.visualizeBaseUrl != null) {
+			parameter.setVisualizeBaseUrl(this.visualizeBaseUrl);
 		}
 
 		return parameter;

@@ -13,7 +13,7 @@
 -->
 <#--
   HTML（グラフ付き）テンプレート
-  @version 1.0.16
+  @version 1.0.15
 -->
 <#--
   TRタグのclass値を取得する
@@ -36,8 +36,8 @@
 		<meta charset="${charset}">
 		<title>${reportName?html}</title>
 
-		<link rel="stylesheet" href="visualize/css/visualize.css" type="text/css" />
-		<link rel="stylesheet" href="visualize/css/visualize-light.css" type="text/css" />
+		<link rel="stylesheet" href="${reportParameter.visualizeBaseUrl}/css/visualize.css" type="text/css" />
+		<link rel="stylesheet" href="${reportParameter.visualizeBaseUrl}/css/visualize-light.css" type="text/css" />
 
 		<style type="text/css" media="all">
 			.clearfix {
@@ -272,9 +272,9 @@
 			}
 		</style>
 
-		<!--[if IE]><script type="text/javascript" src="visualize/js/excanvas.js"></script><![endif]-->
-		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
+		<!--[if IE]><script type="text/javascript" src="${reportParameter.visualizeBaseUrl}/js/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="${reportParameter.visualizeBaseUrl}/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="${reportParameter.visualizeBaseUrl}/js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
 
 			// 期間別統計
@@ -349,14 +349,14 @@
 
 				function getMax() {
 					var max = arguments[0];
-					
+
 					for (var i = 1; i < arguments.length; i++) {
 						max = Math.max(max, arguments[i]);
 					}
-					
+
 					return max;
 				}
-				
+
 				function getProportion(value, top) {
 					return Math.round(value * 100 / top);
 				}
@@ -372,7 +372,7 @@
 					var data = [];
 					var beginTime = $timeSpanStatOptBeginTime.val();
 					var endTime = $timeSpanStatOptEndTime.val();
-					
+
 					var maxValues = {
 						requests: 0
 						, pageTime: {
@@ -392,7 +392,7 @@
 						, tranExceptions: 0
 						<#if reportParameter.maxConcurrentRequest>, maxConcurrent: 0</#if>
 					};
-					
+
 					var topValue = option.proportion ? 100 : 0;
 
 					$(timeSpanStatData).each(function() {
@@ -406,7 +406,7 @@
 						}
 
 						data.push(this);
-						
+
 						maxValues.requests = Math.max(this.requests, maxValues.requests);
 						maxValues.pageTime.sum = Math.max(this.pageTime.sum, maxValues.pageTime.sum);
 						maxValues.pageTime.ave = Math.max(this.pageTime.ave, maxValues.pageTime.ave);
@@ -421,7 +421,7 @@
 						maxValues.transitions = Math.max(this.transitions, maxValues.transitions);
 						maxValues.tranExceptions = Math.max(this.tranExceptions, maxValues.tranExceptions);
 						<#if reportParameter.maxConcurrentRequest>maxValues.maxConcurrent = Math.max(this.maxConcurrent, maxValues.maxConcurrent);</#if>
-						
+
 						if (!option.proportion) {
 							topValue = getMax(
 											topValue
@@ -445,7 +445,7 @@
 					var sizePerGraph = Math.ceil(data.length / (parseInt((data.length - 1) / 45) + 1));
 
 					var sTable = "";
-					
+
 					function getTd(value, maxValue) {
 						if (option.proportion) {
 							return '<td>' + getProportion(value, maxValue) + '</td>';
