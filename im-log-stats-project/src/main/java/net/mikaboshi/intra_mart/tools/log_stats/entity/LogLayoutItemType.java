@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * ログレイアウト項目種別
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public enum LogLayoutItemType {
@@ -78,6 +78,8 @@ public enum LogLayoutItemType {
 	MDC_REQUEST_PAGE_TIME(true, "request.page.time"),
 
 	MDC_SECURITY_ID_LOGINTYPE(true, "security.id.logintype"),
+
+	MDC_TENANT_ID(true, "tenant.id"),
 
 	MDC_LOG_ID(true, "log.id"),
 

@@ -22,7 +22,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 /**
  * ログファイルのパースに関するパラメータ。
  *
- * @version 1.0.10
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameter {
@@ -42,8 +42,14 @@ public class ParserParameter {
 	/** 終了日時（これ以降のログは切り捨てる） */
 	private Date end = null;
 
+	/**
+	 * テナントIDフィルタ（これが指定されている場合は、他のテナントのログは集計しない）
+	 * @since 1.0.16
+	 */
+	private String tenantId = null;
+
 	/** ログのバージョン */
-	private Version version = Version.V72;
+	private Version version = Version.V80;
 
 	/** 例外のグルーピング方法 */
 	private ExceptionLog.GroupingType exceptionGroupingType = ExceptionLog.GroupingType.CAUSE;
@@ -157,6 +163,24 @@ public class ParserParameter {
 	 */
 	public void setEnd(Date end) {
 		this.end = end;
+	}
+
+	/**
+	 * テナントIDフィルタを取得する。
+	 * @since 1.0.16
+	 * @return
+	 */
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	/**
+	 * テナントIDフィルタを設定する。
+	 * @since 1.0.16
+	 * @param tenantId
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**

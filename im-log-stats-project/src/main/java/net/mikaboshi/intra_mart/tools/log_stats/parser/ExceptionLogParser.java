@@ -19,7 +19,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 /**
  * 例外ログパーサ
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public abstract class ExceptionLogParser extends GenericLogParser implements LogParser<ExceptionLog> {
@@ -36,11 +36,9 @@ public abstract class ExceptionLogParser extends GenericLogParser implements Log
 
 			return new ExceptionLogParserV6(parameter);
 
-		} else if (version.isVersion7()) {
+		} else {
 
 			return new ExceptionLogParserV7(parameter);
 		}
-
-		throw new IllegalArgumentException("Unsupported version : " + version);
 	}
 }

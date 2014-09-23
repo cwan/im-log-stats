@@ -14,90 +14,55 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.report;
 
-import java.util.Date;
 import java.util.List;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
 
 
 /**
- * 時間分割統計
+ * テナント別統計
  *
  * @version 1.0.16
+ * @since 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
-public class TimeSpanStatistics extends BasicStatistics {
+public class TenantStatistics extends BasicStatistics {
 
 	/**
-	 * スパン開始日時
+	 * テナントID
 	 */
-	private Date startDate = null;
-
-	/**
-	 * スパン終了日時
-	 * @since 1.0.13
-	 */
-	private Date endDate = null;
+	private String tenantId;
 
 	/**
 	 * コンストラクタ
 	 * @param transitionLogOnly 画面遷移ログのみ（リクエストログなし）かどうか
 	 */
-	public TimeSpanStatistics(boolean transitionLogOnly) {
+	public TenantStatistics(boolean transitionLogOnly) {
 		super(transitionLogOnly);
 	}
 
-	/**
-	 * スパン開始日時を設定する。
-	 * @param startDate スパン開始日時
-	 */
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public String getTenantId() {
+		return tenantId;
 	}
 
-	/**
-	 * スパン開始日時を取得する。
-	 * @return
-	 */
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	/**
-	 * スパン終了日時を設定する。
-	 * @param endDate スパン終了日時
-	 */
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	/**
-	 * スパン終了日時を取得する。
-	 * @return
-	 * @since 1.0.13
-	 */
-	public Date getEndDate() {
-		return endDate;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**
 	 * 同時リクエスト数の最大値を調べる。
 	 * @param concurrentRequestList
-	 * @since 1.0.13
 	 */
 	public void countMaxConcurrentRequest(List<ConcurrentRequest> concurrentRequestList) {
 
-		long lStartTime = this.startDate.getTime();
-		long lEndTime = this.endDate.getTime();
+		if (this.tenantId == null) {
+			return;
+		}
 
 		for (ConcurrentRequest req : concurrentRequestList) {
 
-			if (req.getTime() < lStartTime) {
+			if (!this.tenantId.equals(req.getTenantId())) {
 				continue;
-			}
-
-			if (req.getTime() >= lEndTime) {
-				break;
 			}
 
 			updateMaxConcurrentRequest(req.getCount());

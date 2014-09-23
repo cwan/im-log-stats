@@ -40,7 +40,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.15
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -63,6 +63,19 @@ public class Report {
 			});
 
 	/**
+	 * テナントID => テナント別統計
+	 * @since 1.0.16
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, TenantStatistics> tenantStatMap = LazyMap.decorate(
+			new HashMap<String, TenantStatistics>(),
+			new Factory() {
+				public Object create() {
+					return new TenantStatistics(CollectionUtils.isEmpty(getRequestLogFiles()));
+				}
+			});
+
+	/**
 	 * 全体統計
 	 */
 	private GrossStatistics grossStatistics;
@@ -81,6 +94,27 @@ public class Report {
 	 * 例外ログファイルのコレクション
 	 */
 	private Collection<File> exceptionLogFiles = null;
+
+	/**
+	 * 処理時間統計情報を設定する。
+	 */
+	public static void setPageTimeStat(PageTimeStat stat, List<Long> pageTimes) {
+
+		if (CollectionUtils.isEmpty(pageTimes)) {
+			return;
+		}
+
+		Collections.sort(pageTimes);
+
+		stat.count = pageTimes.size();
+		stat.pageTimeMin = pageTimes.get(0);
+		stat.pageTimeMedian = MathUtil.getMedian(pageTimes, 0L);
+		stat.pageTimeP90 = MathUtil.getPercentile(pageTimes, 90, 0L);
+		stat.pageTimeMax = pageTimes.get(stat.count - 1);
+		stat.pageTimeSum = MathUtil.getSum(pageTimes);
+		stat.pageTimeAverage = MathUtil.getAverage(pageTimes, stat.pageTimeSum, 0L);
+		stat.pageTimeStandardDeviation = MathUtil.getStandardDeviation(pageTimes, stat.pageTimeAverage, 0L);
+	}
 
 	/**
 	 * レポートパラメータを設定する。
@@ -111,6 +145,11 @@ public class Report {
 		TimeSpanStatistics stat = this.timeSpanStatMap.get(floorDate(log.date));
 		stat.add(log);
 
+		if (log.tenantId != null) {
+			TenantStatistics tenantStat = this.tenantStatMap.get(log.tenantId);
+			tenantStat.add(log);
+		}
+
 		getGrossStatistics().add(log);
 	}
 
@@ -127,6 +166,11 @@ public class Report {
 		TimeSpanStatistics stat = this.timeSpanStatMap.get(floorDate(log.date));
 		stat.add(log);
 
+		if (log.tenantId != null) {
+			TenantStatistics tenantStat = this.tenantStatMap.get(log.tenantId);
+			tenantStat.add(log);
+		}
+
 		getGrossStatistics().add(log);
 	}
 
@@ -142,6 +186,12 @@ public class Report {
 
 		TimeSpanStatistics stat = this.timeSpanStatMap.get(floorDate(log.date));
 		stat.add(log);
+
+		// ※標準フォーマットでは例外ログにテナントIDは含まれない
+		if (log.tenantId != null) {
+			TenantStatistics tenantStat = this.tenantStatMap.get(log.tenantId);
+			tenantStat.add(log);
+		}
 
 		getGrossStatistics().add(log);
 	}
@@ -230,6 +280,35 @@ public class Report {
 			TimeSpanStatistics stat = this.timeSpanStatMap.get(startDate);
 			stat.setStartDate(startDate);
 			stat.setEndDate(new Date(stat.getStartDate().getTime() + spanMills));
+
+			if (this.parameter.isMaxConcurrentRequest()) {
+				stat.countMaxConcurrentRequest(concurrentRequestList);
+			}
+
+			list.add(stat);
+		}
+
+		return list;
+	}
+
+	/**
+	 * テナント別統計のリスト（ソート済み）を取得する。
+	 * @since 1.0.16
+	 * @return
+	 */
+	public List<TenantStatistics> getTenantStatisticsList() {
+
+		List<TenantStatistics> list = new ArrayList<TenantStatistics>();
+
+		List<String> tenantIds = new ArrayList<String>(this.tenantStatMap.keySet());
+		Collections.sort(tenantIds);
+
+		// 最大同時リクエスト数
+		List<ConcurrentRequest> concurrentRequestList = getGrossStatistics().getConcurrentRequestList();
+
+		for (String tenantId : tenantIds) {
+			TenantStatistics stat = this.tenantStatMap.get(tenantId);
+			stat.setTenantId(tenantId);
 
 			if (this.parameter.isMaxConcurrentRequest()) {
 				stat.countMaxConcurrentRequest(concurrentRequestList);
@@ -379,27 +458,6 @@ public class Report {
 	 */
 	public long getTotalPageTime() {
 		return getGrossStatistics().getTotalPageTime();
-	}
-
-	/**
-	 * 処理時間統計情報を設定する。
-	 */
-	public void setPageTimeStat(PageTimeStat stat, List<Long> pageTimes) {
-
-		if (CollectionUtils.isEmpty(pageTimes)) {
-			return;
-		}
-
-		Collections.sort(pageTimes);
-
-		stat.count = pageTimes.size();
-		stat.pageTimeMin = pageTimes.get(0);
-		stat.pageTimeMedian = MathUtil.getMedian(pageTimes, 0L);
-		stat.pageTimeP90 = MathUtil.getPercentile(pageTimes, 90, 0L);
-		stat.pageTimeMax = pageTimes.get(stat.count - 1);
-		stat.pageTimeSum = MathUtil.getSum(pageTimes);
-		stat.pageTimeAverage = MathUtil.getAverage(pageTimes, stat.pageTimeSum, 0L);
-		stat.pageTimeStandardDeviation = MathUtil.getStandardDeviation(pageTimes, stat.pageTimeAverage, 0L);
 	}
 
 	/**

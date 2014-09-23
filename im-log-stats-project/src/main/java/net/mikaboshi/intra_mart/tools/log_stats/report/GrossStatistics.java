@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 全体の統計情報
  *
- * @version 1.0.13
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GrossStatistics {
@@ -108,6 +108,12 @@ public class GrossStatistics {
 	private List<ConcurrentRequest> concurrentRequestList = new ArrayList<ConcurrentRequest>();
 
 	/**
+	 * 最大同時リクエスト数集計トリスト（ソート済み）
+	 * @since 1.0.16
+	 */
+	private List<ConcurrentRequest> sortedConcurrentRequestList = null;
+
+	/**
 	 * 処理時間順のリクエストランクサイズを指定するコンストラクタ
 	 * @param requestPageTimeRankSize 処理時間順のリクエストランクサイズ
 	 * @param transitionLogOnly 画面遷移ログのみ（リクエストログなし）かどうか
@@ -162,12 +168,12 @@ public class GrossStatistics {
 			// 最大同時リクエスト数集計のため、受信時刻・返信時刻を記録する
 			if (log.requestAcceptTime != null) {
 				this.concurrentRequestList.add(
-						new ConcurrentRequest(EventType.ACCEPT_TIME, log.requestAcceptTime.getTime()));
+						new ConcurrentRequest(EventType.ACCEPT_TIME, log.requestAcceptTime.getTime(), log.tenantId));
 			}
 
 			if (log.date != null) {
 				this.concurrentRequestList.add(
-						new ConcurrentRequest(EventType.RESPONSE_TIME, log.date.getTime()));
+						new ConcurrentRequest(EventType.RESPONSE_TIME, log.date.getTime(), log.tenantId));
 			}
 		}
 	}
@@ -196,10 +202,10 @@ public class GrossStatistics {
 				long acceptTime = responseTime - log.transitionTimeResponse;
 
 				this.concurrentRequestList.add(
-						new ConcurrentRequest(EventType.ACCEPT_TIME, acceptTime));
+						new ConcurrentRequest(EventType.ACCEPT_TIME, acceptTime, log.tenantId));
 
 				this.concurrentRequestList.add(
-						new ConcurrentRequest(EventType.RESPONSE_TIME, responseTime));
+						new ConcurrentRequest(EventType.RESPONSE_TIME, responseTime, log.tenantId));
 			}
 		}
 
@@ -299,6 +305,10 @@ public class GrossStatistics {
 	 */
 	public List<ConcurrentRequest> getConcurrentRequestList() {
 
+		if (this.sortedConcurrentRequestList != null) {
+			return this.sortedConcurrentRequestList;
+		}
+
 		// 時刻でソート
 		Collections.sort(this.concurrentRequestList, new Comparator<ConcurrentRequest>() {
 
@@ -328,7 +338,9 @@ public class GrossStatistics {
 			req.setCount(count);
 		}
 
-		return this.concurrentRequestList;
+		this.sortedConcurrentRequestList = this.concurrentRequestList;
+
+		return this.sortedConcurrentRequestList;
 	}
 
 	public static class RequestEntry {

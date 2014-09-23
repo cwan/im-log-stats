@@ -25,7 +25,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;
 /**
  * リクエストログパーサ
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class RequestLogParser extends LineLogParser implements LogParser<RequestLog> {
@@ -47,7 +47,7 @@ public class RequestLogParser extends LineLogParser implements LogParser<Request
 
 		populate(lineMap, log);
 
-		if (!isInRange(log) || log.isIN()) {
+		if (!isInRange(log) || log.isIN() || !isTargetTenant(log)) {
 			return null;
 		}
 

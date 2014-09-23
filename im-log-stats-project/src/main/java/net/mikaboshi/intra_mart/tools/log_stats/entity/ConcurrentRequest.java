@@ -17,7 +17,7 @@ package net.mikaboshi.intra_mart.tools.log_stats.entity;
 /**
  * 同時リクエスト集計用
  *
- * @version 1.0.13
+ * @version 1.0.16
  * @since 1.0.13
  * @author <a href="https://github.com/cwan">cwan</a>
  */
@@ -38,9 +38,12 @@ public class ConcurrentRequest {
 
 	private int count = 0;
 
-	public ConcurrentRequest(EventType type, long time) {
+	private String tenantId;
+
+	public ConcurrentRequest(EventType type, long time, String tenantId) {
 		this.type = type;
 		this.time = time;
+		this.tenantId = tenantId;
 	}
 
 	public EventType getType() {
@@ -57,5 +60,14 @@ public class ConcurrentRequest {
 
 	public int getCount() {
 		return count;
+	}
+
+	/**
+	 * テナントIDを取得する。
+	 * @since 1.0.16
+	 * @return
+	 */
+	public String getTenantId() {
+		return tenantId;
 	}
 }

@@ -23,7 +23,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.LogLayoutItemType;
 /**
  * ログレイアウトの定義
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public final class LogLayoutDefinitions {
@@ -34,8 +34,11 @@ public final class LogLayoutDefinitions {
 	/** Ver.7.0, 7.1標準のリクエストログレイアウト */
 	private static final String REQUEST_V70_V71 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.url}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
 
-	/** Ver.7.2, 8.0標準のリクエストログレイアウト */
+	/** Ver.7.2, 8.0.0-8.0.6標準のリクエストログレイアウト */
 	private static final String REQUEST_V72_V80 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.method}\t%X{request.url}\t%X{request.query_string}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
+
+	/** Ver.8.0.7～標準のリクエストログレイアウト */
+	private static final String REQUEST_V807 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{tenant.id}\t%X{log.id}\t-\t%X{client.session.id}\t%X{request.remote.host}\t%X{request.method}\t%X{request.url}\t%X{request.query_string}\t%X{request.url.referer}\t%X{request.page.time}\t%X{request.accept.time}\t%X{request.id}%nopex%n";
 
 	/** Ver.6.0, 6.1標準の画面遷移ログレイアウト */
 	private static final String TRANSITION_V6x = "{DATE}{TAB}{TYPE}{TAB}{REMOTE_ADDRESS}{TAB}{REMOTE_HOST}{TAB}{USER_ID}{TAB}{SESSION_ID}{TAB}{NEXT_PAGE}{TAB}{RESPONSE_TIME}{TAB}{EXCEPTION_NAME}{TAB}{EXCEPTION_MSG}{TAB}{PREVIOUS_PAGE}";
@@ -43,8 +46,11 @@ public final class LogLayoutDefinitions {
 	/** Ver.7.0標準の画面遷移ログレイアウト */
 	private static final String TRANSITION_V70 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
 
-	/** Ver.7.1, 7.2, 8.0標準の画面遷移ログレイアウト */
+	/** Ver.7.1, 7.2, 8.0.0-8.0.6標準の画面遷移ログレイアウト */
 	private static final String TRANSITION_V71_V72_V80 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
+
+	/** Ver.8.0.7～標準の画面遷移ログレイアウト */
+	private static final String TRANSITION_V807 = "[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]\t%X{log.report.sequence}\t%-5level\t%logger{255}\t%X{tenant.id}\t%X{log.id}\t-\t%X{transition.log.type.id}\t%X{request.remote.address}\t%X{request.remote.host}\t%X{transition.access.user.id}\t%X{client.session.id}\t%X{transition.path.page.next}\t%X{transition.time.response}\t%X{transition.exception.name}\t%X{transition.exception.message}\t%X{transition.path.page.previous}\t%X{request.id}%nopex%n";
 
 	private static final Pattern V6_LAYOUT_PATTERN = Pattern.compile("^\\{(.+?)\\}.*");
 
@@ -157,8 +163,19 @@ public final class LogLayoutDefinitions {
 				return REQUEST_V70_V71;
 
 			case V72:
-			case V80:
+			case V800:
+			case V801:
+			case V802:
+			case V803:
+			case V804:
+			case V805:
+			case V806:
 				return REQUEST_V72_V80;
+
+			case V80:
+			case V807:
+			case V808:
+				return REQUEST_V807;
 
 			default:
 				return null;
@@ -183,8 +200,19 @@ public final class LogLayoutDefinitions {
 
 			case V71:
 			case V72:
-			case V80:
+			case V800:
+			case V801:
+			case V802:
+			case V803:
+			case V804:
+			case V805:
+			case V806:
 				return TRANSITION_V71_V72_V80;
+
+			case V80:
+			case V807:
+			case V808:
+				return TRANSITION_V807;
 
 			default:
 				return null;

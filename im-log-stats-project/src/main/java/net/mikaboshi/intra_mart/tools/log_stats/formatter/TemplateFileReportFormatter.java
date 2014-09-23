@@ -43,6 +43,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.report.Report.ExceptionReportEnt
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report.RequestUrlReportEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.Report.SessionReportEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.report.ReportParameter;
+import net.mikaboshi.intra_mart.tools.log_stats.report.TenantStatistics;
 import net.mikaboshi.intra_mart.tools.log_stats.report.TimeSpanStatistics;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -59,7 +60,7 @@ import freemarker.template.TemplateException;
 /**
  * FreeMarkerのテンプレートを使用して、レポートを生成する。
  *
- * @version 1.0.15
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
@@ -195,6 +196,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			setRequestPageTimeRank(report, rootMap);
 			setRequestUrlRank(report, rootMap);
 			setSessionRank(report, rootMap);
+			setTenantStatistics(report, rootMap);
 			setExceptionRank(report, rootMap);
 			setLogFiles(report, rootMap);
 
@@ -244,7 +246,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			List<Long> pageTimes = stat.getRequestPageTimes();
 
 			PageTimeStat pageTimeStat = new PageTimeStat();
-			report.setPageTimeStat(pageTimeStat, pageTimes);
+			Report.setPageTimeStat(pageTimeStat, pageTimes);
 
 			row.put("startDate", stat.getStartDate());
 			row.put("endDate", stat.getEndDate());
@@ -397,6 +399,48 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			row.put("pageTimeRate", new BigDecimal(entry.pageTimeRate * 100, percentMathContext).doubleValue());
 			row.put("firstAccessTime", entry.firstAccessTime);
 			row.put("lastAccessTime", entry.lastAccessTime);
+		}
+	}
+
+	/**
+	 * テナント別統計を設定する。
+	 * @since 1.0.16
+	 * @param report
+	 * @param rootMap
+	 */
+	private void setTenantStatistics(Report report, Map<String, Object> rootMap) {
+
+		Map<String, Object> tenantStat = new HashMap<String, Object>();
+		rootMap.put("tenantStat", tenantStat);
+
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		tenantStat.put("list", list);
+
+		for (TenantStatistics stat : report.getTenantStatisticsList()) {
+
+			Map<String, Object> row = new HashMap<String, Object>();
+			list.add(row);
+
+			List<Long> pageTimes = stat.getRequestPageTimes();
+
+			PageTimeStat pageTimeStat = new PageTimeStat();
+			Report.setPageTimeStat(pageTimeStat, pageTimes);
+
+			row.put("tenantId", stat.getTenantId());
+			row.put("requestCount", stat.getRequestCount());
+			row.put("pageTimeSum", pageTimeStat.pageTimeSum);
+			row.put("pageTimeAverage", pageTimeStat.pageTimeAverage);
+			row.put("pageTimeMin", pageTimeStat.pageTimeMin);
+			row.put("pageTimeMedian", pageTimeStat.pageTimeMedian);
+			row.put("pageTimeP90", pageTimeStat.pageTimeP90);
+			row.put("pageTimeMax", pageTimeStat.pageTimeMax);
+			row.put("pageTimeStandardDeviation", pageTimeStat.pageTimeStandardDeviation);
+			row.put("uniqueUserCount", stat.getUniqueUserCount());
+			row.put("uniqueSessionCount", stat.getUniqueSessionCount());
+			row.put("exceptionCount", stat.getExceptionCount());
+			row.put("transitionCount", stat.getTransitionCount());
+			row.put("transitionExceptionCount", stat.getTransitionExceptionCount());
+			row.put("maxConcurrentRequestCount", stat.getMaxConcurrentRequest());
 		}
 	}
 

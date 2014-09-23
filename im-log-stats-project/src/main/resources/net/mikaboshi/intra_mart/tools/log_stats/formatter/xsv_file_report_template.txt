@@ -13,7 +13,7 @@
 -->
 <#--
   CSV/TSV共通のテンプレート
-  @version 1.0.15
+  @version 1.0.16
 -->
 <#--
   引数をダブルクートで囲い、" を "" に変換する。
@@ -56,6 +56,12 @@ ${(row_index + 1)?c}${separator}${esc(row.url)}${separator}<#if reportParameter.
 ${(row_index + 1)?c}${separator}${esc(row.sessionId)}${separator}${esc(row.userId)}${separator}${row.count?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTimeP90?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.countRate?c}%${separator}${row.pageTimeRate?c}%${separator}<#if row.firstAccessTime??>${row.firstAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if>${separator}<#if row.lastAccessTime??>${row.lastAccessTime?string("yyyy-MM-dd HH:mm:ss.SSS")}<#else>-</#if>
 </#list>
 
+テナント別統計
+#${separator}テナントID▲${separator}リクエスト数合計${separator}リクエスト処理時間の合計(ms)${separator}リクエスト処理時間の平均値(ms)${separator}リクエスト処理時間の最小値(ms)${separator}リクエスト処理時間の中央値(ms)${separator}リクエスト処理時間の90%Line(ms)${separator}リクエスト処理時間の最大値(ms)${separator}リクエスト処理時間の標準偏差(ms)${separator}ユニークユーザ数${separator}ユニークセッション数${separator}画面遷移数合計${separator}画面遷移例外数合計<#if reportParameter.maxConcurrentRequest>${separator}最大同時リクエスト数</#if>
+<#list tenantStat.list as row>
+${(row_index + 1)?c}${separator}${esc(row.tenantId)}${separator}${row.requestCount?c}${separator}${row.pageTimeSum?c}${separator}${row.pageTimeAverage?c}${separator}${row.pageTimeMin?c}${separator}${row.pageTimeMedian?c}${separator}${row.pageTimeP90?c}${separator}${row.pageTimeMax?c}${separator}${row.pageTimeStandardDeviation?c}${separator}${row.uniqueUserCount?c}${separator}${row.exceptionCount?c}${separator}${row.transitionCount?c}${separator}${row.transitionExceptionCount?c}<#if reportParameter.maxConcurrentRequest>${separator}${row.maxConcurrentRequestCount?c}</#if>
+</#list>
+
 例外
 <#if parserParameter.exceptionGroupingByCause>
 #${separator}<#if reportParameter.version.version7>レベル${separator}</#if>発端のCaused byの1行目${separator}回数▼
@@ -84,6 +90,7 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.
 バージョン${separator}${esc(parserParameter.version.getName())}
 開始時刻${separator}<#if parserParameter.begin??>${parserParameter.begin?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
 終了時刻${separator}<#if parserParameter.end??>${parserParameter.end?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
+テナントID${separator}<#if parserParameter.tenantId??>${esc(parserParameter.tenantId)}<#else>-</#if>
 ログファイルの文字コード${separator}${esc(parserParameter.charset)}
 リクエストログレイアウト${separator}${esc(parserParameter.requestLogLayout)}
 画面遷移ログレイアウト${separator}${esc(parserParameter.transitionLogLayout)}

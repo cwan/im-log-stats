@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * ログエンティティ
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public abstract class Log {
@@ -53,6 +53,12 @@ public abstract class Log {
 	 * リクエストID
 	 */
 	public String requestId = null;
+
+	/**
+	 * テナントID
+	 * @since 1.0.16
+	 */
+	public String tenantId = null;
 
 	/**
 	 * ログID

@@ -24,7 +24,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionType;
 /**
  * 画面遷移ログパーサ
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TransitionLogParser extends LineLogParser implements LogParser<TransitionLog> {
@@ -46,7 +46,7 @@ public class TransitionLogParser extends LineLogParser implements LogParser<Tran
 
 		populate(lineMap, log);
 
-		if (!isInRange(log)) {
+		if (!isInRange(log) || !isTargetTenant(log)) {
 			return null;
 		}
 

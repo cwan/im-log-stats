@@ -26,7 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.LogLayoutItemType;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionType;
@@ -37,7 +36,7 @@ import org.apache.commons.logging.Log;
 /**
  * 行ログパーサ
  *
- * @version 1.0.10
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public abstract class LineLogParser extends GenericLogParser {
@@ -257,6 +256,7 @@ public abstract class LineLogParser extends GenericLogParser {
 		log.thread = (String) lineMap.get(LogLayoutItemType.THREAD);
 		log.requestId = (String) lineMap.get(LogLayoutItemType.MDC_REQUEST_ID);
 		log.logId = (String) lineMap.get(LogLayoutItemType.MDC_LOG_ID);
+		log.tenantId = (String) lineMap.get(LogLayoutItemType.MDC_TENANT_ID);
 
 		Integer seq = (Integer) lineMap.get(LogLayoutItemType.MDC_LOG_REPORT_SEQUENCE);
 

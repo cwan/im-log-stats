@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログファイルパーサ設定のネスト要素
  *
- * @version 1.0.10
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameterDataType extends DataType {
@@ -55,6 +55,12 @@ public class ParserParameterDataType extends DataType {
 
 	/** 終了日時（これ以降のログは切り捨てる） */
 	private Date end = null;
+
+	/**
+	 * テナントIDフィルタ（これが指定されている場合は、他のテナントのログは集計しない）
+	 * @since 1.0.16
+	 */
+	private String tenantId = null;
 
 	/** パーサエラーの上限 */
 	private Integer errorLimit = null;
@@ -120,6 +126,15 @@ public class ParserParameterDataType extends DataType {
 		}
 	}
 
+	/**
+	 * テナントIDフィルタを設定する。
+	 * @since 1.0.16
+	 * @param tenantId
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	public void setExceptionGroupingType(String exceptionGroupingType) {
 
 		if (exceptionGroupingType != null) {
@@ -178,6 +193,8 @@ public class ParserParameterDataType extends DataType {
 
 		parameter.setBegin(this.begin);
 		parameter.setEnd(this.end);
+
+		parameter.setTenantId(this.tenantId);
 
 		if (this.exceptionGroupingType != null) {
 			parameter.setExceptionGroupingType(this.exceptionGroupingType);

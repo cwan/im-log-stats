@@ -13,7 +13,7 @@
 -->
 <#--
   HTML（グラフ付き）テンプレート
-  @version 1.0.15
+  @version 1.0.16
 -->
 <#--
   TRタグのclass値を取得する
@@ -101,6 +101,7 @@
 				margin: 0;
 				padding: 0;
 				width: auto;
+				height: auto;
 			}
 
 			table.line_graph_source {
@@ -623,6 +624,9 @@
 			<li><a href="#request_page_time_rank">リクエスト処理時間総合ランク</a></li>
 			<li><a href="#request_url_rank">${requestUrl}別・処理時間合計ランク</a></li>
 			<li><a href="#session_rank">セッション別・処理時間合計ランク</a></li>
+			<#if (tenantStat.list?size > 0)>
+			<li><a href="#tenant_stat">テナント別統計</a></li>
+			</#if>
 			<li><a href="#exception_count">例外</a></li>
 			<li><a href="#log_files">解析対象ログファイル</a></li>
 			<li><a href="#parameters">レポートパラメータ</a></li>
@@ -1079,6 +1083,98 @@
 		</div>
 
 
+		<#if (tenantStat.list?size > 0)>
+		<div class="section_header clearfix">
+			<h2><a name="tenant_stat"></a>テナント別統計</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>ログをテナント毎に集計しています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="集計対象のテナントIDです。（ブランクはシステム管理画面等）">
+						テナントID<span class="sort_mark">▲</span>
+					</th>
+					<th rowspan="2"	title="この期間内に受信した全てのHTTPリクエスト数の合計です。">
+						リクエスト数<br/>合計
+					</th>
+					<th colspan="7"	title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						リクエスト処理時間 [ms]
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したユーザの数です。">
+						ユニーク<br/>ユーザ数
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したセッションの数です。（未ログインセッションも含む）">
+						ユニーク<br/>セッション数
+					</th>
+					<th rowspan="2"	title="この期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計です。（JSSPRPCやポートレットなど、画面遷移ログに出力されないものは含まれません）">
+						画面遷移数<br>合計
+					</th>
+					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
+						画面遷移<br>例外数合計
+					</th>
+					<#if reportParameter.maxConcurrentRequest>
+					<th rowspan="2"	title="この期間内に発生した同時リクエスト数の最大値です。">
+						最大同時<br>リクエスト数
+					</th>
+					</#if>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list tenantStat.list as row>
+					<tr class="${getTrClass(row_index)}">
+						<td class="seq">${row_index + 1}</td>
+						<td class="text">${row.tenantId?html}</td>
+						<td class="numeric">${row.requestCount}</td>
+						<td class="numeric">${row.pageTimeSum}</td>
+						<td class="numeric">${row.pageTimeAverage}</td>
+						<td class="numeric">${row.pageTimeMin}</td>
+						<td class="numeric">${row.pageTimeMedian}</td>
+						<td class="numeric">${row.pageTimeP90}</td>
+						<td class="numeric">${row.pageTimeMax}</td>
+						<td class="numeric">${row.pageTimeStandardDeviation}</td>
+						<td class="numeric">${row.uniqueUserCount}</td>
+						<td class="numeric">${row.uniqueSessionCount}</td>
+						<td class="numeric">${row.transitionCount}</td>
+						<td class="numeric">${row.transitionExceptionCount}</td>
+						<#if reportParameter.maxConcurrentRequest>
+						<td class="numeric">${row.maxConcurrentRequestCount}</td>
+						</#if>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+		</#if>
+
+
 		<div class="section_header clearfix">
 			<h2><a name="exception_count"></a>例外</h2>
 			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
@@ -1179,6 +1275,14 @@
 				終了時刻 :
 				<#if parserParameter.end??>
 					${parserParameter.end?string("yyyy/MM/dd HH:mm")}
+				<#else>
+					-
+				</#if>
+			</li>
+			<li>
+				テナントID :
+				<#if parserParameter.tenantId??>
+					${parserParameter.tenantId?html}
 				<#else>
 					-
 				</#if>

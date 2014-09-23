@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * 汎用ログファイルパーサ
  *
- * @version 1.0.8
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GenericLogParser {
@@ -125,6 +125,25 @@ public class GenericLogParser {
 		}
 
 		return true;
+	}
+
+	/**
+	 * ログが対象のテナントかどうかチェックする。
+	 * @since 1.0.16
+	 * @param log
+	 * @return
+	 */
+	protected boolean isTargetTenant(net.mikaboshi.intra_mart.tools.log_stats.entity.Log log) {
+
+		if (log == null) return false;
+
+		String filterTenantId = this.parameter.getTenantId();
+
+		if (filterTenantId == null || log.tenantId == null) {
+			return true;
+		}
+
+		return filterTenantId.equals(log.tenantId);
 	}
 
 }
