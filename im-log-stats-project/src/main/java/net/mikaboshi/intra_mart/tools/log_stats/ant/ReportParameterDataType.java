@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログ統計レポート設定のネスト要素
  *
- * @version 1.0.15
+ * @version 1.0.16
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ReportParameterDataType extends DataType {
@@ -88,7 +88,7 @@ public class ReportParameterDataType extends DataType {
 	/**
 	 * カスタムテンプレートファイルの文字コード
 	 */
-	private String templateCharset = null;
+	private String templateCharset = Charset.defaultCharset().toString();
 
 	/** レポート出力先パス */
 	private String output = "report_" + new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
