@@ -189,7 +189,7 @@ visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.cs
 
     例:
       <report output="report_{yyyyMMdd}.html" />
-      ⇛ 現在が2012年10月12日ならば、report_20121012.html が生成されます。
+      ? 現在が2012年10月12日ならば、report_20121012.html が生成されます。
 
 ### 3.5. imLogStats のネスト要素 requestLogFiles
 
