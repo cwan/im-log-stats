@@ -22,22 +22,23 @@
 		classpathref="execute.classpath"
 		loaderref="loader1" />
 
-	<property name="log.dir" value="C:\imart\log" />
+	<property name="log.dir" value="C:\Resin\webapps\imart\WEB-INF\log" />
 
 	<target name="generate_report">
 
-		<imLogStats version="7.2" delay="0">
+		<imLogStats version="8.0.8" delay="0">
 
 			<parser
 				charset="UTF-8"
 				begin="2012/10/01"
 				end="2012/10/07"
+				tenantId="default"
 				exceptionGroupingType="cause"
 				errorLimit="500"
 				truncateRequestUrl="true">
 				
-				<requestLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{log.id}	-	%X{client.session.id}	%X{request.remote.host}	%X{request.method}	%X{request.url}	%X{request.query_string}	%X{request.url.referer}	%X{request.page.time}	%X{request.accept.time}	%X{request.id}%nopex%n</requestLogLayout>
-				<transitionLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{log.id}	-	%X{transition.log.type.id}	%X{request.remote.address}	%X{request.remote.host}	%X{transition.access.user.id}	%X{client.session.id}	%X{transition.path.page.next}	%X{transition.time.response}	%X{transition.exception.name}	%X{transition.exception.message}	%X{transition.path.page.previous}	%X{request.id}%nopex%n</transitionLogLayout>
+				<requestLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{tenant.id}	%X{log.id}	-	%X{client.session.id}	%X{request.remote.host}	%X{request.method}	%X{request.url}	%X{request.query_string}	%X{request.url.referer}	%X{request.page.time}	%X{request.accept.time}	%X{request.id}%nopex%n</requestLogLayout>
+				<transitionLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{tenant.id}	%X{log.id}	-	%X{transition.log.type.id}	%X{request.remote.address}	%X{request.remote.host}	%X{transition.access.user.id}	%X{client.session.id}	%X{transition.path.page.next}	%X{transition.time.response}	%X{transition.exception.name}	%X{transition.exception.message}	%X{transition.path.page.previous}	%X{request.id}%nopex%n</transitionLogLayout>
 			</parser>
 
 			<report
