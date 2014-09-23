@@ -11,14 +11,14 @@ im-log-stats
 **ダウンロード**
 
 - [master](https://github.com/cwan/im-log-stats/archive/master.zip) : SNAPSHOT
-- [tags](https://github.com/cwan/im-log-stats/tags) : 安定板
+- [releases](https://github.com/cwan/im-log-stats/releases) : 安定板
 
 ## 1. 動作要件
 
 **解析対象のログ**
 
 - intra-mart WebPlatform/AppFramework Ver.6.0, 6,1, 7.0, 7,1, 7,2
-- intra-mart Accel Platform (8.0)
+- intra-mart Accel Platform 8.0.0 - 8.0.8
 
 **ツール実行環境**
 
@@ -38,7 +38,7 @@ im-log-stats
 1. Ant を実行する。（%ANT_HOME%\bin にパスを通しておく）
 
     ant -f build.xml
-    
+
 1. build.xml に記述したパスにレポートが生成される。
 
 **備考**
@@ -63,13 +63,13 @@ build.xml を編集し、解析対象のログファイルと生成するレポ�
             <include name="*.jar" />
         </fileset>
     </path>
-    
+
     <!-- カスタムタスク、ネスト要素の定義 -->
     <taskdef
         resource="net/mikaboshi/intra_mart/tools/log_stats/ant/taskdef.properties"
         classpathref="execute.classpath"
         loaderref="loader1" />
-    
+
     <typedef
         resource="net/mikaboshi/intra_mart/tools/log_stats/ant/typedef.properties"
         classpathref="execute.classpath"
@@ -83,11 +83,13 @@ intra-mart のログファイル（リクエストログ、画面遷移ログ、
 
 名称 | 説明 | 必須 | デフォルト
 :--|:--|:--|:--
-version | intra-mart のバージョン ( 6.0, 6.1, 7.0, 7.1, 7.2, 8.0 ) | No | 7.2
+version | intra-mart のバージョン ( 6.0, 6.1, 7.0, 7.1, 7.2, 8.0, 8,0.0, 8,0.1, 8,0.2, 8,0.3, 8,0.4, 8,0.5, 8,0.6, 8,0.7, 8,0.8 ) | No | 8.0
 delay | ログファイルのパース中に挿入される遅延時間（ミリ秒）。<br/>（リクエストログ・画面遷移ログは100件毎、例外ログは10ファイル毎）<br/>運用サーバ上で実行する場合、25～100程度を設定すると、時間はかかるがサーバに負荷をかけにくくなる。 | No | 0
 
 **注意**
 - version の設定が間違っていると、レポートの生成に失敗する場合があります。（バージョンによってログレイアウトパターンが異なるため）
+- version を "8.0" と指定した場合、現時点の最新アップデートとみなします。
+- iAP 2014 Spring (8.0.7) 以降、バーチャルテナント対応により、標準のログフォーマットが変更されています。iAP 2013 Winter 以前のログを解析する場合は、version を第3桁までしていしてください。([#25](https://github.com/cwan/im-log-stats/issues/25))
 
 ### 3.3. imLogStats のネスト要素 parser
 
@@ -100,6 +102,7 @@ delay | ログファイルのパース中に挿入される遅延時間（ミリ
 charset | ログファイルの文字コード<br/>（Ver.6.x では IM のシステム文字コード、Ver.7.x, 8.x ではIM実行環境の JVM の文字コード） | No | Ant 実行環境の JVM デフォルト文字コード
 begin | 開始日時（これより前のログは切り捨てる） | No | 下限なし
 end | 終了日時（これより後のログは切り捨てる） | No | 上限なし
+tenantId | テナントID（一致しないログは切り捨てる） | No | 指定なし（全てのテナントのログを収集する）
 exceptionGroupingType | 例外のグルーピング方法<br/>cause : 根本原因となっているの Caused by の1行目でグルーピング<br/>first-line : 例外メッセージ + スタックトレース1行目でグルーピング | No | cause
 errorLimit | パーサエラーの上限。この回数を超えてエラーが発生した場合、処理を打ち切る（レポートは生成されない） | No | 1000
 truncateRequestUrl | true の場合、リクエストURLからスキーム、ホスト、ポートを除去したもので集計する | No | false
@@ -177,16 +180,16 @@ jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc の
 maxConcurrentRequest | true を指定した場合、期間別統計レポートに最大同時リクエスト数が表示される | No | true
 visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.css, *.png）が配置されたURLのベース部分 (※1)(v1.0.15以降)<br/>例: `https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/visualize` | No | visualize
 
-(※1)   
+(※1)
  `visualize` 形式の場合、レポート HTML ファイルと同じフォルダに、`visualize` フォルダを配置するか、visualizeBaseUrlを指定してください（配下の *.js, *.css, *.png ファイルが必要です）。
 
-(※2)   
+(※2)
  `output` 属性において、{ } で囲んだ内部に日時フォーマットを指定し、現在日時で動的にファイル名をつけることが可能です。  
  フォーマットの形式は、[java.text.SimpleDateFormat](http://docs.oracle.com/javase/jp/6/api/java/text/SimpleDateFormat.html) と同じです。
 
     例:
       <report output="report_{yyyyMMdd}.html" />
-      ⇛ 現在が2012年10月12日ならば、report_20121012.html が生成されます。
+      ? 現在が2012年10月12日ならば、report_20121012.html が生成されます。
 
 ### 3.5. imLogStats のネスト要素 requestLogFiles
 
@@ -209,7 +212,7 @@ visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.cs
 ## 4. レポートの見方
 
 生成される統計レポートの見方について説明します。  
-時間・リクエストURL・セッション（ユーザ）の3つの軸で統計をとり、大まかなシステムの負荷の傾向が分かるようになっています。
+時間・リクエストURL・セッション（ユーザ）・テナントの4つの軸で統計をとり、大まかなシステムの負荷の傾向が分かるようになっています。
 
 ### 4.1. 期間別統計
 
@@ -220,7 +223,7 @@ visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.cs
 :--|:--|:--
 集計期間 | ログを集計した開始-終了日時 | リクエストログ、画面遷移ログ、例外ログ
 リクエスト数合計 | この期間に受信したHTTPリクエスト数の合計 | リクエストログ
-リクエスト処理時間 [ms] | Application Runtime がリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
+リクエスト処理時間 [ms] | アプリケーションサーバがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
 - 合計 | リクエスト処理時間の合計 | リクエストログ
 - 平均値 | リクエスト処理時間の平均値 | リクエストログ
 - 最小値 | リクエスト処理時間の最小値 | リクエストログ
@@ -248,7 +251,7 @@ report パラメータの requestPageTimeRankThresholdMillis 属性を設定し�
 :--|:--|:--
 リクエストURL<br/>（遷移先画面パス） | リクエスト先のURLまたは遷移先画面パス ([*](#request_url)) | リクエストログ
 JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パラメータの @jsspPath を "true" に設定した場合のみ表示される） | リクエストログ
-処理時間 | Application Runtime がリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
+処理時間 | アプリケーションサーバがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
 ログ出力日時 | ログが出力された日時（INの場合はリクエスト受信直後、OUTの場合はレスポンス送信前） | リクエストログ
 セッションID | このリクエストを送信したセッション | リクエストログ
 ユーザID | このリクエストを送信したユーザ（未ログイン状態の場合は、不明の場合がある） | 画面遷移ログ
@@ -263,7 +266,7 @@ JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パ
 リクエストURL<br/>（遷移先画面パス） | リクエスト先のURLまたは遷移先画面パス ([*](#request_url)) | リクエストログ、画面遷移ログ
 JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パラメータの @jsspPath を "true" に設定した場合のみ表示される） | リクエストログ
 リクエスト回数 | このURL（または遷移先画面パス）に対するリクエスト受信回数の合計 | リクエストログ、画面遷移ログ
-リクエスト処理時間 [ms] | Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒）([*](#response_time)) | リクエストログ、画面遷移ログ
+リクエスト処理時間 [ms] | アプリケーションサーバがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒）([*](#response_time)) | リクエストログ、画面遷移ログ
 リクエスト回数% | 全リクエストの合計に対する、このURLの回数が占める比率 | リクエストログ、画面遷移ログ
 処理時間% | 全リクエストの合計に対する、このURLの処理時間が占める比率 | リクエストログ、画面遷移ログ
 
@@ -285,12 +288,38 @@ JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パ
 
 (※1)  セッションIDを含まないリクエストは、「-」となります。このランクでは、セッションIDを含まないリクエストは、異なるユーザ（リモートホスト）からのものでも全て1つにまとめて集計しています。
 
-### 4.5. 例外
+### 4.5. テナント別統計
+
+[#25 テナント別統計は、Ver.1.0.16 で追加されました。]
+
+各ログをテナント単位で集計しています。（例外ログは、テナントIDを含まないため対象外です）  
+この統計からは、負荷の高いテナントを知ることができます。
+
+ログ項目 | 説明 | 集計元
+:--|:--|:--
+テナントID | ログを出力したテナント（システム管理者画面等、テナントを特定できないログはブランクになる） | リクエストログ、画面遷移ログ
+リクエスト数合計 | このテナントが処理したHTTPリクエスト数の合計 | リクエストログ
+リクエスト処理時間 [ms] | アプリケーションサーバがリクエストを受信してからレスポンスを返すまでの時間（ミリ秒） ([*](#response_time)) | リクエストログ
+- 合計 | リクエスト処理時間の合計 | リクエストログ
+- 平均値 | リクエスト処理時間の平均値 | リクエストログ
+- 最小値 | リクエスト処理時間の最小値 | リクエストログ
+- 中央値 | リクエスト処理時間の中央値（処理時間でソートしたとき、中央に位置する値） | リクエストログ
+- 90% Line | リクエスト処理時間の90%がこの値以下であるということ | リクエストログ
+- 標準偏差 | リクエスト処理時間の標準偏差（値のばらつき具合を表す指標） | リクエストログ
+ユニークユーザ数 | このテナントにリクエストを送信した重複を除いたユーザの数 | 画面遷移ログ
+ユニークセッション数 | このテナントにリクエストを送信した重複を除いたセッションの数 | リクエストログ、画面遷移ログ
+画面遷移数合計 | この期間内の期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計 | 画面遷移ログ
+画面遷移例外数合計 | このテナントの画面遷移ログにおいて検出されたエラーの合計 | 画面遷移ログ
+最大同時リクエスト数 | このテナントにおいて、同時実行されていたリクエスト数の最大値(※1)  | リクエストログ、画面遷移ログ
+
+(※1)  最大同時リクエスト数から、必要なスレッド数がわかります。ただし、ログが出力されるのはレスポンスが返るときであるため、レスポンスが返らず、実行中のままのスレッドがあるかどうかまでは分かりません。
+
+### 4.6. 例外
 
 例外ログに出力された例外を、根本原因となっている Caused by の1行目、またはメッセージ・スタックトレース1行目の内容でグルーピングし、発生回数の多い順に並べています。  
 例外ログが大量にある場合、どんな種類のエラーが出ているか俯瞰することができます。
 
-### 4.6. 補足
+### 4.7. 補足
 
 #### <a name="request_url"></a>リクエストURL
 
@@ -347,6 +376,7 @@ parserParameter.requestLogLayout | java.lang.String | リクエストログの�
 parserParameter.transitionLogLayout | java.lang.String | 画面遷移ログのレイアウト
 parserParameter.begin | java.util.Date | 開始日時（未設定の場合はnull）
 parserParameter.end | java.util.Date | 終了日時（未設定の場合はnull）
+parserParameter.tenantId | java.lang.String | テナントID（未設定の場合はnull）
 parserParameter.version.name | java.lang.String | バージョン
 parserParameter.exceptionGroupingByCause | boolean | 発端の Caused by の1行目で例外のグルーピングをするならば true、スタックトレースの1行目でグルーピングをするならば false
 parserParameter.truncateUrl | boolean | リクエストURLからスキーム、ホスト、ポートを除去するならば true、しないならば false
@@ -424,7 +454,7 @@ requestUrlRank.list | java.util.List | リクエストURL別・処理時間合�
 - countRate | double | リクエスト回数%
 - pageTimeRate | double | 処理時間%
 
-### 5.7. セッション別・処理時間合計ランク 
+### 5.7. セッション別・処理時間合計ランク
 
 パラメータ名 | 型 | 説明
 :--|:--|:--
@@ -446,7 +476,27 @@ sessionRank | java.util.List | セッション別・処理時間合計ランク�
 - firstAccessTime | java.util.Date | 初回アクセス日時
 - lastAccessTime | java.util.Date | 最終アクセス日時
 
-### 5.8. 例外
+### 5.8. テナント別統計
+
+パラメータ名 | 型 | 説明
+:--|:--|:--
+tenantStat.list | java.util.List | テナント別統計リスト
+- tenantId | java.lang.String | テナントID
+- requestCount | int | リクエスト回数
+- pageTimeSum | long | リクエスト処理時間合計
+- pageTimeAverage | long | リクエスト処理時間平均値
+- pageTimeMin | long | リクエスト処理時間最小値
+- pageTimeMedian | long | リクエスト処理時間中央値
+- pageTimeP90 | long | リクエスト処理時間90% Line
+- pageTimeMax | long | リクエスト処理時間最大値
+- pageTimeStandardDeviation | long | リクエスト処理時間標準偏差
+- uniqueUserCount | int | ユニークユーザ数
+- uniqueSessionCount | int | ユニークセッション数
+- transitionCount | int | 画面遷移数
+- transitionExceptionCount | int | 画面遷移例外発生数
+- maxConcurrentRequestCount | int | 最大同時リクエスト数
+
+### 5.9. 例外
 
 パラメータ名 | 型 | 説明
 :--|:--|:--
@@ -456,7 +506,7 @@ exceptionList | java.util.List | 例外リスト
 - firstLineOfStackTrace | java.lang.String | スタックトレースの1行目
 - count | int | 回数
 
-### 5.9. 解析対象ログファイル
+### 5.10. 解析対象ログファイル
 
 パラメータ名 | 型 | 説明
 :--|:--|:--
@@ -471,6 +521,10 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 [Apache License, Version 2.0](https://github.com/cwan/im-log-stats/blob/master/LICENSE.txt)
 
 ## 7. 更新履歴
+
+### Ver.1.0.16 (2014-09-23)
+- [#24 report/templateCharset省略時にNullPointerExceptionが発生する不具合を修正](https://github.com/cwan/im-log-stats/issues/24)
+- [#25 バーチャルテナント対応](https://github.com/cwan/im-log-stats/issues/25)
 
 ### Ver.1.0.15 (2014-01-14)
 - [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
