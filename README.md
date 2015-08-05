@@ -31,7 +31,7 @@ im-log-stats
 
 1. build.xml を編集する。（[後述](#build_xml)）
 
-1. コマンドプロンプトを開き、1.を解凍したフォルダ（build.xmlがあるとところ）に移動する。
+1. コマンドプロンプトを開き、1.を解凍したフォルダ（build.xmlがあるところ）に移動する。
 
     cd C:\work\im-log-stats
 
