@@ -26,12 +26,12 @@
 
 	<target name="generate_report">
 
-		<imLogStats version="8.0.8" delay="0">
+		<imLogStats version="8.0.11" delay="0">
 
 			<parser
 				charset="UTF-8"
-				begin="2012/10/01"
-				end="2012/10/07"
+				begin="2015/08/01"
+				end="2015/08/07"
 				tenantId="default"
 				exceptionGroupingType="cause"
 				errorLimit="500"

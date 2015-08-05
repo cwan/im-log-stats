@@ -24,7 +24,7 @@
 
 	<target name="generate_report">
 
-		<imLogStats version="7.2" delay="0">
+		<imLogStats version="8.0" delay="0">
 
 			<parser charset="Windows-31J" />
 
