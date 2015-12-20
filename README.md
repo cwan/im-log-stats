@@ -4,9 +4,9 @@ im-log-stats
 [イントラマート](http://www.intra-mart.jp/) のログ（リクエストログ、画面遷移ログ、例外ログ）を解析し、統計レポートを作成するツールです。
 
 **生成されるレポートのサンプル**
-- [report_sample.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.html) : HTML（シンプル）
-- [report_sample_visualize.html](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample_visualize.html) : HTML（グラフ付き）
-- [report_sample.csv](https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/report_sample.csv) : CSV
+- [report_sample.html](http://cwan.github.io/im-log-stats/report_sample.html) : HTML（シンプル）
+- [report_sample_visualize.html](http://cwan.github.io/im-log-stats/report_sample_visualize.html) : HTML（グラフ付き）
+- [report_sample.csv](http://cwan.github.io/im-log-stats/report_sample.csv) : CSV
 
 **ダウンロード**
 
@@ -178,7 +178,7 @@ templateCharset | カスタムテンプレートファイルの文字コード<b
 requestPageTimeRankThresholdMillis | 0以上の値を指定した場合、処理時間がこの値（ミリ秒）以上のリクエストを全てリクエスト処理時間総合ランクに表示する<br/>（この属性を設定した場合、requestPageTimeRankSize の設定は無視される） | No | false
 jsspPath | true を指定した場合、レポートに jssp, jssps, jssprpc のページパスが表示される<br/>（ (2f) を /、(5f) を _ に変換 ） | No | false
 maxConcurrentRequest | true を指定した場合、期間別統計レポートに最大同時リクエスト数が表示される | No | true
-visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.css, *.png）が配置されたURLのベース部分 (※1)(v1.0.15以降)<br/>例: `https://googledrive.com/host/0B5qjh_6P-8VAOFhpbWFLWnZpcFU/visualize` | No | visualize
+visualizeBaseUrl | グラフ生成に必要な静的コンテンツ（*.js, *.css, *.png）が配置されたURLのベース部分 (※1)(v1.0.15以降)<br/>例: `http://cwan.github.io/im-log-stats/visualize` | No | visualize
 
 (※1)
  `visualize` 形式の場合、レポート HTML ファイルと同じフォルダに、`visualize` フォルダを配置するか、visualizeBaseUrlを指定してください（配下の *.js, *.css, *.png ファイルが必要です）。
