@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="Windows-31J">
+		<title>ログ統計レポート（サンプル / Visualize）</title>
+
+		<link rel="stylesheet" href="visualize/css/visualize.css" type="text/css" />
+		<link rel="stylesheet" href="visualize/css/visualize-light.css" type="text/css" />
+
+		<style type="text/css" media="all">
+			.clearfix {
+				zoom: 1;
+			}
+
+			.clearfix:after {
+				content: ".";
+				display: block;
+ 				clear: both;
+				height: 0;
+				visibility: hidden;
+			}
+
+			body {
+				padding: 0;
+				margin: 20px 24px;
+				font-family: 'Meiryo UI', 'HGSｺﾞｼｯｸM';
+			}
+
+			#page_header {
+				border-bottom: 1px solid #030;
+			}
+
+			h1 {
+				font-size: 180%;
+				font-weight: bold;
+				color: #F42;
+				float: left;
+				padding: 0;
+				margin: 5px 0;
+			}
+
+			#signature {
+				font-size: 105%;
+				color: #333;
+				float: right;
+				text-align: right;
+				padding: 0;
+				margin: 5px 0;
+			}
+
+			h2 {
+				font-size: 140%;
+				font-weight: bold;
+				color: #030;
+				margin: 30px 0 5px 0;
+				padding: 0;
+				float: left;
+			}
+
+			h3 {
+				font-size: 130%;
+				font-weight: bold;
+				color: #030;
+				margin: 5px 0 5px 12px;
+				padding: 0;
+			}
+
+			table.detail {
+				margin: 0;
+				padding: 0;
+				width: auto;
+				height: auto;
+			}
+
+			table.line_graph_source {
+				display: none;
+			}
+
+			table.detail tr {
+				border: 1px solid #030;
+				padding: 2px 4px;
+			}
+
+			table.detail td {
+				border: 1px solid #030;
+				padding: 2px 4px;
+				width: auto;
+				font-size: 120%;
+				font-weight: normal;
+				color: #020;
+			}
+
+			table.detail th {
+				border: 1px solid #030;
+				padding: 2px 4px;
+				width: auto;
+			}
+
+			table.detail td.date_time {
+				text-align: center;
+			}
+
+			table.detail td.numeric {
+				text-align: right;
+			}
+
+			table.detail td.seq {
+				text-align: center;
+			}
+
+			table.detail tr.odd_row td {
+				background-color: #FFF;
+			}
+
+			table.detail tr.even_row td {
+				background-color: #FFC;
+			}
+
+			.end_date {
+				vertical-align: super;
+				font-size: 70%;
+			}
+
+			.file_list, .parameters_list {
+				font-size: 120%;
+				font-weight: normal;
+				color: #020;
+			}
+
+			#page_footer {
+				height: 1px;
+				margin: 20px 0 0 0;
+				border-top: 1px solid #030;
+			}
+
+			.sort_mark {
+				color: #F93;
+				padding-left: 2px;
+			}
+
+			.notation {
+				font-size: 105%;
+				color: #666;
+				font-weight: bold;
+				margin: 8px 0;
+				padding: 0 0 0 30px;
+			}
+
+			.tab {
+				padding: 0 2px;
+				color: #CCC;
+				font-weight: bold;
+			}
+
+			.visualize {
+				margin: 20px 0 0 0 !important;
+			}
+
+			.visualize-title {
+				font-size: 140% !important;
+			}
+
+			#time_span_stat_graph_area {
+				width: 1040px;
+				margin: 18px 0 0 0;
+			}
+
+			div.vertical-x ul.visualize-labels-x span.label {
+				/* 縦書き */
+				-webkit-transform: rotate(-90deg);
+				-ms-transform: rotate(-90deg);
+				-moz-transform: rotate(-90deg);-moz-transform-origin: 20px 0px;
+				filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			}
+		</style>
+		<style type="text/css" media="screen">
+			#toc a {
+				font-size: 130%;
+				color: #116;
+			}
+
+			.go_top {
+				margin: 20px 0 5px 0;
+				float: right;
+				color: #116;
+			}
+
+			.go_top a {
+				font-size: 135%;
+				font-weight: bold;
+				color: #666;
+				text-decoration: none;
+			}
+
+			table.detail th {
+				font-size: 120%;
+				font-weight: normal;
+				color: #EFE;
+				background-color: #030;
+				text-align: center;
+				white-space: nowrap;
+			}
+
+			#time_span_stat_graph_option div {
+				float: left;
+				padding: 0 12px 0 0;
+			}
+
+			#time_span_stat_graph_option select {
+				margin-bottom: 2px;
+			}
+
+			#time_span_stat_graph_update {
+				float: right;
+			}
+
+			#time_span_stat_graph_option select {
+				font-size: 90%;
+			}
+		</style>
+		<style type="text/css" media="print">
+			#toc {
+				display: none;
+			}
+
+			.go_top {
+				display: none;
+			}
+
+			table.detail th {
+				font-size: 120%;
+				font-weight: bold;
+				color: #222;
+				background-color: #FFF;
+				text-align: center;
+				white-space: nowrap;
+			}
+
+			#time_span_stat_graph_option {
+				display: none;
+			}
+		</style>
+
+		<!--[if IE]><script type="text/javascript" src="visualize/js/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="visualize/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="visualize/js/visualize.jQuery.js"></script>
+		<script type="text/javascript">
+
+			// 期間別統計
+			var timeSpanStatData = [];
+			var timeSpanTimeSelectOptions = "";
+			var datetime;
+
+			timeSpanStatData[0] = {
+				datetime: { date: "2014-04-13", beginTime: "15:00", endTime: "16:00" }
+				, requests: 819
+				, pageTime: { sum: 132331, ave: 162, min: 0, med: 1, p90: 19, max: 104415, sd: 3669 }
+				, users: 4
+				, sessions: 8
+				, activeSessions: 7
+				, exceptions: 2
+				, transitions: 884
+				, tranExceptions: 1
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[0].datetime.date + " " + timeSpanStatData[0].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[1] = {
+				datetime: { date: "2014-04-16", beginTime: "10:00", endTime: "11:00" }
+				, requests: 0
+				, pageTime: { sum: 0, ave: 0, min: 0, med: 0, p90: 0, max: 0, sd: 0 }
+				, users: 0
+				, sessions: 0
+				, activeSessions: 0
+				, exceptions: 6
+				, transitions: 0
+				, tranExceptions: 0
+				, maxConcurrent: 0
+			};
+
+			datetime = timeSpanStatData[1].datetime.date + " " + timeSpanStatData[1].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[2] = {
+				datetime: { date: "2014-04-16", beginTime: "11:00", endTime: "12:00" }
+				, requests: 374
+				, pageTime: { sum: 42732, ave: 114, min: 1, med: 3, p90: 20, max: 26476, sd: 1379 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 400
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[2].datetime.date + " " + timeSpanStatData[2].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[3] = {
+				datetime: { date: "2014-04-16", beginTime: "15:00", endTime: "16:00" }
+				, requests: 154
+				, pageTime: { sum: 2762, ave: 18, min: 1, med: 2, p90: 12, max: 578, sd: 73 }
+				, users: 2
+				, sessions: 2
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 166
+				, tranExceptions: 0
+				, maxConcurrent: 5
+			};
+
+			datetime = timeSpanStatData[3].datetime.date + " " + timeSpanStatData[3].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[4] = {
+				datetime: { date: "2014-04-16", beginTime: "16:00", endTime: "17:00" }
+				, requests: 99
+				, pageTime: { sum: 3090, ave: 31, min: 1, med: 2, p90: 18, max: 886, sd: 125 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 107
+				, tranExceptions: 0
+				, maxConcurrent: 4
+			};
+
+			datetime = timeSpanStatData[4].datetime.date + " " + timeSpanStatData[4].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[5] = {
+				datetime: { date: "2014-04-16", beginTime: "17:00", endTime: "18:00" }
+				, requests: 74
+				, pageTime: { sum: 2479, ave: 34, min: 1, med: 2, p90: 15, max: 793, sd: 114 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 84
+				, tranExceptions: 0
+				, maxConcurrent: 3
+			};
+
+			datetime = timeSpanStatData[5].datetime.date + " " + timeSpanStatData[5].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[6] = {
+				datetime: { date: "2014-04-24", beginTime: "16:00", endTime: "17:00" }
+				, requests: 0
+				, pageTime: { sum: 0, ave: 0, min: 0, med: 0, p90: 0, max: 0, sd: 0 }
+				, users: 0
+				, sessions: 0
+				, activeSessions: 0
+				, exceptions: 5
+				, transitions: 0
+				, tranExceptions: 0
+				, maxConcurrent: 0
+			};
+
+			datetime = timeSpanStatData[6].datetime.date + " " + timeSpanStatData[6].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[7] = {
+				datetime: { date: "2014-04-24", beginTime: "18:00", endTime: "19:00" }
+				, requests: 0
+				, pageTime: { sum: 0, ave: 0, min: 0, med: 0, p90: 0, max: 0, sd: 0 }
+				, users: 0
+				, sessions: 0
+				, activeSessions: 0
+				, exceptions: 1
+				, transitions: 0
+				, tranExceptions: 0
+				, maxConcurrent: 0
+			};
+
+			datetime = timeSpanStatData[7].datetime.date + " " + timeSpanStatData[7].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[8] = {
+				datetime: { date: "2014-04-29", beginTime: "01:00", endTime: "02:00" }
+				, requests: 53
+				, pageTime: { sum: 26838, ave: 506, min: 3, med: 6, p90: 42, max: 23945, sd: 3265 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 58
+				, tranExceptions: 0
+				, maxConcurrent: 4
+			};
+
+			datetime = timeSpanStatData[8].datetime.date + " " + timeSpanStatData[8].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[9] = {
+				datetime: { date: "2014-04-29", beginTime: "02:00", endTime: "03:00" }
+				, requests: 2917
+				, pageTime: { sum: 200341, ave: 69, min: 1, med: 7, p90: 97, max: 24982, sd: 567 }
+				, users: 3
+				, sessions: 9
+				, activeSessions: 8
+				, exceptions: 0
+				, transitions: 3082
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[9].datetime.date + " " + timeSpanStatData[9].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[10] = {
+				datetime: { date: "2014-04-29", beginTime: "03:00", endTime: "04:00" }
+				, requests: 7
+				, pageTime: { sum: 42, ave: 6, min: 1, med: 2, p90: 18, max: 18, sd: 7 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 7
+				, tranExceptions: 0
+				, maxConcurrent: 1
+			};
+
+			datetime = timeSpanStatData[10].datetime.date + " " + timeSpanStatData[10].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[11] = {
+				datetime: { date: "2014-04-29", beginTime: "04:00", endTime: "05:00" }
+				, requests: 364
+				, pageTime: { sum: 6486, ave: 18, min: 0, med: 2, p90: 38, max: 497, sd: 50 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 370
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[11].datetime.date + " " + timeSpanStatData[11].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[12] = {
+				datetime: { date: "2014-04-29", beginTime: "14:00", endTime: "15:00" }
+				, requests: 468
+				, pageTime: { sum: 55891, ave: 119, min: 0, med: 4, p90: 100, max: 27090, sd: 1272 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 498
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[12].datetime.date + " " + timeSpanStatData[12].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[13] = {
+				datetime: { date: "2014-04-29", beginTime: "15:00", endTime: "16:00" }
+				, requests: 2697
+				, pageTime: { sum: 73583, ave: 27, min: 1, med: 3, p90: 58, max: 2787, sd: 87 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 2739
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[13].datetime.date + " " + timeSpanStatData[13].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[14] = {
+				datetime: { date: "2014-04-29", beginTime: "16:00", endTime: "17:00" }
+				, requests: 994
+				, pageTime: { sum: 19071, ave: 19, min: 1, med: 2, p90: 38, max: 748, sd: 60 }
+				, users: 2
+				, sessions: 4
+				, activeSessions: 4
+				, exceptions: 0
+				, transitions: 1014
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[14].datetime.date + " " + timeSpanStatData[14].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[15] = {
+				datetime: { date: "2014-04-29", beginTime: "17:00", endTime: "18:00" }
+				, requests: 2630
+				, pageTime: { sum: 89294, ave: 34, min: 1, med: 4, p90: 72, max: 2166, sd: 99 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 2794
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[15].datetime.date + " " + timeSpanStatData[15].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[16] = {
+				datetime: { date: "2014-04-29", beginTime: "18:00", endTime: "19:00" }
+				, requests: 2004
+				, pageTime: { sum: 41586, ave: 21, min: 1, med: 3, p90: 42, max: 518, sd: 56 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 2035
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[16].datetime.date + " " + timeSpanStatData[16].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[17] = {
+				datetime: { date: "2014-04-29", beginTime: "19:00", endTime: "20:00" }
+				, requests: 939
+				, pageTime: { sum: 22900, ave: 24, min: 1, med: 4, p90: 52, max: 1679, sd: 76 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 957
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[17].datetime.date + " " + timeSpanStatData[17].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[18] = {
+				datetime: { date: "2014-04-29", beginTime: "20:00", endTime: "21:00" }
+				, requests: 332
+				, pageTime: { sum: 50538, ave: 152, min: 1, med: 10, p90: 91, max: 24731, sd: 1405 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 345
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[18].datetime.date + " " + timeSpanStatData[18].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[19] = {
+				datetime: { date: "2014-04-29", beginTime: "21:00", endTime: "22:00" }
+				, requests: 509
+				, pageTime: { sum: 79995, ave: 157, min: 1, med: 12, p90: 213, max: 15416, sd: 780 }
+				, users: 2
+				, sessions: 4
+				, activeSessions: 4
+				, exceptions: 0
+				, transitions: 574
+				, tranExceptions: 1
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[19].datetime.date + " " + timeSpanStatData[19].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[20] = {
+				datetime: { date: "2014-04-29", beginTime: "22:00", endTime: "23:00" }
+				, requests: 189
+				, pageTime: { sum: 11218, ave: 59, min: 1, med: 3, p90: 65, max: 1959, sd: 228 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 195
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[20].datetime.date + " " + timeSpanStatData[20].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[21] = {
+				datetime: { date: "2014-05-12", beginTime: "22:00", endTime: "23:00" }
+				, requests: 1241
+				, pageTime: { sum: 182387, ave: 147, min: 1, med: 8, p90: 204, max: 26886, sd: 1130 }
+				, users: 2
+				, sessions: 6
+				, activeSessions: 6
+				, exceptions: 0
+				, transitions: 1368
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[21].datetime.date + " " + timeSpanStatData[21].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[22] = {
+				datetime: { date: "2014-05-15", beginTime: "10:00", endTime: "11:00" }
+				, requests: 436
+				, pageTime: { sum: 60300, ave: 138, min: 1, med: 8, p90: 195, max: 25559, sd: 1266 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 484
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[22].datetime.date + " " + timeSpanStatData[22].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[23] = {
+				datetime: { date: "2014-05-15", beginTime: "16:00", endTime: "17:00" }
+				, requests: 309
+				, pageTime: { sum: 55920, ave: 181, min: 1, med: 7, p90: 188, max: 27657, sd: 1598 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 340
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[23].datetime.date + " " + timeSpanStatData[23].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[24] = {
+				datetime: { date: "2014-05-25", beginTime: "22:00", endTime: "23:00" }
+				, requests: 752
+				, pageTime: { sum: 107660, ave: 143, min: 1, med: 3, p90: 148, max: 28449, sd: 1198 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 8
+				, transitions: 853
+				, tranExceptions: 0
+				, maxConcurrent: 4
+			};
+
+			datetime = timeSpanStatData[24].datetime.date + " " + timeSpanStatData[24].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[25] = {
+				datetime: { date: "2014-05-29", beginTime: "16:00", endTime: "17:00" }
+				, requests: 133
+				, pageTime: { sum: 40575, ave: 305, min: 1, med: 5, p90: 211, max: 29812, sd: 2581 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 0
+				, exceptions: 7
+				, transitions: 152
+				, tranExceptions: 0
+				, maxConcurrent: 3
+			};
+
+			datetime = timeSpanStatData[25].datetime.date + " " + timeSpanStatData[25].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[26] = {
+				datetime: { date: "2014-05-29", beginTime: "17:00", endTime: "18:00" }
+				, requests: 309
+				, pageTime: { sum: 55326, ave: 179, min: 1, med: 5, p90: 144, max: 27758, sd: 1608 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 338
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[26].datetime.date + " " + timeSpanStatData[26].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[27] = {
+				datetime: { date: "2014-06-12", beginTime: "16:00", endTime: "17:00" }
+				, requests: 105
+				, pageTime: { sum: 9746, ave: 93, min: 2, med: 12, p90: 352, max: 1212, sd: 200 }
+				, users: 2
+				, sessions: 3
+				, activeSessions: 3
+				, exceptions: 11
+				, transitions: 128
+				, tranExceptions: 5
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[27].datetime.date + " " + timeSpanStatData[27].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[28] = {
+				datetime: { date: "2014-06-25", beginTime: "15:00", endTime: "16:00" }
+				, requests: 36
+				, pageTime: { sum: 2389, ave: 66, min: 4, med: 10, p90: 45, max: 1331, sd: 235 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 4
+				, transitions: 38
+				, tranExceptions: 4
+				, maxConcurrent: 2
+			};
+
+			datetime = timeSpanStatData[28].datetime.date + " " + timeSpanStatData[28].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[29] = {
+				datetime: { date: "2014-06-25", beginTime: "16:00", endTime: "17:00" }
+				, requests: 206
+				, pageTime: { sum: 31031, ave: 151, min: 1, med: 5, p90: 218, max: 19032, sd: 1330 }
+				, users: 2
+				, sessions: 3
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 235
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[29].datetime.date + " " + timeSpanStatData[29].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[30] = {
+				datetime: { date: "2014-06-28", beginTime: "23:00", endTime: "00:00" }
+				, requests: 211
+				, pageTime: { sum: 46775, ave: 222, min: 1, med: 6, p90: 83, max: 24948, sd: 1783 }
+				, users: 2
+				, sessions: 5
+				, activeSessions: 5
+				, exceptions: 0
+				, transitions: 226
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[30].datetime.date + " " + timeSpanStatData[30].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[31] = {
+				datetime: { date: "2014-07-08", beginTime: "09:00", endTime: "10:00" }
+				, requests: 67
+				, pageTime: { sum: 8148, ave: 122, min: 1, med: 11, p90: 492, max: 1436, sd: 251 }
+				, users: 2
+				, sessions: 3
+				, activeSessions: 0
+				, exceptions: 3
+				, transitions: 81
+				, tranExceptions: 3
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[31].datetime.date + " " + timeSpanStatData[31].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[32] = {
+				datetime: { date: "2014-07-08", beginTime: "10:00", endTime: "11:00" }
+				, requests: 1052
+				, pageTime: { sum: 463686, ave: 441, min: 1, med: 4, p90: 178, max: 275244, sd: 8631 }
+				, users: 4
+				, sessions: 27
+				, activeSessions: 20
+				, exceptions: 3
+				, transitions: 1190
+				, tranExceptions: 2
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[32].datetime.date + " " + timeSpanStatData[32].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[33] = {
+				datetime: { date: "2014-07-08", beginTime: "11:00", endTime: "12:00" }
+				, requests: 306
+				, pageTime: { sum: 71203, ave: 233, min: 1, med: 6, p90: 245, max: 20338, sd: 1636 }
+				, users: 2
+				, sessions: 8
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 342
+				, tranExceptions: 0
+				, maxConcurrent: 5
+			};
+
+			datetime = timeSpanStatData[33].datetime.date + " " + timeSpanStatData[33].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[34] = {
+				datetime: { date: "2014-07-08", beginTime: "13:00", endTime: "14:00" }
+				, requests: 89
+				, pageTime: { sum: 38480, ave: 432, min: 2, med: 7, p90: 261, max: 28341, sd: 3004 }
+				, users: 1
+				, sessions: 3
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 99
+				, tranExceptions: 0
+				, maxConcurrent: 3
+			};
+
+			datetime = timeSpanStatData[34].datetime.date + " " + timeSpanStatData[34].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[35] = {
+				datetime: { date: "2014-07-08", beginTime: "14:00", endTime: "15:00" }
+				, requests: 4
+				, pageTime: { sum: 309, ave: 77, min: 8, med: 88, p90: 124, max: 124, sd: 43 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 4
+				, tranExceptions: 0
+				, maxConcurrent: 1
+			};
+
+			datetime = timeSpanStatData[35].datetime.date + " " + timeSpanStatData[35].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[36] = {
+				datetime: { date: "2014-07-10", beginTime: "16:00", endTime: "17:00" }
+				, requests: 436
+				, pageTime: { sum: 65276, ave: 150, min: 1, med: 6, p90: 193, max: 28275, sd: 1396 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 2
+				, exceptions: 0
+				, transitions: 515
+				, tranExceptions: 0
+				, maxConcurrent: 5
+			};
+
+			datetime = timeSpanStatData[36].datetime.date + " " + timeSpanStatData[36].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[37] = {
+				datetime: { date: "2014-07-10", beginTime: "17:00", endTime: "18:00" }
+				, requests: 113
+				, pageTime: { sum: 4116, ave: 36, min: 1, med: 3, p90: 114, max: 546, sd: 84 }
+				, users: 1
+				, sessions: 1
+				, activeSessions: 0
+				, exceptions: 0
+				, transitions: 132
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[37].datetime.date + " " + timeSpanStatData[37].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+			timeSpanStatData[38] = {
+				datetime: { date: "2014-07-20", beginTime: "11:00", endTime: "12:00" }
+				, requests: 204
+				, pageTime: { sum: 54011, ave: 265, min: 1, med: 10, p90: 213, max: 26897, sd: 1966 }
+				, users: 1
+				, sessions: 2
+				, activeSessions: 1
+				, exceptions: 0
+				, transitions: 225
+				, tranExceptions: 0
+				, maxConcurrent: 6
+			};
+
+			datetime = timeSpanStatData[38].datetime.date + " " + timeSpanStatData[38].datetime.beginTime;
+			timeSpanTimeSelectOptions += '<option value="' + datetime + '">' + datetime + '</option>';
+
+			function formatNumber(n) {
+				var s = new String(n);
+				while (s != (s = s.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+				return s;
+			}
+
+			$(function() {
+
+				var timeSpanStatTableBody = "";
+
+				$(timeSpanStatData).each(function(i) {
+
+					timeSpanStatTableBody += '<tr class="' + (i % 2 === 0 ? 'even_row' : 'odd_row') + '">';
+					timeSpanStatTableBody += '<td class="seq">' + (i + 1) + '</td>';
+					timeSpanStatTableBody += '<td class="date_time">' + this.datetime.date + ' ' + this.datetime.beginTime + '<span class="end_date">- ' + this.datetime.endTime + '</span></td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.requests) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.sum) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.ave) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.min) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.med) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.p90) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.max) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.pageTime.sd) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.users) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.sessions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.activeSessions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.exceptions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.transitions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.tranExceptions) + '</td>';
+					timeSpanStatTableBody += '<td class="numeric">' + formatNumber(this.maxConcurrent) + '</td>';
+					timeSpanStatTableBody += '</tr>'
+				});
+
+				$(timeSpanStatTableBody).appendTo("#time_span_stat_detail tbody");
+
+				var $timeSpanStatGraphs = $("#time_span_stat_graphs");
+				var $timeSpanStatOptBeginTime = $("#time_span_stat_graph_opt_begin_time");
+				var $timeSpanStatOptEndTime = $("#time_span_stat_graph_opt_end_time");
+
+				$(timeSpanTimeSelectOptions).appendTo($timeSpanStatOptBeginTime);
+				$(timeSpanTimeSelectOptions).appendTo($timeSpanStatOptEndTime);
+
+				$("option:last", $timeSpanStatOptEndTime).attr("selected", true);
+
+
+				function getMax() {
+					var max = arguments[0];
+
+					for (var i = 1; i < arguments.length; i++) {
+						max = Math.max(max, arguments[i]);
+					}
+
+					return max;
+				}
+
+				function getProportion(value, top) {
+					return Math.round(value * 100 / top);
+				}
+
+				function buildTimeSpanStatGraph(option) {
+
+					if (timeSpanStatData.length === 0) {
+						return;
+					}
+
+					$timeSpanStatGraphs.empty();
+
+					var data = [];
+					var beginTime = $timeSpanStatOptBeginTime.val();
+					var endTime = $timeSpanStatOptEndTime.val();
+
+					var maxValues = {
+						requests: 0
+						, pageTime: {
+							sum: 0
+							, ave: 0
+							, min: 0
+							, med: 0
+							, p90: 0
+							, max: 0
+							, sd: 0
+						}
+						, users: 0
+						, sessions: 0
+						, activeSessions: 0
+						, exceptions: 0
+						, transitions: 0
+						, tranExceptions: 0
+						, maxConcurrent: 0
+					};
+
+					var topValue = option.proportion ? 100 : 0;
+
+					$(timeSpanStatData).each(function() {
+
+						if ((this.datetime.date + ' ' + this.datetime.beginTime) < beginTime) {
+							return true;
+						}
+
+						if ((this.datetime.date + ' ' + this.datetime.endTime) > endTime) {
+							return false;
+						}
+
+						data.push(this);
+
+						maxValues.requests = Math.max(this.requests, maxValues.requests);
+						maxValues.pageTime.sum = Math.max(this.pageTime.sum, maxValues.pageTime.sum);
+						maxValues.pageTime.ave = Math.max(this.pageTime.ave, maxValues.pageTime.ave);
+						maxValues.pageTime.min = Math.max(this.pageTime.min, maxValues.pageTime.min);
+						maxValues.pageTime.med = Math.max(this.pageTime.med, maxValues.pageTime.med);
+						maxValues.pageTime.p90 = Math.max(this.pageTime.p90, maxValues.pageTime.p90);
+						maxValues.pageTime.max = Math.max(this.pageTime.max, maxValues.pageTime.max);
+						maxValues.pageTime.sd = Math.max(this.pageTime.sd, maxValues.pageTime.sd);
+						maxValues.users = Math.max(this.users, maxValues.users);
+						maxValues.sessions = Math.max(this.sessions, maxValues.sessions);
+						maxValues.activeSessions = Math.max(this.activeSessions, maxValues.activeSessions);
+						maxValues.exceptions = Math.max(this.exceptions, maxValues.exceptions);
+						maxValues.transitions = Math.max(this.transitions, maxValues.transitions);
+						maxValues.tranExceptions = Math.max(this.tranExceptions, maxValues.tranExceptions);
+						maxValues.maxConcurrent = Math.max(this.maxConcurrent, maxValues.maxConcurrent);
+
+						if (!option.proportion) {
+							topValue = getMax(
+											topValue
+											, maxValues.requests
+											, maxValues.pageTime.sum
+											, maxValues.pageTime.ave
+											, maxValues.pageTime.min
+											, maxValues.pageTime.med
+											, maxValues.pageTime.p90
+											, maxValues.pageTime.sd
+											, maxValues.users
+											, maxValues.sessions
+											, maxValues.activeSessions
+											, maxValues.exceptions
+											, maxValues.transitions
+											, maxValues.tranExceptions
+											, maxValues.maxConcurrent);
+						}
+					});
+
+					var sizePerGraph = Math.ceil(data.length / (parseInt((data.length - 1) / 45) + 1));
+
+					var sTable = "";
+
+					function getTd(value, maxValue) {
+						if (option.proportion) {
+							return '<td>' + getProportion(value, maxValue) + '</td>';
+						} else {
+							return '<td>' + value + '</td>';
+						}
+					}
+
+					$(data).each(function(i) {
+
+						if (i % sizePerGraph === 0) {
+
+							if (i > 0) {
+								sTable += "</tbody></table>";
+							}
+
+							sTable += '<table class="line_graph_source time_span_stat_source">';
+							sTable += '<caption>期間別統計 (' + this.datetime.date + ' ' + this.datetime.beginTime + ' ～)</caption>';
+							sTable += '<thead><tr><td></td>';
+
+							if (option.requests) sTable += '<th>リクエスト数合計</th>';
+							if (option.sum) sTable += '<th>処理時間合計</th>';
+							if (option.ave) sTable += '<th>処理時間平均値</th>';
+							if (option.min) sTable += '<th>処理時間最小値</th>';
+							if (option.med) sTable += '<th>処理時間中央値</th>';
+							if (option.p90) sTable += '<th>処理時間90% Line</th>';
+							if (option.max) sTable += '<th>処理時間最大値</th>';
+							if (option.sd) sTable += '<th>処理時間標準偏差</th>';
+							if (option.users) sTable += '<th>ユニークユーザ数</th>';
+							if (option.sessions) sTable += '<th>ユニークセッション数</th>';
+							if (option.activeSessions) sTable += '<th>有効セッション数</th>';
+							if (option.exceptions) sTable += '<th>例外数合計</th>';
+							if (option.transitions) sTable += '<th>画面遷移数合計</th>';
+							if (option.tranExceptions) sTable += '<th>画面遷移例外数合計</th>';
+							if (option.maxConcurrent) sTable += '<th>最大同時リクエスト数</th>';
+
+							sTable += '</tr></thead><tbody>'
+						}
+
+						sTable += '<tr><th>' + this.datetime.beginTime + '</th>';
+
+						if (option.requests) {
+							sTable += getTd(this.requests, maxValues.requests);
+						}
+
+						if (option.sum) {
+							sTable += getTd(this.pageTime.sum, maxValues.pageTime.sum);
+						}
+
+						if (option.ave) {
+							sTable += getTd(this.pageTime.ave, maxValues.pageTime.ave);
+						}
+
+						if (option.min) {
+							sTable += getTd(this.pageTime.min, maxValues.pageTime.min);
+						}
+
+						if (option.med) {
+							sTable += getTd(this.pageTime.med, maxValues.pageTime.med);
+						}
+
+						if (option.p90) {
+							sTable += getTd(this.pageTime.p90, maxValues.pageTime.p90);
+						}
+
+						if (option.max) {
+							sTable += getTd(this.pageTime.max, maxValues.pageTime.max);
+						}
+
+						if (option.sd) {
+							sTable += getTd(this.pageTime.sd, maxValues.pageTime.sd);
+						}
+
+						if (option.users) {
+							sTable += getTd(this.users, maxValues.users);
+						}
+
+						if (option.sessions) {
+							sTable += getTd(this.sessions, maxValues.sessions);
+						}
+
+						if (option.activeSessions) {
+							sTable += getTd(this.activeSessions, maxValues.activeSessions);
+						}
+
+						if (option.exceptions) {
+							sTable += getTd(this.exceptions, maxValues.exceptions);
+						}
+
+						if (option.transitions) {
+							sTable += getTd(this.transitions, maxValues.transitions);
+						}
+
+						if (option.tranExceptions) {
+							sTable += getTd(this.tranExceptions, maxValues.tranExceptions);
+						}
+
+						if (option.maxConcurrent) {
+							sTable += getTd(this.maxConcurrent, maxValues.maxConcurrent);
+						}
+
+						sTable += '</tr>';
+					});
+
+					sTable += '</tbody></table>';
+
+					$(sTable).appendTo($timeSpanStatGraphs);
+
+					$('table.time_span_stat_source').visualize(
+							{type: 'line', width: '960px', height: '380px', parseDirection: 'y', topValue: topValue, bottomValue: 0});
+				}
+
+				function getTimeSpanGraphOption() {
+
+					return {
+						requests: $("#time_span_stat_graph_opt_requests").attr("checked")
+						, sum: $("#time_span_stat_graph_opt_sum").attr("checked")
+						, ave: $("#time_span_stat_graph_opt_average").attr("checked")
+						, min: $("#time_span_stat_graph_opt_min").attr("checked")
+						, med: $("#time_span_stat_graph_opt_median").attr("checked")
+						, p90: $("#time_span_stat_graph_opt_p90").attr("checked")
+						, max: $("#time_span_stat_graph_opt_max").attr("checked")
+						, sd: $("#time_span_stat_graph_opt_sd").attr("checked")
+						, users: $("#time_span_stat_graph_opt_users").attr("checked")
+						, sessions: $("#time_span_stat_graph_opt_sessions").attr("checked")
+						, activeSessions: $("#time_span_stat_graph_opt_active_sessions").attr("checked")
+						, exceptions: $("#time_span_stat_graph_opt_exceptions").attr("checked")
+						, transitions: $("#time_span_stat_graph_opt_transitions").attr("checked")
+						, tranExceptions: $("#time_span_stat_graph_opt_tran_exceptions").attr("checked")
+						, maxConcurrent: $("#time_span_stat_graph_opt_max_concurrent").attr("checked")
+						, proportion: $("#time_span_stat_graph_opt_proportion").attr("checked")
+					};
+				}
+
+				buildTimeSpanStatGraph(getTimeSpanGraphOption());
+
+				// グラフ更新
+				$("#time_span_stat_graph_update").click(function() {
+
+					$timeSpanStatGraphs
+						.animate({ opacity: 0.1 }, "fast", function() {
+							buildTimeSpanStatGraph(getTimeSpanGraphOption());
+						})
+						.animate({ opacity: 1 }, "fast");
+				});
+
+				// リクエストURL別・処理時間合計ランク
+				$('#request_url_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+
+				// セッション別・処理時間合計ランク
+				$('#session_rank_source').visualize({type: 'pie', height: '320px', width: '480px'});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="page_header" class="clearfix">
+			<h1><a name="top"></a>ログ統計レポート（サンプル / Visualize）</h1>
+			<div id="signature">
+				Generated by <a href="https://github.com/cwan/im-log-stats" target="_blank">im-log-stats 1.0.17-SNAPSHOT</a><br/>
+				2014-09-23 13:16:05<br/>
+				
+			</div>
+		</div>
+
+
+		<ul id="toc">
+			<li><a href="#time_span_stat">期間別統計</a></li>
+			<li><a href="#request_page_time_rank">リクエスト処理時間総合ランク</a></li>
+			<li><a href="#request_url_rank">リクエストURL別・処理時間合計ランク</a></li>
+			<li><a href="#session_rank">セッション別・処理時間合計ランク</a></li>
+			<li><a href="#tenant_stat">テナント別統計</a></li>
+			<li><a href="#exception_count">例外</a></li>
+			<li><a href="#log_files">解析対象ログファイル</a></li>
+			<li><a href="#parameters">レポートパラメータ</a></li>
+		</ul>
+
+		<div class="section_header clearfix">
+			<h2><a name="time_span_stat"></a>期間別統計</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>ログを60分毎に集計しています。</li>
+		</ul>
+
+		<table class="detail" id="time_span_stat_detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="集計単位となる期間です。">
+						集計期間<span class="sort_mark">▲</span>
+					</th>
+					<th rowspan="2"	title="この期間内に受信した全てのHTTPリクエスト数の合計です。">
+						リクエスト数<br/>合計
+					</th>
+					<th colspan="7"	title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						リクエスト処理時間 [ms]
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したユーザの数です。">
+						ユニーク<br/>ユーザ数
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したセッションの数です。（未ログインセッションも含む）">
+						ユニーク<br/>セッション数
+					</th>
+					<th rowspan="2" title="この期間において、有効であると見なされるセッションの数です。（この期間以前に生成され、まだログアウト・タイムアウトしていないセッション）">
+						有効<br/>セッション数
+					</th>
+					<th rowspan="2"	title="この期間内に発生したエラーの合計です。（エラーログファイルの数。1つのエラーで複数のエラーログが作成される場合もあります。リクエスト処理以外で発生したログも含まれます）">
+						例外数合計
+					</th>
+					<th rowspan="2"	title="この期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計です。（JSSPRPCやポートレットなど、画面遷移ログに出力されないものは含まれません）">
+						画面遷移数<br>合計
+					</th>
+					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
+						画面遷移<br>例外数合計
+					</th>
+					<th rowspan="2"	title="この期間内に発生した同時リクエスト数の最大値です。">
+						最大同時<br>リクエスト数
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+
+		<div id="time_span_stat_graph_area">
+			<div id="time_span_stat_graph_option" class="clearfix">
+				<div>
+					始:<select id="time_span_stat_graph_opt_begin_time"></select><br/>
+					終:<select id="time_span_stat_graph_opt_end_time"></select>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_requests">
+					<label for="time_span_stat_graph_opt_requests">リクエスト数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sum">
+					<label for="time_span_stat_graph_opt_sum">処理時間合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_average" checked="checked">
+					<label for="time_span_stat_graph_opt_average">処理時間平均値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_min" checked="checked">
+					<label for="time_span_stat_graph_opt_min">処理時間最小値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_median" checked="checked">
+					<label for="time_span_stat_graph_opt_median">処理時間中央値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_p90" checked="checked">
+					<label for="time_span_stat_graph_opt_p90">処理時間90% Line</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_max">
+					<label for="time_span_stat_graph_opt_max">処理時間最大値</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sd">
+					<label for="time_span_stat_graph_opt_sd">標準偏差</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_users">
+					<label for="time_span_stat_graph_opt_users">ユニークユーザ数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_sessions">
+					<label for="time_span_stat_graph_opt_sessions">ユニークセッション数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_active_sessions">
+					<label for="time_span_stat_graph_opt_active_sessions">有効セッション数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_exceptions">
+					<label for="time_span_stat_graph_opt_exceptions">例外数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_transitions">
+					<label for="time_span_stat_graph_opt_transitions">画面遷移数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_tran_exceptions">
+					<label for="time_span_stat_graph_opt_tran_exceptions">画面遷移例外数合計</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_max_concurrent">
+					<label for="time_span_stat_graph_opt_max_concurrent">最大同時リクエスト数</label>
+				</div>
+				<div>
+					<input type="checkbox" id="time_span_stat_graph_opt_proportion" checked="checked">
+					<label for="time_span_stat_graph_opt_proportion">割合で表示</label>
+				</div>
+				<input type="button" value="更新" id="time_span_stat_graph_update">
+			</div>
+
+			<div id="time_span_stat_graphs" class="vertical-x"></div>
+		</div>
+
+		<div class="section_header clearfix">
+			<h2><a name="request_page_time_rank"></a>リクエスト処理時間総合ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>
+					リクエスト処理時間が大きいものから順に20件抽出しました。
+			</li>
+			<li>リクエスト数の合計は、21,632件です。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th title="リクエスト先のURLまたは遷移先画面パスです。">
+						リクエストURL
+					</th>
+					<th title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						処理時間 [ms]<span class="sort_mark">▼</span>
+					</th>
+					<th title="ログが出力された日時です。（INの場合はリクエスト受信直後、OUTの場合はレスポンス送信前）">
+						ログ出力日時
+					</th>
+					<th title="このリクエストを送信したセッションです。">
+						セッションID
+					</th>
+					<th title="このリクエストを送信したユーザです。（未ログイン状態の場合は、不明の場合があります）">
+						ユーザID
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr class="odd_row">
+						<td class="seq">1</td>
+						<td class="url">http://localhost:8088/imart/system/settings/tenant/register</td>
+						<td class="numeric">275,244</td>
+						<td class="date_time">2014-07-08 10:51:13.325</td>
+						<td class="text">aaadJQ3G2ZXPlhsewPtCu</td>
+						<td class="text">anonymous<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">2</td>
+						<td class="url">http://localhost:8088/imart/system/settings/tenant/register</td>
+						<td class="numeric">104,415</td>
+						<td class="date_time">2014-04-13 15:27:03.368</td>
+						<td class="text">aaamp8S2pv7k76g2HWzvu</td>
+						<td class="text">system<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">3</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">29,812</td>
+						<td class="date_time">2014-05-29 16:18:54.060</td>
+						<td class="text">aaaoWL-rEux387LJa2gzu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">4</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">28,449</td>
+						<td class="date_time">2014-05-25 22:36:08.966</td>
+						<td class="text">aaaXPMKXuRJbLfLT-LZyu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">5</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">28,341</td>
+						<td class="date_time">2014-07-08 13:28:26.572</td>
+						<td class="text">aaacOfoFkpDHXdi4LouCu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">6</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">28,275</td>
+						<td class="date_time">2014-07-10 16:30:47.641</td>
+						<td class="text">aaaKAF6f8z3Lt8mZGlFCu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">7</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">27,758</td>
+						<td class="date_time">2014-05-29 17:14:27.346</td>
+						<td class="text">aaaM18nww_ZDGfP4Uchzu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">8</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">27,671</td>
+						<td class="date_time">2014-07-08 10:29:14.379</td>
+						<td class="text">aaahznJqWXZCL4nmLLtCu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">9</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">27,657</td>
+						<td class="date_time">2014-05-15 16:37:30.100</td>
+						<td class="text">aaaFErBMhXqZocepb0_xu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">10</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">27,090</td>
+						<td class="date_time">2014-04-29 14:55:16.833</td>
+						<td class="text">aaabNV1J3UHqXhA0ldSwu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">11</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">26,897</td>
+						<td class="date_time">2014-07-20 11:03:48.843</td>
+						<td class="text">aaasrkW7d229waMOKGrDu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">12</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">26,886</td>
+						<td class="date_time">2014-05-12 22:51:01.378</td>
+						<td class="text">aaa8ui4iixKwg7QzVSWxu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">13</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">26,476</td>
+						<td class="date_time">2014-04-16 11:00:44.280</td>
+						<td class="text">aaa3vsRcBXx3re3I1qOvu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">14</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">26,249</td>
+						<td class="date_time">2014-05-12 22:32:44.296</td>
+						<td class="text">aaaDZDpxS_-yGfj4JOWxu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">15</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">25,559</td>
+						<td class="date_time">2014-05-15 10:11:12.454</td>
+						<td class="text">aaaoIuj8Ljrea9q3MB9xu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">16</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">25,497</td>
+						<td class="date_time">2014-07-08 10:45:07.203</td>
+						<td class="text">aaaQmQI-vPK4HcxsoPtCu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">17</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">24,982</td>
+						<td class="date_time">2014-04-29 02:31:05.794</td>
+						<td class="text">aaaqtE6mMgs4u8Wl3yPwu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">18</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">24,948</td>
+						<td class="date_time">2014-06-28 23:35:51.844</td>
+						<td class="text">aaaFM04gtGwvL_fiV5IBu</td>
+						<td class="text">anonymous<br/></td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">19</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">24,731</td>
+						<td class="date_time">2014-04-29 20:00:24.369</td>
+						<td class="text">aaaMyl5uppzzSbt-bjTwu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">20</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">23,945</td>
+						<td class="date_time">2014-04-29 01:59:11.583</td>
+						<td class="text">aaa9VgtvzU-Qi_VaKrPwu</td>
+						<td class="text">ueda<br/></td>
+					</tr>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="request_url_rank"></a>リクエストURL別・処理時間合計ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>リクエストURL毎に処理時間を集計し、処理時間の合計が大きいものから順に20件抽出しました。</li>
+			<li>リクエストURLの合計は、808件です。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="リクエスト先のURLまたは遷移先画面パスです。">
+						リクエストURL
+					</th>
+					<th rowspan="2" title="このURLまたは画面パスに対するリクエスト受信回数の合計です。">
+						リクエスト<br/>回数
+					</th>
+					<th colspan="7" title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						処理時間 [ms]
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このURLまたは画面パスの回数が占める比率です。">
+						リクエスト<br/>回数%
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このURLまたは画面パスの処理時間が占める比率です。">
+						処理<br/>時間%
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計<span class="sort_mark">▼</span>
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr class="odd_row">
+						<td class="seq">1</td>
+						<td class="url">http://localhost:8088/imart/home</td>
+						<td class="numeric">46</td>
+						<td class="numeric">633,467</td>
+						<td class="numeric">13,771</td>
+						<td class="numeric">55</td>
+						<td class="numeric">15,744</td>
+						<td class="numeric">27,758</td>
+						<td class="numeric">29,812</td>
+						<td class="numeric">11,911</td>
+						<td class="numeric">0.21%</td>
+						<td class="numeric">29%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">2</td>
+						<td class="url">http://localhost:8088/imart/system/settings/tenant/register</td>
+						<td class="numeric">2</td>
+						<td class="numeric">379,659</td>
+						<td class="numeric">189,830</td>
+						<td class="numeric">104,415</td>
+						<td class="numeric">189,829</td>
+						<td class="numeric">275,244</td>
+						<td class="numeric">275,244</td>
+						<td class="numeric">85,415</td>
+						<td class="numeric">0.009%</td>
+						<td class="numeric">18%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">3</td>
+						<td class="url">http://localhost:8088/imart/menu/sitemap</td>
+						<td class="numeric">14</td>
+						<td class="numeric">57,130</td>
+						<td class="numeric">4,081</td>
+						<td class="numeric">170</td>
+						<td class="numeric">5,006</td>
+						<td class="numeric">7,198</td>
+						<td class="numeric">10,978</td>
+						<td class="numeric">3,426</td>
+						<td class="numeric">0.065%</td>
+						<td class="numeric">2.6%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">4</td>
+						<td class="url">http://localhost:8088/imart/forma(2f)designer(2f)form(5f)designer.jssprpc</td>
+						<td class="numeric">257</td>
+						<td class="numeric">56,674</td>
+						<td class="numeric">221</td>
+						<td class="numeric">12</td>
+						<td class="numeric">119</td>
+						<td class="numeric">321</td>
+						<td class="numeric">2,654</td>
+						<td class="numeric">447</td>
+						<td class="numeric">1.2%</td>
+						<td class="numeric">2.6%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">5</td>
+						<td class="url">http://localhost:8088/imart/bis(2f)imw(2f)view(2f)apply(5f)view.jssps</td>
+						<td class="numeric">73</td>
+						<td class="numeric">55,822</td>
+						<td class="numeric">765</td>
+						<td class="numeric">206</td>
+						<td class="numeric">375</td>
+						<td class="numeric">1,959</td>
+						<td class="numeric">6,078</td>
+						<td class="numeric">1,103</td>
+						<td class="numeric">0.34%</td>
+						<td class="numeric">2.6%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">6</td>
+						<td class="url">http://localhost:8088/imart/certification</td>
+						<td class="numeric">41</td>
+						<td class="numeric">49,141</td>
+						<td class="numeric">1,199</td>
+						<td class="numeric">23</td>
+						<td class="numeric">1,425</td>
+						<td class="numeric">2,279</td>
+						<td class="numeric">2,999</td>
+						<td class="numeric">841</td>
+						<td class="numeric">0.19%</td>
+						<td class="numeric">2.3%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">7</td>
+						<td class="url">http://localhost:8088/imart/bis/user/workflow/apply/apply_list_wf</td>
+						<td class="numeric">70</td>
+						<td class="numeric">32,333</td>
+						<td class="numeric">462</td>
+						<td class="numeric">262</td>
+						<td class="numeric">367</td>
+						<td class="numeric">573</td>
+						<td class="numeric">2,421</td>
+						<td class="numeric">366</td>
+						<td class="numeric">0.32%</td>
+						<td class="numeric">1.5%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">8</td>
+						<td class="url">http://localhost:8088/imart/system/setup/sample</td>
+						<td class="numeric">2</td>
+						<td class="numeric">31,140</td>
+						<td class="numeric">15,570</td>
+						<td class="numeric">7,741</td>
+						<td class="numeric">15,570</td>
+						<td class="numeric">23,399</td>
+						<td class="numeric">23,399</td>
+						<td class="numeric">7,829</td>
+						<td class="numeric">0.009%</td>
+						<td class="numeric">1.4%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">9</td>
+						<td class="url">http://localhost:8088/imart/forma/form/update_form_data/updateForm</td>
+						<td class="numeric">57</td>
+						<td class="numeric">27,360</td>
+						<td class="numeric">480</td>
+						<td class="numeric">312</td>
+						<td class="numeric">428</td>
+						<td class="numeric">646</td>
+						<td class="numeric">1,267</td>
+						<td class="numeric">179</td>
+						<td class="numeric">0.26%</td>
+						<td class="numeric">1.3%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">10</td>
+						<td class="url">http://localhost:8088/imart/im_workflow/common/switch/switch_content</td>
+						<td class="numeric">76</td>
+						<td class="numeric">24,583</td>
+						<td class="numeric">323</td>
+						<td class="numeric">188</td>
+						<td class="numeric">265</td>
+						<td class="numeric">527</td>
+						<td class="numeric">1,059</td>
+						<td class="numeric">180</td>
+						<td class="numeric">0.35%</td>
+						<td class="numeric">1.1%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">11</td>
+						<td class="url">http://localhost:8088/imart/component-ajax-service/listtable/session/3c8a21f9ad0060c32c33f6ace3d58a728db2af49</td>
+						<td class="numeric">71</td>
+						<td class="numeric">21,719</td>
+						<td class="numeric">306</td>
+						<td class="numeric">100</td>
+						<td class="numeric">149</td>
+						<td class="numeric">600</td>
+						<td class="numeric">2,079</td>
+						<td class="numeric">426</td>
+						<td class="numeric">0.33%</td>
+						<td class="numeric">1%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">12</td>
+						<td class="url">http://localhost:8088/imart/forma/form/update_form_data</td>
+						<td class="numeric">11</td>
+						<td class="numeric">21,060</td>
+						<td class="numeric">1,915</td>
+						<td class="numeric">498</td>
+						<td class="numeric">2,243</td>
+						<td class="numeric">2,709</td>
+						<td class="numeric">2,988</td>
+						<td class="numeric">891</td>
+						<td class="numeric">0.051%</td>
+						<td class="numeric">0.98%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">13</td>
+						<td class="url">http://localhost:8088/imart/bis/admin/integration/edit_flow</td>
+						<td class="numeric">11</td>
+						<td class="numeric">17,266</td>
+						<td class="numeric">1,570</td>
+						<td class="numeric">623</td>
+						<td class="numeric">1,225</td>
+						<td class="numeric">2,789</td>
+						<td class="numeric">3,224</td>
+						<td class="numeric">836</td>
+						<td class="numeric">0.051%</td>
+						<td class="numeric">0.8%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">14</td>
+						<td class="url">http://localhost:8088/imart/im(5f)master(2f)common(2f)include(2f)include.jssps</td>
+						<td class="numeric">21</td>
+						<td class="numeric">13,867</td>
+						<td class="numeric">660</td>
+						<td class="numeric">19</td>
+						<td class="numeric">334</td>
+						<td class="numeric">1,515</td>
+						<td class="numeric">3,230</td>
+						<td class="numeric">763</td>
+						<td class="numeric">0.097%</td>
+						<td class="numeric">0.64%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">15</td>
+						<td class="url">http://localhost:8088/imart/forma/common/import/import_application/importApplication</td>
+						<td class="numeric">2</td>
+						<td class="numeric">12,781</td>
+						<td class="numeric">6,391</td>
+						<td class="numeric">2,160</td>
+						<td class="numeric">6,390</td>
+						<td class="numeric">10,621</td>
+						<td class="numeric">10,621</td>
+						<td class="numeric">4,231</td>
+						<td class="numeric">0.009%</td>
+						<td class="numeric">0.59%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">16</td>
+						<td class="url">http://localhost:8088/imart/bis/common/parts/bis_iframe_sender</td>
+						<td class="numeric">3</td>
+						<td class="numeric">12,271</td>
+						<td class="numeric">4,090</td>
+						<td class="numeric">3,665</td>
+						<td class="numeric">4,151</td>
+						<td class="numeric">4,455</td>
+						<td class="numeric">4,455</td>
+						<td class="numeric">325</td>
+						<td class="numeric">0.014%</td>
+						<td class="numeric">0.57%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">17</td>
+						<td class="url">http://localhost:8088/imart/tenant/menu/html_menu_tree</td>
+						<td class="numeric">10</td>
+						<td class="numeric">11,948</td>
+						<td class="numeric">1,195</td>
+						<td class="numeric">640</td>
+						<td class="numeric">1,236</td>
+						<td class="numeric">1,991</td>
+						<td class="numeric">2,386</td>
+						<td class="numeric">527</td>
+						<td class="numeric">0.046%</td>
+						<td class="numeric">0.55%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">18</td>
+						<td class="url">http://localhost:8088/imart/forma(2f)common(2f)ajax(2f)server(5f)logic.jssprpc</td>
+						<td class="numeric">268</td>
+						<td class="numeric">10,218</td>
+						<td class="numeric">38</td>
+						<td class="numeric">2</td>
+						<td class="numeric">7</td>
+						<td class="numeric">41</td>
+						<td class="numeric">3,473</td>
+						<td class="numeric">277</td>
+						<td class="numeric">1.2%</td>
+						<td class="numeric">0.47%</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">19</td>
+						<td class="url">http://localhost:8088/imart/system/login</td>
+						<td class="numeric">10</td>
+						<td class="numeric">10,087</td>
+						<td class="numeric">1,009</td>
+						<td class="numeric">24</td>
+						<td class="numeric">1,203</td>
+						<td class="numeric">2,385</td>
+						<td class="numeric">3,334</td>
+						<td class="numeric">966</td>
+						<td class="numeric">0.046%</td>
+						<td class="numeric">0.47%</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">20</td>
+						<td class="url">http://localhost:8088/imart/forma/datasource/java/edit_java</td>
+						<td class="numeric">11</td>
+						<td class="numeric">8,515</td>
+						<td class="numeric">774</td>
+						<td class="numeric">443</td>
+						<td class="numeric">708</td>
+						<td class="numeric">1,075</td>
+						<td class="numeric">1,149</td>
+						<td class="numeric">216</td>
+						<td class="numeric">0.051%</td>
+						<td class="numeric">0.39%</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<div>
+
+			<table id="request_url_rank_source" class="line_graph_source">
+				<caption>リクエストURL別・処理時間合計ランク（合計比率）</caption>
+				<thead>
+					<tr>
+							<th>#1</th>
+							<th>#2</th>
+							<th>#3</th>
+							<th>#4</th>
+							<th>#5</th>
+							<th>その他</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<th>#1</th>
+							<td>633467</td>
+						</tr>
+						<tr>
+							<th>#2</th>
+							<td>379659</td>
+						</tr>
+						<tr>
+							<th>#3</th>
+							<td>57130</td>
+						</tr>
+						<tr>
+							<th>#4</th>
+							<td>56674</td>
+						</tr>
+						<tr>
+							<th>#5</th>
+							<td>55822</td>
+						</tr>
+						<tr>
+							<th>その他</th>
+							<td>975763</td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="session_rank"></a>セッション別・処理時間合計ランク</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>セッション毎に処理時間を集計し、処理時間の合計が大きいものから順に20件抽出しました。</li>
+			<li>セッション数の合計は、110件です。</li>
+			<li>セッションIDを含まないリクエストについては、異なるユーザからのものも1つにまとめられています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="セッションIDです。">
+						セッションID
+					</th>
+					<th rowspan="2" title="セッションに紐付くユーザIDです。（未ログイン状態の場合は、不明の場合があります）">
+						ユーザID
+					</th>
+					<th rowspan="2" title="このセッションからのリクエスト受信回数の合計です。">
+						リクエスト<br/>回数
+					</th>
+					<th colspan="7" title="このセッションからのリクエスト処理時間の合計です。">
+						処理時間 [ms]
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このセッションの回数が占める比率です。">
+						リクエスト<br/>回数%
+					</th>
+					<th rowspan="2" title="全リクエストの合計に対する、このセッションの処理時間が占める比率です。">
+						処理<br/>時間%
+					</th>
+					<th rowspan="2" title="このセッションが最初にリクエストを送信した日時です。（ログに出現する範囲）">
+						初回アクセス日時
+					</th>
+					<th rowspan="2" title="このセッションが最後にリクエストを送信した日時です。（ログに出現する範囲）">
+						最終アクセス日時
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計<span class="sort_mark">▼</span>
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr class="odd_row">
+						<td class="seq">1</td>
+						<td class="text">aaadJQ3G2ZXPlhsewPtCu</td>
+						<td class="text">anonymous<br/></td>
+						<td class="numeric">111</td>
+						<td class="numeric">310,129</td>
+						<td class="numeric">2,794</td>
+						<td class="numeric">1</td>
+						<td class="numeric">7</td>
+						<td class="numeric">298</td>
+						<td class="numeric">275,244</td>
+						<td class="numeric">26,073</td>
+						<td class="numeric">0.51%</td>
+						<td class="numeric">14%</td>
+						<td class="date_time">2014-07-08 10:45:13.189</td>
+						<td class="date_time">2014-07-08 10:56:23.783</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">2</td>
+						<td class="text">aaabNV1J3UHqXhA0ldSwu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">9,478</td>
+						<td class="numeric">294,280</td>
+						<td class="numeric">31</td>
+						<td class="numeric">0</td>
+						<td class="numeric">3</td>
+						<td class="numeric">55</td>
+						<td class="numeric">27,090</td>
+						<td class="numeric">293</td>
+						<td class="numeric">44%</td>
+						<td class="numeric">14%</td>
+						<td class="date_time">2014-04-29 14:55:16.831</td>
+						<td class="date_time">2014-04-29 19:55:43.908</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">3</td>
+						<td class="text">aaaDZDpxS_-yGfj4JOWxu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">1,132</td>
+						<td class="numeric">137,972</td>
+						<td class="numeric">122</td>
+						<td class="numeric">1</td>
+						<td class="numeric">8</td>
+						<td class="numeric">191</td>
+						<td class="numeric">26,249</td>
+						<td class="numeric">866</td>
+						<td class="numeric">5.2%</td>
+						<td class="numeric">6.4%</td>
+						<td class="date_time">2014-05-12 22:32:44.294</td>
+						<td class="date_time">2014-05-12 22:47:35.782</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">4</td>
+						<td class="text">aaa9VgtvzU-Qi_VaKrPwu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">1,735</td>
+						<td class="numeric">136,965</td>
+						<td class="numeric">79</td>
+						<td class="numeric">1</td>
+						<td class="numeric">6</td>
+						<td class="numeric">91</td>
+						<td class="numeric">23,945</td>
+						<td class="numeric">695</td>
+						<td class="numeric">8%</td>
+						<td class="numeric">6.3%</td>
+						<td class="date_time">2014-04-29 01:59:11.581</td>
+						<td class="date_time">2014-04-29 02:27:19.073</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">5</td>
+						<td class="text">aaamp8S2pv7k76g2HWzvu</td>
+						<td class="text">system<br/></td>
+						<td class="numeric">41</td>
+						<td class="numeric">105,485</td>
+						<td class="numeric">2,573</td>
+						<td class="numeric">1</td>
+						<td class="numeric">3</td>
+						<td class="numeric">24</td>
+						<td class="numeric">104,415</td>
+						<td class="numeric">16,103</td>
+						<td class="numeric">0.19%</td>
+						<td class="numeric">4.9%</td>
+						<td class="date_time">2014-04-13 15:24:25.145</td>
+						<td class="date_time">2014-04-13 15:27:03.368</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">6</td>
+						<td class="text">aaaXPMKXuRJbLfLT-LZyu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">751</td>
+						<td class="numeric">104,877</td>
+						<td class="numeric">140</td>
+						<td class="numeric">1</td>
+						<td class="numeric">3</td>
+						<td class="numeric">143</td>
+						<td class="numeric">28,449</td>
+						<td class="numeric">1,195</td>
+						<td class="numeric">3.5%</td>
+						<td class="numeric">4.9%</td>
+						<td class="date_time">2014-05-25 22:36:08.964</td>
+						<td class="date_time">2014-05-25 22:47:17.735</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">7</td>
+						<td class="text">aaarOILiqlh2CcqyeITwu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">663</td>
+						<td class="numeric">87,731</td>
+						<td class="numeric">132</td>
+						<td class="numeric">1</td>
+						<td class="numeric">9</td>
+						<td class="numeric">196</td>
+						<td class="numeric">15,416</td>
+						<td class="numeric">692</td>
+						<td class="numeric">3.1%</td>
+						<td class="numeric">4.1%</td>
+						<td class="date_time">2014-04-29 21:49:37.895</td>
+						<td class="date_time">2014-04-29 22:14:39.537</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">8</td>
+						<td class="text">aaaqtE6mMgs4u8Wl3yPwu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">1,490</td>
+						<td class="numeric">85,806</td>
+						<td class="numeric">58</td>
+						<td class="numeric">0</td>
+						<td class="numeric">4</td>
+						<td class="numeric">80</td>
+						<td class="numeric">24,982</td>
+						<td class="numeric">667</td>
+						<td class="numeric">6.9%</td>
+						<td class="numeric">4%</td>
+						<td class="date_time">2014-04-29 02:31:05.788</td>
+						<td class="date_time">2014-04-29 04:09:35.437</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">9</td>
+						<td class="text">aaaKAF6f8z3Lt8mZGlFCu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">548</td>
+						<td class="numeric">67,893</td>
+						<td class="numeric">124</td>
+						<td class="numeric">1</td>
+						<td class="numeric">6</td>
+						<td class="numeric">161</td>
+						<td class="numeric">28,275</td>
+						<td class="numeric">1,246</td>
+						<td class="numeric">2.5%</td>
+						<td class="numeric">3.1%</td>
+						<td class="date_time">2014-07-10 16:30:47.627</td>
+						<td class="date_time">2014-07-10 17:01:56.441</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">10</td>
+						<td class="text">aaaoIuj8Ljrea9q3MB9xu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">435</td>
+						<td class="numeric">58,558</td>
+						<td class="numeric">135</td>
+						<td class="numeric">1</td>
+						<td class="numeric">8</td>
+						<td class="numeric">193</td>
+						<td class="numeric">25,559</td>
+						<td class="numeric">1,265</td>
+						<td class="numeric">2%</td>
+						<td class="numeric">2.7%</td>
+						<td class="date_time">2014-05-15 10:11:12.452</td>
+						<td class="date_time">2014-05-15 10:16:19.671</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">11</td>
+						<td class="text">aaaFErBMhXqZocepb0_xu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">308</td>
+						<td class="numeric">54,295</td>
+						<td class="numeric">176</td>
+						<td class="numeric">1</td>
+						<td class="numeric">7</td>
+						<td class="numeric">185</td>
+						<td class="numeric">27,657</td>
+						<td class="numeric">1,598</td>
+						<td class="numeric">1.4%</td>
+						<td class="numeric">2.5%</td>
+						<td class="date_time">2014-05-15 16:37:30.098</td>
+						<td class="date_time">2014-05-15 16:42:45.558</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">12</td>
+						<td class="text">aaaM18nww_ZDGfP4Uchzu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">308</td>
+						<td class="numeric">53,696</td>
+						<td class="numeric">174</td>
+						<td class="numeric">1</td>
+						<td class="numeric">4</td>
+						<td class="numeric">144</td>
+						<td class="numeric">27,758</td>
+						<td class="numeric">1,608</td>
+						<td class="numeric">1.4%</td>
+						<td class="numeric">2.5%</td>
+						<td class="date_time">2014-05-29 17:14:27.331</td>
+						<td class="date_time">2014-05-29 17:41:55.539</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">13</td>
+						<td class="text">aaasrkW7d229waMOKGrDu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">203</td>
+						<td class="numeric">51,671</td>
+						<td class="numeric">255</td>
+						<td class="numeric">1</td>
+						<td class="numeric">10</td>
+						<td class="numeric">206</td>
+						<td class="numeric">26,897</td>
+						<td class="numeric">1,966</td>
+						<td class="numeric">0.94%</td>
+						<td class="numeric">2.4%</td>
+						<td class="date_time">2014-07-20 11:03:48.840</td>
+						<td class="date_time">2014-07-20 11:34:17.329</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">14</td>
+						<td class="text">aaaMyl5uppzzSbt-bjTwu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">332</td>
+						<td class="numeric">50,538</td>
+						<td class="numeric">152</td>
+						<td class="numeric">1</td>
+						<td class="numeric">10</td>
+						<td class="numeric">91</td>
+						<td class="numeric">24,731</td>
+						<td class="numeric">1,405</td>
+						<td class="numeric">1.5%</td>
+						<td class="numeric">2.3%</td>
+						<td class="date_time">2014-04-29 20:00:24.366</td>
+						<td class="date_time">2014-04-29 20:06:25.921</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">15</td>
+						<td class="text">aaa8ui4iixKwg7QzVSWxu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">104</td>
+						<td class="numeric">40,881</td>
+						<td class="numeric">393</td>
+						<td class="numeric">2</td>
+						<td class="numeric">10</td>
+						<td class="numeric">315</td>
+						<td class="numeric">26,886</td>
+						<td class="numeric">2,637</td>
+						<td class="numeric">0.48%</td>
+						<td class="numeric">1.9%</td>
+						<td class="date_time">2014-05-12 22:51:01.376</td>
+						<td class="date_time">2014-05-12 22:51:49.673</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">16</td>
+						<td class="text">aaa3vsRcBXx3re3I1qOvu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">373</td>
+						<td class="numeric">40,374</td>
+						<td class="numeric">108</td>
+						<td class="numeric">1</td>
+						<td class="numeric">3</td>
+						<td class="numeric">18</td>
+						<td class="numeric">26,476</td>
+						<td class="numeric">1,376</td>
+						<td class="numeric">1.7%</td>
+						<td class="numeric">1.9%</td>
+						<td class="date_time">2014-04-16 11:00:44.278</td>
+						<td class="date_time">2014-04-16 11:34:32.428</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">17</td>
+						<td class="text">aaaFM04gtGwvL_fiV5IBu</td>
+						<td class="text">anonymous<br/></td>
+						<td class="numeric">112</td>
+						<td class="numeric">39,259</td>
+						<td class="numeric">351</td>
+						<td class="numeric">2</td>
+						<td class="numeric">9</td>
+						<td class="numeric">113</td>
+						<td class="numeric">24,948</td>
+						<td class="numeric">2,420</td>
+						<td class="numeric">0.52%</td>
+						<td class="numeric">1.8%</td>
+						<td class="date_time">2014-06-28 23:35:51.842</td>
+						<td class="date_time">2014-06-28 23:37:19.126</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">18</td>
+						<td class="text">aaaoWL-rEux387LJa2gzu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">132</td>
+						<td class="numeric">38,431</td>
+						<td class="numeric">291</td>
+						<td class="numeric">1</td>
+						<td class="numeric">5</td>
+						<td class="numeric">208</td>
+						<td class="numeric">29,812</td>
+						<td class="numeric">2,585</td>
+						<td class="numeric">0.61%</td>
+						<td class="numeric">1.8%</td>
+						<td class="date_time">2014-05-29 16:18:54.058</td>
+						<td class="date_time">2014-05-29 16:22:12.457</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">19</td>
+						<td class="text">aaacOfoFkpDHXdi4LouCu</td>
+						<td class="text">ueda<br/></td>
+						<td class="numeric">91</td>
+						<td class="numeric">35,938</td>
+						<td class="numeric">395</td>
+						<td class="numeric">2</td>
+						<td class="numeric">7</td>
+						<td class="numeric">100</td>
+						<td class="numeric">28,341</td>
+						<td class="numeric">2,965</td>
+						<td class="numeric">0.42%</td>
+						<td class="numeric">1.7%</td>
+						<td class="date_time">2014-07-08 13:28:26.570</td>
+						<td class="date_time">2014-07-08 14:08:04.441</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">20</td>
+						<td class="text">aaa0ow7YmHm2BaLhlTtCu</td>
+						<td class="text">tenant<br/></td>
+						<td class="numeric">97</td>
+						<td class="numeric">33,472</td>
+						<td class="numeric">345</td>
+						<td class="numeric">2</td>
+						<td class="numeric">6</td>
+						<td class="numeric">302</td>
+						<td class="numeric">20,338</td>
+						<td class="numeric">2,147</td>
+						<td class="numeric">0.45%</td>
+						<td class="numeric">1.6%</td>
+						<td class="date_time">2014-07-08 11:02:16.342</td>
+						<td class="date_time">2014-07-08 11:03:47.120</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<div>
+
+			<table id="session_rank_source" class="line_graph_source">
+				<caption>セッション別・処理時間合計ランク（合計比率）</caption>
+				<thead>
+					<tr>
+							<th>#1</th>
+							<th>#2</th>
+							<th>#3</th>
+							<th>#4</th>
+							<th>#5</th>
+							<th>その他</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<th>#1</th>
+							<td>310129</td>
+						</tr>
+						<tr>
+							<th>#2</th>
+							<td>294280</td>
+						</tr>
+						<tr>
+							<th>#3</th>
+							<td>137972</td>
+						</tr>
+						<tr>
+							<th>#4</th>
+							<td>136965</td>
+						</tr>
+						<tr>
+							<th>#5</th>
+							<td>105485</td>
+						</tr>
+						<tr>
+							<th>その他</th>
+							<td>1173684</td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="tenant_stat"></a>テナント別統計</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>ログをテナント毎に集計しています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th rowspan="2">#</th>
+					<th rowspan="2" title="集計対象のテナントIDです。（ブランクはシステム管理画面等）">
+						テナントID<span class="sort_mark">▲</span>
+					</th>
+					<th rowspan="2"	title="この期間内に受信した全てのHTTPリクエスト数の合計です。">
+						リクエスト数<br/>合計
+					</th>
+					<th colspan="7"	title="Application Runtimeがリクエストを受信してからレスポンスを返すまでの時間です。">
+						リクエスト処理時間 [ms]
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したユーザの数です。">
+						ユニーク<br/>ユーザ数
+					</th>
+					<th rowspan="2"	title="この期間内にリクエストを送信したセッションの数です。（未ログインセッションも含む）">
+						ユニーク<br/>セッション数
+					</th>
+					<th rowspan="2"	title="この期間内に発生した画面遷移（REQUEST/FORWARD/INCLUDE）の合計です。（JSSPRPCやポートレットなど、画面遷移ログに出力されないものは含まれません）">
+						画面遷移数<br>合計
+					</th>
+					<th rowspan="2"	title="この期間内の画面遷移ログにおいて検出されたエラーの合計です。">
+						画面遷移<br>例外数合計
+					</th>
+					<th rowspan="2"	title="この期間内に発生した同時リクエスト数の最大値です。">
+						最大同時<br>リクエスト数
+					</th>
+				</tr>
+				<tr>
+					<th title="リクエスト処理時間の合計です。">
+						合計
+					</th>
+					<th title="リクエスト処理時間の平均です。">
+						平均値
+					</th>
+					<th title="リクエスト処理時間の最小値です。">
+						最小値
+					</th>
+					<th title="リクエスト処理時間の中央値です。">
+						中央値
+					</th>
+					<th title="処理時間の90%がこの値以下であるということです。">
+						90% Line
+					</th>
+					<th title="リクエスト処理時間の最大値です。">
+						最大値
+					</th>
+					<th title="リクエスト処理時間の標準偏差です。（値のばらつき具合を表す指標）">
+						標準偏差
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr class="odd_row">
+						<td class="seq">1</td>
+						<td class="text"></td>
+						<td class="numeric">40</td>
+						<td class="numeric">1,070</td>
+						<td class="numeric">27</td>
+						<td class="numeric">1</td>
+						<td class="numeric">2</td>
+						<td class="numeric">23</td>
+						<td class="numeric">725</td>
+						<td class="numeric">113</td>
+						<td class="numeric">1</td>
+						<td class="numeric">1</td>
+						<td class="numeric">41</td>
+						<td class="numeric">0</td>
+						<td class="numeric">5</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">2</td>
+						<td class="text">default</td>
+						<td class="numeric">20,913</td>
+						<td class="numeric">1,768,441</td>
+						<td class="numeric">85</td>
+						<td class="numeric">0</td>
+						<td class="numeric">4</td>
+						<td class="numeric">85</td>
+						<td class="numeric">104,415</td>
+						<td class="numeric">1,130</td>
+						<td class="numeric">5</td>
+						<td class="numeric">106</td>
+						<td class="numeric">22,271</td>
+						<td class="numeric">16</td>
+						<td class="numeric">6</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">3</td>
+						<td class="text">tenant2</td>
+						<td class="numeric">679</td>
+						<td class="numeric">389,004</td>
+						<td class="numeric">573</td>
+						<td class="numeric">1</td>
+						<td class="numeric">4</td>
+						<td class="numeric">168</td>
+						<td class="numeric">275,244</td>
+						<td class="numeric">10,645</td>
+						<td class="numeric">4</td>
+						<td class="numeric">11</td>
+						<td class="numeric">747</td>
+						<td class="numeric">0</td>
+						<td class="numeric">6</td>
+					</tr>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="exception_count"></a>例外</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="notation">
+			<li>エラーログに出力された例外の集計です。</li>
+			<li>レベル・発端のCaused byの1行目の内容が等しいものでまとめ、発生回数の多い順に並べています。</li>
+		</ul>
+
+		<table class="detail">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th title="ログレベルです。">
+						レベル
+					</th>
+					<th title="発端のCaused byの1行目です。">
+						Caused by:1行目
+					</th>
+					<th title="この例外が何回発生したかを表します。">
+						回数<span class="sort_mark">▼</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr class="odd_row">
+						<td class="seq">1</td>
+						<td class="text">INFO<br/></td>
+						<td class="text">oracle.net.ns.NetException: Listener refused the connection with the following error:<br/></td>
+						<td class="numeric">17</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">2</td>
+						<td class="text">ERROR<br/></td>
+						<td class="text">jp.co.intra_mart.common.aid.jsdk.javax.servlet.exception.ForbiddenException: [E.IWP.LICENSE.SYSTEM.00018] ライセンスの有効期間が切れているため、アクセスできません。<br/></td>
+						<td class="numeric">13</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">3</td>
+						<td class="text">WARN<br/></td>
+						<td class="text">java.lang.RuntimeException: resource: iwp/platform/schema/exists_table.sql is not found.<br/></td>
+						<td class="numeric">5</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">4</td>
+						<td class="text">WARN<br/></td>
+						<td class="text">jp.co.intra_mart.system.router.authz.InvalidConfigurationException: [E.IWP.ROUTER.AUTHZ.00020] Mapper(welcome-all) which does not exist is specified.<br/></td>
+						<td class="numeric">5</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">5</td>
+						<td class="text">ERROR<br/></td>
+						<td class="text">java.lang.RuntimeException: Unsupported database type. (type : OTHER)<br/></td>
+						<td class="numeric">4</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">6</td>
+						<td class="text">ERROR<br/></td>
+						<td class="text">jp.co.intra_mart.system.secure.license.exception.OverMaxLicenseException: [E.IWP.LICENSE.USER.00001] ライセンス数の上限を超えた為、登録できませんでした。<br/></td>
+						<td class="numeric">2</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">7</td>
+						<td class="text">WARN<br/></td>
+						<td class="text">java.lang.NoClassDefFoundError: Could not initialize class jp.co.intra_mart.foundation.router.RouterFactory$LazyHolder<br/></td>
+						<td class="numeric">2</td>
+					</tr>
+					<tr class="even_row">
+						<td class="seq">8</td>
+						<td class="text">ERROR<br/></td>
+						<td class="text">java.lang.NullPointerException<br/></td>
+						<td class="numeric">1</td>
+					</tr>
+					<tr class="odd_row">
+						<td class="seq">9</td>
+						<td class="text">ERROR<br/></td>
+						<td class="text">jp.co.intra_mart.common.aid.jsdk.javax.servlet.exception.ForbiddenException: [E.IWP.LICENSE.SYSTEM.00019] アプリケーション「intra-mart Accel Collaboration[CSUSD]」のライセンスが設定されていないため、アクセスできません。<br/></td>
+						<td class="numeric">1</td>
+					</tr>
+			</tbody>
+		</table>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="log_files"></a>解析対象ログファイル</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<h3>リクエストログ</h3>
+		<ul class="file_list">
+				<li>C:\imart\resin-pro-4.0.37.2014spring\webapps\imart\WEB-INF\log\platform\request.log</li>
+		</ul>
+
+		<h3>画面遷移ログ</h3>
+		<ul class="file_list">
+				<li>C:\imart\resin-pro-4.0.37.2014spring\webapps\imart\WEB-INF\log\platform\transition.log</li>
+		</ul>
+
+		<h3>エラーログ</h3>
+		<ul class="file_list">
+			<li>55ファイル</li>
+		</ul>
+
+
+		<div class="section_header clearfix">
+			<h2><a name="parameters"></a>レポートパラメータ</h2>
+			<div class="go_top"><a href="#top" title="Topへ">&uArr;</a></div>
+		</div>
+
+		<ul class="parameters_list">
+			<li>
+				バージョン : 8.0.7
+			</li>
+			<li>
+				開始時刻 :
+					-
+			</li>
+			<li>
+				終了時刻 :
+					2014/08/01 00:00
+			</li>
+			<li>
+				テナントID :
+					-
+			</li>
+			<li>
+				ログファイルの文字コード : UTF-8
+			</li>
+			<li>
+				リクエストログレイアウト :<br/>[%d{yyyy-MM-dd HH:mm:ss.SSS}]<span class='tab'>{TAB}</span>[%thread]<span class='tab'>{TAB}</span>%X{log.report.sequence}<span class='tab'>{TAB}</span>%-5level<span class='tab'>{TAB}</span>%logger{255}<span class='tab'>{TAB}</span>%X{tenant.id}<span class='tab'>{TAB}</span>%X{log.id}<span class='tab'>{TAB}</span>-<span class='tab'>{TAB}</span>%X{client.session.id}<span class='tab'>{TAB}</span>%X{request.remote.host}<span class='tab'>{TAB}</span>%X{request.method}<span class='tab'>{TAB}</span>%X{request.url}<span class='tab'>{TAB}</span>%X{request.query_string}<span class='tab'>{TAB}</span>%X{request.url.referer}<span class='tab'>{TAB}</span>%X{request.page.time}<span class='tab'>{TAB}</span>%X{request.accept.time}<span class='tab'>{TAB}</span>%X{request.id}%nopex%n
+			</li>
+			<li>
+				画面遷移ログレイアウト :<br/>[%d{yyyy-MM-dd HH:mm:ss.SSS}]<span class='tab'>{TAB}</span>[%thread]<span class='tab'>{TAB}</span>%X{log.report.sequence}<span class='tab'>{TAB}</span>%-5level<span class='tab'>{TAB}</span>%logger{255}<span class='tab'>{TAB}</span>%X{tenant.id}<span class='tab'>{TAB}</span>%X{log.id}<span class='tab'>{TAB}</span>-<span class='tab'>{TAB}</span>%X{transition.log.type.id}<span class='tab'>{TAB}</span>%X{request.remote.address}<span class='tab'>{TAB}</span>%X{request.remote.host}<span class='tab'>{TAB}</span>%X{transition.access.user.id}<span class='tab'>{TAB}</span>%X{client.session.id}<span class='tab'>{TAB}</span>%X{transition.path.page.next}<span class='tab'>{TAB}</span>%X{transition.time.response}<span class='tab'>{TAB}</span>%X{transition.exception.name}<span class='tab'>{TAB}</span>%X{transition.exception.message}<span class='tab'>{TAB}</span>%X{transition.path.page.previous}<span class='tab'>{TAB}</span>%X{request.id}%nopex%n
+			</li>
+			<li>
+				期間別統計の間隔 : 60分
+			</li>
+			<li>
+				セッションタイムアウト時間 : 30分
+			</li>
+			<li>
+					リクエスト処理時間ランクの出力件数 : 20
+			</li>
+			<li>
+				リクエストURLランクの出力件数 : 20
+			</li>
+			<li>
+				セッションランクの出力件数 : 20
+			</li>
+			<li>
+				例外のグルーピング方法 : 発端のCaused byの1行目
+			</li>
+		</ul>
+
+		<div id="page_footer">
+		</div>
+	</body>
+</html>
