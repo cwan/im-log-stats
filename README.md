@@ -323,22 +323,8 @@ JSSPページパス | jssp, jssps, jssprpc のページパス<br/>（ parser パ
 
 #### <a name="request_url"></a>リクエストURL
 
-リクエストURL（または遷移先画面パス）からは、以下のようにして対応する機能が分かります。
-
-URL パターン | 説明
-:--|:--
-`/xxx-yyy.service` | im-JavaEE 開発モデルプログラムのURLです。<br/>`WEF-INF/classes/**/service-config-xxx.xml` ファイルから、`<service-id>yyy</service-id>` となっている箇所の ServiceController がリクエストの入り口になります。
-`/*.jssp`<br/>`/*.jssps`<br/>`/*.jssprpc` | im-スクリプト開発モデルプログラムの URL です。<br/>(2f)→/, (5f)→_ に変換すると、Resource Service (pages) のソースが分かります。
-`/dt` | ポータルの URL です。構成されるポートレット個別のログはありません。
-`/services/*` | Web サービスの URL です。
-`/HTTPActionEventListener` | バッチプログラムまたは外部ソフトウェア連携プログラムのURLです。
-`*.do` | Struts プログラムの URL です。
-`*/` | SAStruts プログラムの URL です。
-その他 | web.xml のマッピングを確認してください。
-
 リクエストログファイルが1つも指定されなかった場合、画面遷移ログ（遷移タイプ = REQUEST のみ）からリクエスト情報の統計が取得されます。  
-ただし、Ver.7.x, 8.x 標準のフィルタ設定では、`*.jssprpc`、`/services/*`、`/HTTPActionEventListener` 等に TransitionLogFilter が設定されていないため、これらの情報は統計から除外されます。  
-（Ver.6.x 標準では、TransitionLogFilter にすべての URL がマッピングされています。）
+ただし、Ver.7.x のフィルタ設定では、`*.jssprpc`、`/services/*`、`/HTTPActionEventListener` 等に TransitionLogFilter が設定されていないため、これらの情報は統計には含まれません。  
 
 #### <a name="response_time"></a>リクエスト処理時間
 
