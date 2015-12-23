@@ -210,7 +210,7 @@ public class ParserParameter {
 	/**
 	 *
 	 * @param errorCounter
-	 * @since 1.0,10
+	 * @since 1.0.10
 	 */
 	public void setErrorCounter(ParserErrorCounter errorCounter) {
 		this.errorCounter = errorCounter;
@@ -219,7 +219,7 @@ public class ParserParameter {
 	/**
 	 *
 	 * @return
-	 * @since 1.0,10
+	 * @since 1.0.10
 	 */
 	public ParserErrorCounter getErrorCounter() {
 		return errorCounter;
