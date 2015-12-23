@@ -14,8 +14,7 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.ant;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +35,7 @@ public class AntParameterUtilTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void getReportOutput_不正なフォーマット() {
 
-		String input = "report_{Y}.html";
+		String input = "report_{T}.html";
 		AntParameterUtil.getReportOutput(input);
 	}
 
