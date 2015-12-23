@@ -506,50 +506,18 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 [Apache License, Version 2.0](https://github.com/cwan/im-log-stats/blob/master/LICENSE.txt)
 
-## 7. 更新履歴
+## 7. マイルストーン
 
-### Ver.1.0.17 (2015-08-05)
-
- - [#26 visualizeレポートの「処理時間最大値」の割合表示が出ない不具合を修正](https://github.com/cwan/im-log-stats/issues/26)
- - [#27 2015 Summer (v8.0.11) に対応](https://github.com/cwan/im-log-stats/issues/27)
-
-### Ver.1.0.16 (2014-09-23)
-- [#24 report/templateCharset省略時にNullPointerExceptionが発生する不具合を修正](https://github.com/cwan/im-log-stats/issues/24)
-- [#25 バーチャルテナント対応](https://github.com/cwan/im-log-stats/issues/25)
-
-### Ver.1.0.15 (2014-01-14)
-- [#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)
-- [#15 IEで期間別統計グラフの時刻が縦にならない不具合を修正。](https://github.com/cwan/im-log-stats/issues/15)
-- [#17 期間別統計グラフの縦軸を割合で表示できるようにした。](https://github.com/cwan/im-log-stats/issues/17)
-- [#19 中央値、90%Lineの計算方法を修正。](https://github.com/cwan/im-log-stats/issues/19)
-- [#21 visualizeレポートで使用しているjs等をWebから取得できるようにした。](https://github.com/cwan/im-log-stats/issues/21)
-
-### Ver.1.0.14 (2013-05-11)
-- [#12 visualizeテンプレートのCSS文法エラーを修正。](https://github.com/cwan/im-log-stats/issues/12)
-- [#13 レポート出力の性能改善](https://github.com/cwan/im-log-stats/issues/13)
-- [#14 セッション別・処理時間合計ランクに、セッションID無しのリクエストを含めるようにした。](https://github.com/cwan/im-log-stats/issues/14)
-- [#15 レポート生成時のログを見やすくした。](https://github.com/cwan/im-log-stats/issues/15)
-
-### Ver.1.0.13 (2013-04-07)
-- [#10 期間別統計に最大同時リクエスト数を追加した。](https://github.com/cwan/im-log-stats/issues/10)
-- [#11 期間別統計グラフに、画面遷移例外数合計が表示できなかった不具合を修正。](https://github.com/cwan/im-log-stats/issues/11)
-
-### Ver.1.0.12 (2013-02-05)
-- ~~[#9 visualizeレポートで、期間別統計の順序が入れ替わる不具合を修正。](https://github.com/cwan/im-log-stats/issues/9)~~
-
-### Ver.1.0.11 (2013-01-29)
-- [#4 期間別統計グラフの改善](https://github.com/cwan/im-log-stats/issues/4)
-- [#5 リクエスト処理時間総合ランクを、処理時間の閾値で抽出できるようにする。](https://github.com/cwan/im-log-stats/issues/5)
-- [#6 jssp ページのソースパスを表示できるようにする。](https://github.com/cwan/im-log-stats/issues/6)
-- [#7 レポートのリクエストURLから、スキーム、ホスト、ポートを除去できるようにする。](https://github.com/cwan/im-log-stats/issues/7)
-- [#8 im-log-stats のバージョンをレポートに表示する。](https://github.com/cwan/im-log-stats/issues/8)
-
-### Ver.1.0.10 (2012-10-22)
-- [#2 レポートにグラフを表示できるようにする。](https://github.com/cwan/im-log-stats/issues/2)
-- [#3 パース時のエラーが多い場合に、処理を打ち切るようにする。](https://github.com/cwan/im-log-stats/issues/3)
-
-### Ver.1.0.9 (2012-10-12)
-- [#1 パラメータの parser/@begin, parser/@end, report/@output を動的に設定できるようにした。](https://github.com/cwan/im-log-stats/issues/1)
-
-### Ver.1.0.8 (2012-10-08)
-- 一般公開
+バージョン | リリース日
+:---------:|:---------:
+[v1.0.18](https://github.com/cwan/im-log-stats/milestones/v1.0.18) | |
+[v1.0.17](https://github.com/cwan/im-log-stats/milestones/v1.0.17) | 2015-08-05 |
+[v1.0.16](https://github.com/cwan/im-log-stats/milestones/v1.0.16) | 2014-09-23 |
+[v1.0.15](https://github.com/cwan/im-log-stats/milestones/v1.0.15) | 2014-01-14 |
+[v1.0.14](https://github.com/cwan/im-log-stats/milestones/v1.0.14) | 2013-05-11 |
+[v1.0.13](https://github.com/cwan/im-log-stats/milestones/v1.0.13) | 2013-04-07 |
+[v1.0.12](https://github.com/cwan/im-log-stats/milestones/v1.0.12) | 2013-02-05 |
+[v1.0.11](https://github.com/cwan/im-log-stats/milestones/v1.0.11) | 2013-01-29 |
+[v1.0.10](https://github.com/cwan/im-log-stats/milestones/v1.0.10) | 2013-10-22 |
+[v1.0.9](https://github.com/cwan/im-log-stats/milestones/v1.0.9) | 2012-10-12 |
+[v1.0.8](https://github.com/cwan/im-log-stats/milestones/v1.0.8) | 2012-10-08 |
