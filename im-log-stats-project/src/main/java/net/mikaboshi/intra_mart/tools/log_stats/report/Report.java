@@ -40,7 +40,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.16
+ * @version 1.0.18
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -220,6 +220,10 @@ public class Report {
 			for (Map.Entry<String, Date> sessionEntry : sessionMap.getLastAccessSessionMap().entrySet()) {
 
 				String sessionId = sessionEntry.getKey();
+
+				if (sessionMap.isAvailabilityCheckSessionId(sessionId)) {
+					continue;
+				}
 
 				Date date = sessionMap.getFirstAccessDate(sessionId);
 

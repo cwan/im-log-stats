@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 全体の統計情報
  *
- * @version 1.0.16
+ * @version 1.0.18
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GrossStatistics {
@@ -423,10 +423,14 @@ public class GrossStatistics {
 
 		String url = log.getUrl();
 
-		if (url != null &&
-				(url.endsWith("/user.logout") || url.endsWith(".portal"))) {
+		if (url != null) {
+			if (url.endsWith("/user.logout") || url.endsWith(".portal")) {
+				this.sessionMap.putLogoutDate(log.clientSessionId, log.date);
+			}
 
-			this.sessionMap.putLogoutDate(log.clientSessionId, log.date);
+			if (url.endsWith("/availability_check/") || url.endsWith("/availability_check/index.jsp")) {
+				this.sessionMap.addAvailabilityCheckSessionId(log.clientSessionId);
+			}
 		}
 	}
 }

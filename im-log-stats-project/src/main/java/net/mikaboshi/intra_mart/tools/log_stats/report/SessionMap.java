@@ -16,8 +16,10 @@ package net.mikaboshi.intra_mart.tools.log_stats.report;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.mikaboshi.intra_mart.tools.log_stats.util.LongListFactory;
 
@@ -27,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * セッション情報
  *
- * @version 1.0.8
+ * @version 1.0.18
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class SessionMap {
@@ -59,6 +61,12 @@ public class SessionMap {
 	 * セッションID => ログアウト時刻
 	 */
 	private Map<String, Date> logoutSessionMap = new HashMap<String, Date>();
+
+	/**
+	 * availability_checkのセッションID
+	 * @since 1.0.18
+	 */
+	private Set<String> availabilityCheckSessionIds = new HashSet<String>();
 
 	/**
 	 * セッションIDからユーザIDを取得する
@@ -179,6 +187,27 @@ public class SessionMap {
 		if (isValidId(sessionId)) {
 			this.logoutSessionMap.put(sessionId, date);
 		}
+	}
+
+	/**
+	 * availability_checkのセッションIDを追加する。
+	 * @param sessionId
+	 * @since 1.0.18
+	 */
+	public void addAvailabilityCheckSessionId(String sessionId) {
+		if (isValidId(sessionId)) {
+			this.availabilityCheckSessionIds.add(sessionId);
+		}
+	}
+
+	/**
+	 * availability_checkのセッションIDであればtrueを返す。
+	 * @param sessionId
+	 * @return
+	 * @since 1.0.18
+	 */
+	public boolean isAvailabilityCheckSessionId(String sessionId) {
+		return this.availabilityCheckSessionIds.contains(sessionId);
 	}
 
 	/**
