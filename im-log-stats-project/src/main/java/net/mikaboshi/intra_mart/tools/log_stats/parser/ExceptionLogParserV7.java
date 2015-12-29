@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
 import net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil;

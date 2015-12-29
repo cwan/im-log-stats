@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,7 +61,7 @@ import freemarker.template.TemplateException;
 /**
  * FreeMarkerのテンプレートを使用して、レポートを生成する。
  *
- * @version 1.0.16
+ * @version 1.0.18
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
@@ -190,6 +191,7 @@ public class TemplateFileReportFormatter extends AbstractFileReportFormatter {
 			rootMap.put("totalRequestCount", report.getRequestCount());
 			rootMap.put("projectVersion", Application.getInstance().getProjectVersion());
 			rootMap.put("projectUrl", Application.getInstance().getProjectUrl());
+			rootMap.put("timeZone", TimeZone.getDefault());
 
 			setParameters(rootMap);
 			setTimeSpanStatistics(report, rootMap);

@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
+import java.util.TimeZone;
 
 import net.mikaboshi.intra_mart.tools.log_stats.formatter.ReportFormatter;
 import net.mikaboshi.intra_mart.tools.log_stats.parser.Version;
@@ -36,7 +36,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 /**
  * intra-martログ統計レポート作成Antタスク。
  *
- * @version 1.0.8
+ * @version 1.0.18
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ImLogStatsTask extends Task {
@@ -62,6 +62,9 @@ public class ImLogStatsTask extends Task {
 	/** 遅延時間（ミリ秒） */
 	private long delay = 0L;
 
+	/** タイムゾーン */
+	private String timeZone;
+
 	public ImLogStatsTask() {
 		super();
 	}
@@ -73,6 +76,23 @@ public class ImLogStatsTask extends Task {
 
 		if (version == null) {
 			throw new BuildException("Unsupported version : " + this.version);
+		}
+
+		if (this.timeZone != null) {
+			TimeZone oTimeZone = null;
+
+			for (String timeZoneId : TimeZone.getAvailableIDs()) {
+				if (timeZoneId.equals(this.timeZone)) {
+					oTimeZone = TimeZone.getTimeZone(timeZoneId);
+					break;
+				}
+			}
+
+			if (oTimeZone == null) {
+				throw new BuildException("Unsupported time zone : " + this.timeZone);
+			}
+
+			TimeZone.setDefault(oTimeZone);
 		}
 
 		LogReportGenerator generator = new LogReportGenerator();
@@ -150,6 +170,15 @@ public class ImLogStatsTask extends Task {
 
 	public void setDelay(long delay) {
 		this.delay = delay;
+	}
+
+	/**
+	 * タイムゾーンを設定する。
+	 * @param timeZone
+	 * @since
+	 */
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
 	}
 
 	/**

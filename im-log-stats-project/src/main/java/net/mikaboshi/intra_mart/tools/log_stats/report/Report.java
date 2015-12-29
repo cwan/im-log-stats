@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
@@ -94,6 +95,9 @@ public class Report {
 	 * 例外ログファイルのコレクション
 	 */
 	private Collection<File> exceptionLogFiles = null;
+
+	/** タイムゾーンのオフセット（ミリ秒） */
+	private long timeZoneOffset = TimeZone.getDefault().getRawOffset();
 
 	/**
 	 * 処理時間統計情報を設定する。
@@ -558,7 +562,7 @@ public class Report {
 	private Date floorDate(Date date) {
 
 		long time = date.getTime();
-		return new Date(time - time % (this.parameter.getSpan() * 60 * 1000));
+		return new Date(time - (time + this.timeZoneOffset) % (this.parameter.getSpan() * 60 * 1000));
 	}
 
 	private static class PageTimeSumDescComparator implements Comparator<PageTimeStat>  {

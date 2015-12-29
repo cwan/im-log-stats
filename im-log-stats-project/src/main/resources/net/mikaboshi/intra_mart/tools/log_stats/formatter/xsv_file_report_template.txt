@@ -13,7 +13,7 @@
 -->
 <#--
   CSV/TSV共通のテンプレート
-  @version 1.0.16
+  @version 1.0.18
 -->
 <#--
   引数をダブルクートで囲い、" を "" に変換する。
@@ -88,6 +88,7 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.
 レポートパラメータ
 項目名${separator}値
 バージョン${separator}${esc(parserParameter.version.getName())}
+タイムゾーン${separator}${esc(timeZone.getID())}
 開始時刻${separator}<#if parserParameter.begin??>${parserParameter.begin?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
 終了時刻${separator}<#if parserParameter.end??>${parserParameter.end?string("yyyy/MM/dd HH:mm")}<#else>-</#if>
 テナントID${separator}<#if parserParameter.tenantId??>${esc(parserParameter.tenantId)}<#else>-</#if>
