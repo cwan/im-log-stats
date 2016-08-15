@@ -179,6 +179,8 @@ public final class LogLayoutDefinitions {
 			case V8010:
 			case V8011:
 			case V8012:
+			case V8013:
+			case V8014:
 				return REQUEST_V807;
 
 			default:
@@ -220,6 +222,8 @@ public final class LogLayoutDefinitions {
 			case V8010:
 			case V8011:
 			case V8012:
+			case V8013:
+			case V8014:
 				return TRANSITION_V807;
 
 			default:

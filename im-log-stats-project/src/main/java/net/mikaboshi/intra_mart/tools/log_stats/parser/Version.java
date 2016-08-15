@@ -58,7 +58,11 @@ public enum Version {
 
 	V8011("8.0.11"),	// 2015 Summer
 
-	V8012("8.0.12");	// 2015 Winter
+	V8012("8.0.12"),	// 2015 Winter
+
+	V8013("8.0.13"),	// 2016 Spring
+
+	V8014("8.0.14");	// 2016 Summer
 
 
 	private final String name;
