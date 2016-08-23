@@ -155,6 +155,20 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
 
 省略した場合は、imLogStats/@version に指定したバージョンの標準レイアウトが適用されます。
 
+#### parser のネスト要素 aggregatedUrlPattern
+
+リクエストURL別・処理時間合計ランクにおいて、パラメタライズされたURLを1つのURLとして集約する場合に、URLパターンを正規表現で指定します。（この要素は、v1.0.20以降のバージョンで使用できます）
+
+例えば、[lisTable](http://www.intra-mart.jp/apidoc/iap/apilist-jsp-tagdoc/doc/pc/imuiListTable/index.html)タグのAjaxリクエストを集約する場合は、次の例のように記述します。
+
+```xml
+<parser charset="UTF-8">
+    <aggregatedUrlPattern>/component-ajax-service/listtable/session/(.+)</aggregatedUrlPattern>
+</parser>
+```
+
+`<aggregatedUrlPattern>`要素は、複数記述することができます。
+
 
 ### 3.4. imLogStats のネスト要素 report
 
@@ -362,6 +376,7 @@ timeZone | java.util.TimeZone | タイムゾーン
 parserParameter.charset | java.lang.String | ログファイルの文字コード
 parserParameter.requestLogLayout | java.lang.String | リクエストログのレイアウト
 parserParameter.transitionLogLayout | java.lang.String | 画面遷移ログのレイアウト
+parserParameter.aggregatedUrlPatterns | java.util.List<java.lang.String> | 集約URLパターン
 parserParameter.begin | java.util.Date | 開始日時（未設定の場合はnull）
 parserParameter.end | java.util.Date | 終了日時（未設定の場合はnull）
 parserParameter.tenantId | java.lang.String | テナントID（未設定の場合はnull）
@@ -512,6 +527,7 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 バージョン | リリース日
 :---------:|:---------:
+[v1.0.20](https://github.com/cwan/im-log-stats/milestones/v1.0.20) | 未定 |
 [v1.0.19](https://github.com/cwan/im-log-stats/milestones/v1.0.19) | 2016-08-15 |
 [v1.0.18](https://github.com/cwan/im-log-stats/milestones/v1.0.18) | 2015-12-29 |
 [v1.0.17](https://github.com/cwan/im-log-stats/milestones/v1.0.17) | 2015-08-05 |
