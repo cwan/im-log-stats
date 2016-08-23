@@ -162,12 +162,18 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
 例えば、[lisTable](http://www.intra-mart.jp/apidoc/iap/apilist-jsp-tagdoc/doc/pc/imuiListTable/index.html)タグのAjaxリクエストを集約する場合は、次の例のように記述します。
 
 ```xml
-<parser charset="UTF-8">
+<parser>
     <aggregatedUrlPattern>/component-ajax-service/listtable/session/(.+)</aggregatedUrlPattern>
 </parser>
 ```
 
 `<aggregatedUrlPattern>`要素は、複数記述することができます。
+
+```xml
+<parser>
+    <aggregatedUrlPattern>/foo/(.+)</aggregatedUrlPattern>
+    <aggregatedUrlPattern>/bar/baz/(.+)</aggregatedUrlPattern>
+</parser>
 
 
 ### 3.4. imLogStats のネスト要素 report
