@@ -174,7 +174,7 @@ Ver.7.x, 8.x では、im_logger_transition.xml の以下の値を設定してく
     <aggregatedUrlPattern>/foo/(.+)</aggregatedUrlPattern>
     <aggregatedUrlPattern>/bar/baz/(.+)</aggregatedUrlPattern>
 </parser>
-
+```
 
 ### 3.4. imLogStats のネスト要素 report
 
