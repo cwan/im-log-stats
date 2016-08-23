@@ -13,7 +13,7 @@
 -->
 <#--
   HTML（グラフ付き）テンプレート
-  @version 1.0.18
+  @version 1.0.20
 -->
 <#--
   TRタグのclass値を取得する
@@ -1299,6 +1299,17 @@
 			</li>
 			<li>
 				画面遷移ログレイアウト :<br/>${parserParameter.transitionLogLayout?html?replace("\t", "<span class='tab'>{TAB}</span>")}
+			</li>
+			<li>
+				集約URLパターン :
+				<#if (parserParameter.aggregatedUrlPatterns?size > 0)>
+					<br/>
+					<#list parserParameter.aggregatedUrlPatterns as urlPattern>
+						${urlPattern?html}<br/>
+					</#list>
+				<#else>
+					-
+				</#if>
 			</li>
 			<li>
 				期間別統計の間隔 : ${reportParameter.span}分

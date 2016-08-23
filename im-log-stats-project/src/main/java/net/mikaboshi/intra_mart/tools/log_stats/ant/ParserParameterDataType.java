@@ -17,7 +17,9 @@ package net.mikaboshi.intra_mart.tools.log_stats.ant;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.RequestLogLayout;
 import net.mikaboshi.intra_mart.tools.log_stats.ant.LogLayoutDataType.TransitionLogLayout;
@@ -33,7 +35,7 @@ import org.apache.tools.ant.types.DataType;
 /**
  * ログファイルパーサ設定のネスト要素
  *
- * @version 1.0.16
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameterDataType extends DataType {
@@ -74,12 +76,22 @@ public class ParserParameterDataType extends DataType {
 	 */
 	private Boolean truncateRequestUrl = null;
 
+	/**
+	 * 集約URLパターン
+	 * @since 1.0.20
+	 */
+	private List<String> aggregatedUrlPatterns = new ArrayList<String>();
+
 	public void addConfigured(RequestLogLayout requestLogLayout) {
 		this.requestLogLayout = requestLogLayout;
 	}
 
 	public void addConfigured(TransitionLogLayout transitionLogLayout) {
 		this.transitionLogLayout = transitionLogLayout;
+	}
+
+	public void addConfigured(AggregatedUrlPatternDataType aggregatedUrlPattern) {
+		this.aggregatedUrlPatterns.add(aggregatedUrlPattern.getText());
 	}
 
 	public void setCharset(String charset) {
@@ -208,7 +220,31 @@ public class ParserParameterDataType extends DataType {
 			parameter.setTruncateRequestUrl(this.truncateRequestUrl.booleanValue());
 		}
 
+		parameter.setAggregatedUrlPatterns(this.aggregatedUrlPatterns);
+
 		return parameter;
+	}
+
+
+	/**
+	 * URL集約パターン
+	 *
+	 * @since 1.0.20
+	 * @version 1.0.20
+	 * @author <a href="https://github.com/cwan">cwan</a>
+	 */
+	public static class AggregatedUrlPatternDataType  extends DataType {
+		String text;
+
+		public void addText(String s) {
+			if (s != null) {
+				this.text = s.trim();
+			}
+		}
+
+		public String getText() {
+			return text;
+		}
 	}
 
 }

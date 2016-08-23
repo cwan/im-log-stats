@@ -13,7 +13,7 @@
 -->
 <#--
   CSV/TSV共通のテンプレート
-  @version 1.0.18
+  @version 1.0.20
 -->
 <#--
   引数をダブルクートで囲い、" を "" に変換する。
@@ -95,6 +95,7 @@ ${(row_index + 1)?c}${separator}<#if reportParameter.version.version7>${esc(row.
 ログファイルの文字コード${separator}${esc(parserParameter.charset)}
 リクエストログレイアウト${separator}${esc(parserParameter.requestLogLayout)}
 画面遷移ログレイアウト${separator}${esc(parserParameter.transitionLogLayout)}
+集約URLパターン<#if (parserParameter.aggregatedUrlPatterns?size > 0)><#list parserParameter.aggregatedUrlPatterns as urlPattern>${separator}${esc(urlPattern)}</#list><#else>${separator}-</#if>
 期間別統計の間隔${separator}${reportParameter.span?c}分
 セッションタイムアウト時間${separator}${reportParameter.sessionTimeout?c}分
 <#if (reportParameter.requestPageTimeRankThresholdMillis < 0)>

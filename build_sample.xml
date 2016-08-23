@@ -26,7 +26,7 @@
 
 	<target name="generate_report">
 
-		<imLogStats version="8.0.12" delay="0" timeZone="Asia/Tokyo">
+		<imLogStats version="8.0.14" delay="0" timeZone="Asia/Tokyo">
 
 			<parser
 				charset="UTF-8"
@@ -39,6 +39,7 @@
 				
 				<requestLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{tenant.id}	%X{log.id}	-	%X{client.session.id}	%X{request.remote.host}	%X{request.method}	%X{request.url}	%X{request.query_string}	%X{request.url.referer}	%X{request.page.time}	%X{request.accept.time}	%X{request.id}%nopex%n</requestLogLayout>
 				<transitionLogLayout>[%d{yyyy-MM-dd HH:mm:ss.SSS}]	[%thread]	%X{log.report.sequence}	%-5level	%logger{255}	%X{tenant.id}	%X{log.id}	-	%X{transition.log.type.id}	%X{request.remote.address}	%X{request.remote.host}	%X{transition.access.user.id}	%X{client.session.id}	%X{transition.path.page.next}	%X{transition.time.response}	%X{transition.exception.name}	%X{transition.exception.message}	%X{transition.path.page.previous}	%X{request.id}%nopex%n</transitionLogLayout>
+				<aggregatedUrlPattern>/component-ajax-service/listtable/session/(.+)</aggregatedUrlPattern>
 			</parser>
 
 			<report

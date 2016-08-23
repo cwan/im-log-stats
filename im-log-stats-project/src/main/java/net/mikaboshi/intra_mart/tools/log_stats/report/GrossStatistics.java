@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ConcurrentRequest.EventType;
@@ -38,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 全体の統計情報
  *
- * @version 1.0.18
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class GrossStatistics {
@@ -114,6 +117,12 @@ public class GrossStatistics {
 	private List<ConcurrentRequest> sortedConcurrentRequestList = null;
 
 	/**
+	 * 集約URLパターンマップ（オリジナルパターン文字列 => Patternオブジェクト）
+	 * @since 1.0.20
+	 */
+	private Map<String, Pattern> aggregatedUrlPatternMap = new HashMap<String, Pattern>();
+
+	/**
 	 * 処理時間順のリクエストランクサイズを指定するコンストラクタ
 	 * @param requestPageTimeRankSize 処理時間順のリクエストランクサイズ
 	 * @param transitionLogOnly 画面遷移ログのみ（リクエストログなし）かどうか
@@ -150,6 +159,31 @@ public class GrossStatistics {
 	 */
 	public void setMaxConcurrentRequest(boolean maxConcurrentRequest) {
 		this.maxConcurrentRequest = maxConcurrentRequest;
+	}
+
+	/**
+	 * リクエストURL別・処理時間合計ランクにおいて、URLを集約する場合のパターンを設定する。
+	 * @param patterns
+	 * @throws PatternSyntaxException パターンが不正な場合にスローされる
+	 * @since 1.0.20
+	 */
+	public void setAggregatedUrlPatterns(List<String> patterns) throws PatternSyntaxException {
+		if (patterns == null) {
+			return;
+		}
+
+		for (String pattern : patterns) {
+
+			Pattern compiled;
+
+			if (pattern.startsWith("^")) {
+				compiled = Pattern.compile(pattern);
+			} else {
+				compiled = Pattern.compile("(.*?)" + pattern);
+			}
+
+			this.aggregatedUrlPatternMap.put(pattern, compiled);
+		}
 	}
 
 	/**
@@ -356,7 +390,8 @@ public class GrossStatistics {
 		this.totalPageTime += responseTime;
 
 		if (StringUtils.isNotEmpty(url)) {
-			this.urlPageTimesMap.get(url).add(responseTime);
+
+			this.urlPageTimesMap.get(getAggregatedUrl(url)).add(responseTime);
 		}
 
 		this.sessionMap.addPageTime(log.clientSessionId, responseTime);
@@ -432,5 +467,26 @@ public class GrossStatistics {
 				this.sessionMap.addAvailabilityCheckSessionId(log.clientSessionId);
 			}
 		}
+	}
+
+	/**
+	 * URLが集約可能ならば、集約されたURL文字列を返す。
+	 * 集約不可能ならば、引数をそのまま返す。
+	 *
+	 * @param url
+	 * @return
+	 * @since 1.0.20
+	 */
+	private String getAggregatedUrl(String url) {
+
+		for (Map.Entry<String, Pattern> entry : this.aggregatedUrlPatternMap.entrySet()) {
+			Matcher matcher = entry.getValue().matcher(url);
+
+			if (matcher.matches()) {
+				return matcher.group(1) + entry.getKey();
+			}
+		}
+
+		return url;
 	}
 }

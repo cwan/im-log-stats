@@ -31,6 +31,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.Level;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionLog;
+import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
 import net.mikaboshi.intra_mart.tools.log_stats.report.GrossStatistics.RequestEntry;
 import net.mikaboshi.intra_mart.tools.log_stats.util.MathUtil;
 
@@ -41,7 +42,7 @@ import org.apache.commons.collections.map.LazyMap;
 /**
  * ログ解析レポート
  *
- * @version 1.0.18
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class Report {
@@ -49,7 +50,13 @@ public class Report {
 	/**
 	 * レポートパラメータ
 	 */
-	private ReportParameter parameter = new ReportParameter();
+	private ReportParameter reportParameter = new ReportParameter();
+
+	/**
+	 * パーサパラメータ
+	 * @since 1.0.20
+	 */
+	private ParserParameter parserParameter = new ParserParameter();
 
 	/**
 	 * 分割開始時刻 => 時間分割統計
@@ -123,17 +130,30 @@ public class Report {
 	/**
 	 * レポートパラメータを設定する。
 	 * @param parameter
+	 * @deprecated
 	 */
 	public void setParameter(ReportParameter parameter) {
-		this.parameter = parameter;
+		this.reportParameter = parameter;
+	}
+
+	/**
+	 * レポートパラメータ、パーサパラメータを設定する。
+	 * @param reportParameter
+	 * @param parserParameter
+	 * @since 1.0.20
+	 */
+	public void setParameter(ReportParameter reportParameter, ParserParameter parserParameter) {
+		this.reportParameter = reportParameter;
+		this.parserParameter = parserParameter;
 	}
 
 	/**
 	 * レポートパラメータを取得する。
 	 * @return
+	 * @deprecated
 	 */
 	public ReportParameter getParameter() {
-		return parameter;
+		return reportParameter;
 	}
 
 	/**
@@ -142,7 +162,7 @@ public class Report {
 	 */
 	public void add(RequestLog log) {
 
-		if (log == null || log.date == null || log.isIN() || this.parameter.getSpan() <= 0) {
+		if (log == null || log.date == null || log.isIN() || this.reportParameter.getSpan() <= 0) {
 			return;
 		}
 
@@ -163,7 +183,7 @@ public class Report {
 	 */
 	public void add(TransitionLog log) {
 
-		if (log == null || log.date == null || this.parameter.getSpan() <= 0) {
+		if (log == null || log.date == null || this.reportParameter.getSpan() <= 0) {
 			return;
 		}
 
@@ -184,7 +204,7 @@ public class Report {
 	 */
 	public void add(ExceptionLog log) {
 
-		if (log == null || log.date == null || this.parameter.getSpan() <= 0) {
+		if (log == null || log.date == null || this.reportParameter.getSpan() <= 0) {
 			return;
 		}
 
@@ -205,11 +225,11 @@ public class Report {
 	 */
 	public void countActiveSessions() {
 
-		if (this.parameter.getSpan() <= 0) {
+		if (this.reportParameter.getSpan() <= 0) {
 			return;
 		}
 
-		long sessionTimeoutMillis = this.parameter.getSessionTimeout() * 60 * 1000;
+		long sessionTimeoutMillis = this.reportParameter.getSessionTimeout() * 60 * 1000;
 
 		SessionMap sessionMap = getGrossStatistics().getSessionMap();
 
@@ -217,7 +237,7 @@ public class Report {
 
 			// 統計終了時点で有効なセッションを数える
 			long startTime = statEntry.getKey().getTime();
-			long endTime = startTime + (this.parameter.getSpan() * 60 * 1000);
+			long endTime = startTime + (this.reportParameter.getSpan() * 60 * 1000);
 
 			int activeSessions = 0;
 
@@ -271,11 +291,11 @@ public class Report {
 
 		List<TimeSpanStatistics> list = new ArrayList<TimeSpanStatistics>();
 
-		if (this.parameter.getSpan() <= 0) {
+		if (this.reportParameter.getSpan() <= 0) {
 			return list;
 		}
 
-		long spanMills = this.parameter.getSpan() * 60L * 1000L;
+		long spanMills = this.reportParameter.getSpan() * 60L * 1000L;
 
 		// ログ出力日時の昇順にならびかえ
 		List<Date> startDates = new ArrayList<Date>(this.timeSpanStatMap.keySet());
@@ -289,7 +309,7 @@ public class Report {
 			stat.setStartDate(startDate);
 			stat.setEndDate(new Date(stat.getStartDate().getTime() + spanMills));
 
-			if (this.parameter.isMaxConcurrentRequest()) {
+			if (this.reportParameter.isMaxConcurrentRequest()) {
 				stat.countMaxConcurrentRequest(concurrentRequestList);
 			}
 
@@ -318,7 +338,7 @@ public class Report {
 			TenantStatistics stat = this.tenantStatMap.get(tenantId);
 			stat.setTenantId(tenantId);
 
-			if (this.parameter.isMaxConcurrentRequest()) {
+			if (this.reportParameter.isMaxConcurrentRequest()) {
 				stat.countMaxConcurrentRequest(concurrentRequestList);
 			}
 
@@ -542,18 +562,20 @@ public class Report {
 
 		if (this.grossStatistics == null) {
 
-			if (this.parameter.getRequestPageTimeRankThresholdMillis() < 0L) {
+			if (this.reportParameter.getRequestPageTimeRankThresholdMillis() < 0L) {
 
 				this.grossStatistics = new GrossStatistics(
-												this.parameter.getRequestPageTimeRankSize(),
+												this.reportParameter.getRequestPageTimeRankSize(),
 												CollectionUtils.isEmpty(getRequestLogFiles()));
 			} else {
 				this.grossStatistics = new GrossStatistics(
-												this.parameter.getRequestPageTimeRankThresholdMillis(),
+												this.reportParameter.getRequestPageTimeRankThresholdMillis(),
 												CollectionUtils.isEmpty(getRequestLogFiles()));
 			}
 
-			this.grossStatistics.setMaxConcurrentRequest(this.parameter.isMaxConcurrentRequest());
+			this.grossStatistics.setMaxConcurrentRequest(this.reportParameter.isMaxConcurrentRequest());
+
+			this.grossStatistics.setAggregatedUrlPatterns(this.parserParameter.getAggregatedUrlPatterns());
 		}
 
 		return grossStatistics;
@@ -562,7 +584,7 @@ public class Report {
 	private Date floorDate(Date date) {
 
 		long time = date.getTime();
-		return new Date(time - (time + this.timeZoneOffset) % (this.parameter.getSpan() * 60 * 1000));
+		return new Date(time - (time + this.timeZoneOffset) % (this.reportParameter.getSpan() * 60 * 1000));
 	}
 
 	private static class PageTimeSumDescComparator implements Comparator<PageTimeStat>  {

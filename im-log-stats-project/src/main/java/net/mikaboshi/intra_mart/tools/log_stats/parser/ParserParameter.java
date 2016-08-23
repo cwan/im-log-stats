@@ -15,14 +15,16 @@
 package net.mikaboshi.intra_mart.tools.log_stats.parser;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 
 /**
  * ログファイルのパースに関するパラメータ。
  *
- * @version 1.0.16
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class ParserParameter {
@@ -62,6 +64,12 @@ public class ParserParameter {
 	 * @since 1.0.11
 	 */
 	private boolean truncateRequestUrl = false;
+
+	/**
+	 * 集約URLパターン
+	 * @since 1.0.20
+	 */
+	private List<String> aggregatedUrlPatterns = new ArrayList<String>();
 
 	/**
 	 * @return charset
@@ -241,6 +249,24 @@ public class ParserParameter {
 	 */
 	public void setTruncateRequestUrl(boolean truncateRequestUrl) {
 		this.truncateRequestUrl = truncateRequestUrl;
+	}
+
+	/**
+	 * 集約URLパターンを取得する。
+	 * @since 1.0.20
+	 * @return
+	 */
+	public List<String> getAggregatedUrlPatterns() {
+		return aggregatedUrlPatterns;
+	}
+
+	/**
+	 * 集約URLパターンを設定する。
+	 * @param aggregatedUrlPatterns
+	 * @since 1.0.20
+	 */
+	public void setAggregatedUrlPatterns(List<String> aggregatedUrlPatterns) {
+		this.aggregatedUrlPatterns = aggregatedUrlPatterns;
 	}
 
 }

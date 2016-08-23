@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-
 import net.mikaboshi.intra_mart.tools.log_stats.entity.ExceptionLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.RequestLog;
 import net.mikaboshi.intra_mart.tools.log_stats.entity.TransitionLog;
@@ -39,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * ログファイルを解析し、統計レポートを生成する。
  *
- * @version 1.0.8
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class LogReportGenerator {
@@ -158,7 +157,7 @@ public class LogReportGenerator {
 	 */
 	public void execute(ReportFormatter reportFormatter) throws IOException {
 
-		this.report.setParameter(getReportParameter());
+		this.report.setParameter(getReportParameter(), getParserParameter());
 
 		parseRequestLogs();
 		parseTransitionLogs();
