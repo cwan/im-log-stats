@@ -533,16 +533,16 @@ logFiles.transitionLogOnly | boolean | 画面遷移ログからリクエスト�
 
 バージョン | リリース日
 :---------:|:---------:
-[v1.0.20](https://github.com/cwan/im-log-stats/milestones/v1.0.20) | 未定 |
-[v1.0.19](https://github.com/cwan/im-log-stats/milestones/v1.0.19) | 2016-08-15 |
-[v1.0.18](https://github.com/cwan/im-log-stats/milestones/v1.0.18) | 2015-12-29 |
-[v1.0.17](https://github.com/cwan/im-log-stats/milestones/v1.0.17) | 2015-08-05 |
-[v1.0.16](https://github.com/cwan/im-log-stats/milestones/v1.0.16) | 2014-09-23 |
-[v1.0.15](https://github.com/cwan/im-log-stats/milestones/v1.0.15) | 2014-01-14 |
-[v1.0.14](https://github.com/cwan/im-log-stats/milestones/v1.0.14) | 2013-05-11 |
-[v1.0.13](https://github.com/cwan/im-log-stats/milestones/v1.0.13) | 2013-04-07 |
-[v1.0.12](https://github.com/cwan/im-log-stats/milestones/v1.0.12) | 2013-02-05 |
-[v1.0.11](https://github.com/cwan/im-log-stats/milestones/v1.0.11) | 2013-01-29 |
-[v1.0.10](https://github.com/cwan/im-log-stats/milestones/v1.0.10) | 2013-10-22 |
-[v1.0.9](https://github.com/cwan/im-log-stats/milestones/v1.0.9) | 2012-10-12 |
-[v1.0.8](https://github.com/cwan/im-log-stats/milestones/v1.0.8) | 2012-10-08 |
+[v1.0.20](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.20) | 未定 |
+[v1.0.19](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.19) | 2016-08-15 |
+[v1.0.18](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.18) | 2015-12-29 |
+[v1.0.17](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.17) | 2015-08-05 |
+[v1.0.16](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.16) | 2014-09-23 |
+[v1.0.15](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.15) | 2014-01-14 |
+[v1.0.14](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.14) | 2013-05-11 |
+[v1.0.13](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.13) | 2013-04-07 |
+[v1.0.12](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.12) | 2013-02-05 |
+[v1.0.11](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.11) | 2013-01-29 |
+[v1.0.10](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.10) | 2013-10-22 |
+[v1.0.9](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.9) | 2012-10-12 |
+[v1.0.8](https://github.com/cwan/im-log-stats/issues?utf8=%E2%9C%93&q=milestone%3Av1.0.8) | 2012-10-08 |
