@@ -23,7 +23,7 @@ import net.mikaboshi.intra_mart.tools.log_stats.entity.LogLayoutItemType;
 /**
  * ログレイアウトの定義
  *
- * @version 1.0.18
+ * @version 1.0.20
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public final class LogLayoutDefinitions {
@@ -181,6 +181,7 @@ public final class LogLayoutDefinitions {
 			case V8012:
 			case V8013:
 			case V8014:
+			case V8015:
 				return REQUEST_V807;
 
 			default:
@@ -224,6 +225,7 @@ public final class LogLayoutDefinitions {
 			case V8012:
 			case V8013:
 			case V8014:
+			case V8015:
 				return TRANSITION_V807;
 
 			default:
