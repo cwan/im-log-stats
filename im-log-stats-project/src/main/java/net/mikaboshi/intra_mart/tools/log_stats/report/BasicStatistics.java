@@ -14,6 +14,8 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.report;
 
+import static net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -104,7 +106,10 @@ public abstract class BasicStatistics {
 
 		this.requestCount++;
 		this.requestPageTimes.add(log.requestPageTime);
-		this.uniqueSessionIds.add(log.clientSessionId);
+
+		if (isValidId(log.clientSessionId)) {
+			this.uniqueSessionIds.add(log.clientSessionId);
+		}
 	}
 
 	/**
@@ -118,13 +123,16 @@ public abstract class BasicStatistics {
 		}
 
 		this.transitionCount++;
-		this.uniqueSessionIds.add(log.clientSessionId);
+
+		if (isValidId(log.clientSessionId)) {
+			this.uniqueSessionIds.add(log.clientSessionId);
+		}
+
 		this.uniqueUserIds.add(log.transitionAccessUserId);
 
 		if (this.transitionLogOnly && log.type == TransitionType.REQUEST) {
 			this.requestCount++;
 			this.requestPageTimes.add(log.transitionTimeResponse);
-			this.uniqueSessionIds.add(log.clientSessionId);
 		}
 
 		if (!"-".equals(log.transitionExceptionName)) {

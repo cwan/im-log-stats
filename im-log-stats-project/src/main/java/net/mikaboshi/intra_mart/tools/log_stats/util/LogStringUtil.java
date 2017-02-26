@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * ログ文字列に関するユーティリティクラス
  *
- * @version 1.0.9
+ * @version 1.0.21
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public final class LogStringUtil {
@@ -69,6 +69,16 @@ public final class LogStringUtil {
 		} else {
 			return url;
 		}
+	}
+
+	/**
+	 * セッションID、ユーザIDが有効ならばtrueを返す。
+	 * @since 1.0.21
+	 * @param id
+	 * @return
+	 */
+	public static boolean isValidId(String id) {
+		return StringUtils.isNotBlank(id) && !"-".equals(id.trim());
 	}
 
 }

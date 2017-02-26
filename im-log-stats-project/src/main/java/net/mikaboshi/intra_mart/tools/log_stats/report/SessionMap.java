@@ -14,6 +14,8 @@
 
 package net.mikaboshi.intra_mart.tools.log_stats.report;
 
+import static net.mikaboshi.intra_mart.tools.log_stats.util.LogStringUtil.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,15 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.mikaboshi.intra_mart.tools.log_stats.util.LongListFactory;
-
 import org.apache.commons.collections.map.LazyMap;
-import org.apache.commons.lang.StringUtils;
+
+import net.mikaboshi.intra_mart.tools.log_stats.util.LongListFactory;
 
 /**
  * セッション情報
  *
- * @version 1.0.18
+ * @version 1.0.21
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public class SessionMap {
@@ -210,12 +211,4 @@ public class SessionMap {
 		return this.availabilityCheckSessionIds.contains(sessionId);
 	}
 
-	/**
-	 * セッションID、ユーザIDが有効ならばtrueを返す。
-	 * @param id
-	 * @return
-	 */
-	private boolean isValidId(String id) {
-		return StringUtils.isNotBlank(id) && !"-".equals(id.trim());
-	}
 }
