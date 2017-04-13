@@ -17,7 +17,7 @@ im-log-stats
 
 **解析対象のログ**
 
-- intra-mart WebPlatform/AppFramework Ver.6.0, 6,1, 7.0, 7.1, 7.2
+- intra-mart WebPlatform/AppFramework Ver.6.0, 6.1, 7.0, 7.1, 7.2
 - intra-mart Accel Platform 8.0.0 - 8.0.15
 
 **ツール実行環境**
