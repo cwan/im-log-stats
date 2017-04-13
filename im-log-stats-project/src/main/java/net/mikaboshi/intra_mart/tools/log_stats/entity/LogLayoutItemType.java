@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * ログレイアウト項目種別
  *
- * @version 1.0.16
+ * @version 1.0.21
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public enum LogLayoutItemType {
@@ -129,7 +129,9 @@ public enum LogLayoutItemType {
 
 	MDC_REQUEST_METHOD(true, "request.method"),
 
-	MDC_REQUEST_QUERY_STRING(true, "request.query_string");
+	MDC_REQUEST_QUERY_STRING(true, "request.query_string"),
+
+	MDC_UNKNOWN(true, "");
 
 
 	private static Map<String, LogLayoutItemType> nonMdcMap = null;
@@ -191,7 +193,9 @@ public enum LogLayoutItemType {
 
 		} else if (type == MDC) {
 
-			return mdcMap.get(mdcName);
+			LogLayoutItemType itemType = mdcMap.get(mdcName);
+
+			return itemType != null ? itemType : MDC_UNKNOWN;
 
 		} else {
 

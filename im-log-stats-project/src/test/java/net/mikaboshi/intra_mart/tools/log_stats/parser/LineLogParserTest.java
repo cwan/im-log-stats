@@ -16,11 +16,14 @@ package net.mikaboshi.intra_mart.tools.log_stats.parser;
 
 import static org.junit.Assert.*;
 
-import net.mikaboshi.intra_mart.tools.log_stats.parser.LineLogParser;
-import net.mikaboshi.intra_mart.tools.log_stats.parser.ParserParameter;
-
 import org.junit.Test;
 
+/**
+ * 行ログパーサのテストケース
+ *
+ * @version 1.0.21
+ * @author <a href="https://github.com/cwan">cwan</a>
+ */
 public class LineLogParserTest {
 
 	@Test(expected = NullPointerException.class)
@@ -99,6 +102,17 @@ public class LineLogParserTest {
 		LineLogParser parser = new LineLogParserMock(layout);
 		String actual = parser.logLayoutPattern.pattern();
 		String expected = "^\\[(.*?)\\]\\t\\[(.*?)\\]\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t\\-\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)\\t(.*?)$";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void test_layout_独自MDC() {
+		String layout = "[%X{foo}]\t[%d{yyyy-MM-dd HH:mm:ss.SSS}]\t[%thread]";
+
+		LineLogParser parser = new LineLogParserMock(layout);
+		String actual = parser.logLayoutPattern.pattern();
+		String expected = "^\\[(.*?)\\]\\t\\[(.*?)\\]\\t\\[(.*?)\\]$";
 
 		assertEquals(expected, actual);
 	}
