@@ -17,7 +17,7 @@ package net.mikaboshi.intra_mart.tools.log_stats.parser;
 /**
  * ログファイルのバージョン
  *
- * @version 1.0.20
+ * @version 1.0.21
  * @author <a href="https://github.com/cwan">cwan</a>
  */
 public enum Version {
@@ -64,7 +64,9 @@ public enum Version {
 
 	V8014("8.0.14"),	// 2016 Summer
 
-	V8015("8.0.15");	// 2016 Winter
+	V8015("8.0.15"),	// 2016 Winter
+
+	V8016("8.0.16");	// 2017 Spring
 
 
 	private final String name;
